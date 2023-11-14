@@ -1,36 +1,39 @@
 #include "../include/minishell.h"
 
-void handler(int signum)
+void sigint_handler(int signum)
 {
     if (signum != SIGINT)
         return;
-    printf("ctrl + c\n");
+    printf("\n");
     rl_on_new_line();
-    rl_replace_line("", 1);
+    rl_replace_line("", 0);
     rl_redisplay();
 }
 
 int main(void)
 {
-    int ret = 0;
-    char *line;
+    char    *line;
+    t_list  *lst;
 
-    signal(SIGINT, handler);
     while (1)
     {
+        signal(SIGINT, sigint_handler);
+        signal(SIGQUIT, SIG_IGN);
         line = readline("input> ");
         if (line)
         {
-            if (!ret)
-                printf("output> %s\n", line);
+            lst = tokenize(line);
+            ft_lstiter(lst, print_elem);
+            //syntax error check
+            //따옴표 제거 및 환경변수 치환 -> 실행
             add_history(line);
             free(line);
             line = NULL;
         }
         else
         {
-            printf("ctrl + d\n");
-			return (0);
+            printf("exit");
+            return (0);
         }
     }
     return (0);

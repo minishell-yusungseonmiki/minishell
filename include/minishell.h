@@ -24,6 +24,6 @@ typedef struct s_struct {
 }	t_token;
 
 t_list *tokenize(char *s);
-
+void	print_elem(void *token);
 
 #endif
