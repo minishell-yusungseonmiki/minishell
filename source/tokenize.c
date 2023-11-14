@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../include/minishell.h"
 
 void	print_elem(void *token)
 {
@@ -107,11 +107,3 @@ t_list *tokenize(char *s)
 	// ft_lstiter(lst, print_elem);
 	return (lst);
 }
-
-// int main(int argc, char **argv)
-// {
-// 	printf("%s\n", argv[1]);
-// 	if (argc == 2)
-// 		tokenize(argv[1]);
-// 	return (0);
-// }

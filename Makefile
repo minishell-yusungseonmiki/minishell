@@ -1,49 +1,38 @@
-.SUFFIXES : .c .o
+CC = gcc
+CFLAGS = -Werror -Wall -Wextra
+LIBFT = ./libft/libft.a
 
-NAME=minishell
-CC=gcc
-PRINTF = printf
-CFLAGS= -Werror -Wall -Wextra -I/opt/homebrew/opt/readline/include
-LIBFT=./libft/libft.a
-LLDB= -g
-DEBUG= -g3 -fsanitize=address
-
-SRCS= main.c test_parse.c
-OBJS=$(SRCS:.c=.o)
+NAME = minishell
+SRC_DIR = source
+OBJ_DIR = object
+READ = -L/usr/local/lib -lreadline
+INC = -Iinclude -I/usr/local/include/readline
+SRCS = $(shell find $(SRC_DIR) -name *.c)
+OBJS = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
 
 all:  $(NAME)
 
 $(NAME): $(LIBFT) $(OBJS)
-	@$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -L/opt/homebrew/opt/readline/lib -lreadline -o $(NAME)
+	$(CC) $(CFLAGS) $(INC) $(READ) -o $@ $^
 
 $(LIBFT):
-	$(MAKE) -C ./libft
+	make -C ./libft
 
-%.o: %.c
+$(OBJ_DIR) :
+	mkdir -p $(OBJ_DIR)
+
+$(OBJ_DIR)/%.o : $(SRC_DIR)/%.c | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	$(MAKE) fclean -C ./libft
-	rm -f $(OBJS) $(TEST_OBJS)
+	make fclean -C ./libft
+	rm -rf $(OBJ_DIR)
 
 fclean: clean
 	rm -f $(NAME)
 
 re:
-	$(MAKE) fclean
-	$(MAKE) all
+	make fclean
+	make all
 
-debug:
-	$(MAKE) debug -C ./libft
-	$(MAKE) fclean
-	$(MAKE) all CFLAGS="$(CFLAGS) $(DEBUG)"
-
-lldb:
-	$(MAKE) lldb -C ./libft
-	$(MAKE) fclean
-	$(MAKE) all CFLAGS="$(CFLAGS) $(LLDB)"
-
-test:
-	$(MAKE) 'OBJS=$(TEST_OBJS)' all
-
-.PHONY: all clean fclean re debug lldb test
+.PHONY: all clean fclean re

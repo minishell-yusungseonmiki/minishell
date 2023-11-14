@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../include/minishell.h"
 
 /* TEST */
 // static char	test_state[8][20] = {
@@ -125,3 +125,11 @@ int	main(void)
 	}
 	return (0);
 }
+
+// int main(int argc, char **argv)
+// {
+// 	printf("%s\n", argv[1]);
+// 	if (argc == 2)
+// 		tokenize(argv[1]);
+// 	return (0);
+// }
