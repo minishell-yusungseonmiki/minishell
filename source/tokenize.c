@@ -2,7 +2,7 @@
 
 void	print_elem(void *token)
 {
-	printf("%s\n", ((t_token *)token)->elem);
+	printf("%s %d\n", ((t_token *)token)->elem, ((t_token *)token)->type);
 }
 
 t_token	*make_token(char *elem, e_type type)
@@ -26,12 +26,48 @@ int	end_of_token(char *s)
 	return (1);
 }
 
+int	check_special(t_list **lst, char *s, int *start, int *i)
+{
+	if (ft_strncmp(&s[*i], "<<", 2) == 0)
+	{
+		ft_lstadd_back(lst, ft_lstnew(make_token("<<", HEREDOC)));
+		(*i) += 2;
+	}
+	else if (ft_strncmp(&s[*i], ">>", 2) == 0)
+	{
+		ft_lstadd_back(lst, ft_lstnew(make_token(">>", APPEND)));
+		(*i) += 2;
+	}
+	else if (s[*i] == '|')
+	{
+		ft_lstadd_back(lst, ft_lstnew(make_token("|", PIPE)));
+		(*i)++;
+	}
+	else if (s[*i] == '<')
+	{
+		ft_lstadd_back(lst, ft_lstnew(make_token("<", IN)));
+		(*i)++;
+	}
+	else if (s[*i] == '>')
+	{
+		ft_lstadd_back(lst, ft_lstnew(make_token(">", OUT)));
+		(*i)++;
+	}
+	else if (s[*i] == ' ')
+		(*i)++;
+	else // 명령어나 공백이 아니면(=인덱스 증가가 없으면) check가 0
+		return (0);
+	*start = *i;
+	return (1); // 명령어나 공백이면(=인덱스 증가가 있으면) check가 1
+}
+
+
 t_list *tokenize(char *s)
 {
+	t_list *lst;
 	int	i;
 	char q;
 	int	start = 0;
-	t_list *lst;
 
 	int	check = 0;
 	i = 0;
@@ -57,47 +93,7 @@ t_list *tokenize(char *s)
 					ft_lstadd_back(&lst, ft_lstnew(make_token(ft_substr(s, start, i - start), ARG)));
 				start = i;
 			}
-			if (ft_strncmp(&s[i], "<<", 2) == 0)
-			{
-				ft_lstadd_back(&lst, ft_lstnew(make_token("<<", HEREDOC)));
-				i += 2;
-				start = i;
-				check = 1;
-			}
-			else if (ft_strncmp(&s[i], ">>", 2) == 0)
-			{
-				ft_lstadd_back(&lst, ft_lstnew(make_token(">>", APPEND)));
-				i += 2;
-				start = i;
-				check = 1;
-			}
-			else if (s[i] == '|')
-			{
-				ft_lstadd_back(&lst, ft_lstnew(make_token("|", PIPE)));
-				i++;
-				start = i;
-				check = 1;
-			}
-			else if (s[i] == '<')
-			{
-				ft_lstadd_back(&lst, ft_lstnew(make_token("<", IN)));
-				i++;
-				start = i;
-				check = 1;
-			}
-			else if (s[i] == '>')
-			{
-				ft_lstadd_back(&lst, ft_lstnew(make_token(">", OUT)));
-				i++;
-				start = i;
-				check = 1;
-			}
-			else if (s[i] == ' ')
-			{
-				i++;
-				start = i;
-				check = 1;
-			}
+			check += check_special(&lst, s, &start, &i);
 		}
 		if (check == 0)
 			i++;
