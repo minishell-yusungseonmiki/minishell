@@ -5,8 +5,8 @@ LIBFT = ./libft/libft.a
 NAME = minishell
 SRC_DIR = source
 OBJ_DIR = object
-READ = -L/opt/homebrew/opt/readline/lib -lreadline
-INC = -Iinclude -I/opt/homebrew/opt/readline/include
+READ = -L/usr/local/lib -lreadline
+INC = -Iinclude -I/usr/local/include/readline
 SRCS = $(shell find $(SRC_DIR) -name *.c)
 OBJS = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
 
