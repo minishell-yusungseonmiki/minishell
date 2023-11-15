@@ -10,13 +10,13 @@ void sigint_handler(int signum)
     rl_redisplay();
 }
 
-void    syntax_error(void)
+int    syntax_error(void)
 {
     perror("syntax error");
-    exit(1);
+    return (1);
 }
 
-void    quote_check(char *s)
+int    quote_check(char *s)
 {
     char    q;
     int     i;
@@ -35,16 +35,17 @@ void    quote_check(char *s)
         i++;
     }
     if (q != 0)
-        syntax_error();
+        return (syntax_error());
+    return (0);
 }
 
-void    syntax_check(t_list *lst)
+int    syntax_check(t_list *lst)
 {
     t_list  *cur;
 
     cur = lst;
     if (((t_token *)(cur->content))->type == PIPE) // 첫 시작이 파이프인 경우
-        syntax_error();
+        return (syntax_error());
     while (cur && cur->next)
     {
         if (((t_token *)(cur->content))->type != ARG)
@@ -52,15 +53,16 @@ void    syntax_check(t_list *lst)
             if (((t_token *)(cur->content))->type == PIPE)
             {
                 if (((t_token *)(cur->next->content))->type == PIPE) // 연속 PIPE인 경우
-                    syntax_error();
+                    return (syntax_error());
             }
             else if (((t_token *)(cur->next->content))->type != ARG) // REDIRECTION 다음이 ARG가 아닌 경우
-                syntax_error();
+                return (syntax_error());
         }
         cur = cur->next;
     }
     if (((t_token *)(cur->content))->type != ARG) // 맨 끝이 ARG가 아닌 경우
-        syntax_error();
+        return (syntax_error());
+    return (0);
 }
 
 int main(void)
@@ -75,9 +77,11 @@ int main(void)
         line = readline("input> ");
         if (line)
         {
-            quote_check(line);
+            if (quote_check(line) == 1)
+                continue;
             lst = tokenize(line);
-            syntax_check(lst);
+            if (syntax_check(lst) == 1)
+                continue;
             ft_lstiter(lst, print_elem); //토큰 확인
             //따옴표 제거 및 환경변수 치환 -> 실행
             add_history(line);
