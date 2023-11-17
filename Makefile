@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Werror -Wall -Wextra
+CFLAGS = -Werror -Wall -Wextra -fsanitize=address
 LIBFT = ./libft/libft.a
 
 NAME = minishell

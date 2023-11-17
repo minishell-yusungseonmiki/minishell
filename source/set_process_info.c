@@ -1,15 +1,30 @@
 #include "../include/minishell.h"
 
+void	print_proc_info(void *proc_info)
+{
+	t_proc_info *pi;
+
+	pi = (t_proc_info *)proc_info;
+	printf("in_fd : %d, out_fd : %d\n", pi->in_fd, pi->out_fd);
+
+	printf("cmd_argv\n");
+	int	i = 0;
+	while ((pi->cmd_argv)[i])
+	{
+		printf("%s\n", (pi->cmd_argv)[i]);
+		i++;
+	}
+}
+
 void	set_process_info(t_list *token_lst)
 {
 	t_list	*node_lst;
-	t_proc_info	**proc_lst;
+	t_list	*proc_info_lst;
 
 	node_lst = make_node_list(token_lst);
-	proc_lst = make_process_info_list(node_lst);
-	
+	proc_info_lst = make_process_info_list(node_lst);
+	ft_lstiter(proc_info_lst, print_proc_info);
 }
-
 
 // process information 초기화
 void	init_proc_info(t_proc_info *proc_info)
@@ -34,20 +49,22 @@ t_list	*make_node_list(t_list *token_lst)
 		node->elem = token->elem;
 		node->type = token->type;
 		node->visited = 0;
-		ft_lstadd_back(node_lst, node);
+		ft_lstadd_back(&node_lst, ft_lstnew(node));
 		token_lst = token_lst->next;
 	}
 	return node_lst;
 }
 
 // 프로세스의 정보 담은 구조체 리스트 만들기
-t_proc_info	**make_process_info_list(t_list *lst)
+t_list	*make_process_info_list(t_list *lst)
 {
-	t_proc_info	**proc_lst;
+	t_list		*proc_info_lst;
+	t_proc_info	*proc_info;
 	int			pipe_cnt;
 	int			i;
 	t_list		*iter;
 
+	proc_info_lst = NULL;
 	pipe_cnt = 0;
 	iter = lst;
 	while (iter)
@@ -56,15 +73,15 @@ t_proc_info	**make_process_info_list(t_list *lst)
 			pipe_cnt++;
 		iter = iter->next;
 	}
-	proc_lst = (t_proc_info **)malloc(sizeof(t_proc_info *) * (pipe_cnt + 1));
 	i = 0;
 	iter = lst;
-	while (i < pipe_cnt)
+	while (i < pipe_cnt + 1)
 	{
-		proc_lst[i] = (t_proc_info *)malloc(sizeof(t_proc_info));
-		init_proc_info(proc_lst[i]);
-		find_in_out(iter, proc_lst[i]);
-		find_cmd_argv(iter, proc_lst[i]);
+		proc_info = (t_proc_info *)malloc(sizeof(t_proc_info));
+		init_proc_info(proc_info);
+		find_in_out(iter, proc_info);
+		find_cmd_argv(iter, proc_info);
+		ft_lstadd_back(&proc_info_lst, ft_lstnew(proc_info));
 		i++;
 		while (iter)
 		{
@@ -74,7 +91,7 @@ t_proc_info	**make_process_info_list(t_list *lst)
 		}
 		iter = iter->next;
 	}
-	return proc_lst;
+	return proc_info_lst;
 }
 
 // 하나의 파이프 내부 순회하면서 infile, outfile 결정하기
@@ -93,7 +110,7 @@ void	find_in_out(t_list *lst, t_proc_info *proc_info)
 			((t_node *)(lst->content))->visited = 1; // 방문 여부 확인(리다이렉션)
 			((t_node *)(lst->next->content))->visited = 1; // 방문 여부 확인(파일이름/리미터)
 		}
-		if ((((t_node *)(lst->content))->type == OUT))
+		if ((((t_node *)(lst->content))->type) == OUT)
 		{
 			outfile_name = ((t_node *)(lst->next->content))->elem;
 			proc_info->out_fd = open(outfile_name, O_CREAT | O_RDWR | O_TRUNC, 0666);
