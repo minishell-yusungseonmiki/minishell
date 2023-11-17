@@ -16,6 +16,7 @@
 # include <readline/history.h>
 # include <unistd.h>
 # include <stdlib.h>
+# include <fcntl.h>
 
 typedef enum {
 	ARG,
@@ -26,10 +27,23 @@ typedef enum {
 	APPEND		// >>
 }	e_type;
 
-typedef struct s_struct {
+typedef struct s_token {
 	char	*elem;
 	e_type	type;
 }	t_token;
+
+typedef struct s_node {
+	char	*elem;
+	e_type	type;
+	int		visited;
+}	t_node;
+
+typedef struct s_proc_info {
+	int		in_fd;
+	int		out_fd;
+	char	**cmd_argv;
+	char	*cmd_path;
+}	t_proc_info;
 
 t_list *tokenize(char *s);
 void	print_elem(void *token);
