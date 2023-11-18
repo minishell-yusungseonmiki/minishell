@@ -80,8 +80,8 @@ int main(void)
             if (quote_check(line) == 1)
                 continue;
             lst = tokenize(line);
-            //if (syntax_check(lst) == 1)
-            //    continue;
+            if (!lst || syntax_check(lst) == 1)
+               continue;
             // ft_lstiter(lst, print_elem); //토큰 확인
             //따옴표 제거 및 환경변수 치환 -> 실행
             // printf("%s", heredoc(lst)); //히어독 먼저 처리, 마지막 히어독 리턴
