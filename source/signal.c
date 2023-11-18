@@ -6,7 +6,7 @@ void sigint_handler(int signum)
         return;
     printf("\n");
     rl_on_new_line();
-    rl_replace_line("", 0);
+    // rl_replace_lmakeine("", 0);
     rl_redisplay();
 }
 
@@ -84,11 +84,9 @@ int main(void)
             //    continue;
             // ft_lstiter(lst, print_elem); //토큰 확인
             //따옴표 제거 및 환경변수 치환 -> 실행
-            //printf("%s", heredoc(lst)); //히어독 먼저 처리, 마지막 히어독 리턴
-            
-            printf("\n------파이프별로 프로세스 정보 구조체에 담기------\n");
-            set_process_info(lst); //파이프별로 프로세스 정보 구조체에 담기
-            printf("-------------------------------------------\n");
+            // printf("%s", heredoc(lst)); //히어독 먼저 처리, 마지막 히어독 리턴
+
+            find_pipe(lst); //파이프별로 프로세스 정보 구조체에 담기
             add_history(line);
             free(line);
             line = NULL;

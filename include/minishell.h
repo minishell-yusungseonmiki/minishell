@@ -45,20 +45,18 @@ typedef struct s_proc_info {
 	char	*cmd_path;
 }	t_proc_info;
 
-t_list *tokenize(char *s);
-void	print_elem(void *token);
+t_list 		*tokenize(char *s);
+void		print_elem(void *token);
 
-char	*heredoc(t_list *lst);
-char	*get_next_line(int fd);
+char		*heredoc(t_list *lst);
+char		*get_next_line(int fd);
 
-
-void	print_proc_info(void *proc_info);
-void	set_process_info(t_list *token_lst);
-void	init_proc_info(t_proc_info *proc_info);
-t_list	*make_node_list(t_list *token_lst);
-t_list	*make_process_info_list(t_list *lst);
-void	find_in_out(t_list *lst, t_proc_info *proc_info);
-void	find_cmd_argv(t_list *lst, t_proc_info *proc_info);
-
-
+void		print_proc_info(void *proc_info);
+void		find_pipe(t_list *token_lst);
+t_list		*separate_list_by_pipe(t_list *start, t_list *end);
+t_proc_info	*set_proc_info(t_list *sub_lst);
+int			find_in_fd(t_list *lst);
+int			find_out_fd(t_list *lst);
+char		**find_cmd_argv(t_list *lst);
+char		*find_cmd_path(char *cmd);
 #endif
