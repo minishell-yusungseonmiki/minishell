@@ -65,11 +65,13 @@ int    syntax_check(t_list *lst)
     return (0);
 }
 
-int main(void)
+int main(int argc, char **argv, char **envp)
 {
     char    *line;
     t_list  *lst;
 
+    if (argc != 1 && ft_strncmp(*argv, "./minishell", ft_strlen(*argv)))
+        return (1);
     while (1)
     {
         signal(SIGINT, sigint_handler);
@@ -86,7 +88,7 @@ int main(void)
             //따옴표 제거 및 환경변수 치환 -> 실행
             // printf("%s", heredoc(lst)); //히어독 먼저 처리, 마지막 히어독 리턴
 
-            find_pipe(lst); //파이프별로 프로세스 정보 구조체에 담기
+            find_pipe(lst, envp); //파이프별로 프로세스 정보 구조체에 담기
             add_history(line);
             free(line);
             line = NULL;

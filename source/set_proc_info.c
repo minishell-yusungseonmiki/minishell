@@ -23,7 +23,7 @@ void	print_proc_info(void *proc_info)
 // 정보 구조체 담는 전체적인 흐름
 // token 순회하면서 파이프 만나거나 token 끝나면 sub_lst 만들기
 // sub_lst를 순회하면서 proc_info_lst에 정보 담기
-void	find_pipe(t_list *token_lst)
+void	find_pipe(t_list *token_lst, char **envp)
 {
 	t_list	*iter;
 	t_list	*sub_lst;
@@ -36,14 +36,14 @@ void	find_pipe(t_list *token_lst)
 		if (iter == NULL)
 		{
 			sub_lst = separate_list_by_pipe(token_lst, iter);
-			ft_lstadd_back(&proc_info_lst, ft_lstnew(set_proc_info(sub_lst)));
+			ft_lstadd_back(&proc_info_lst, ft_lstnew(set_proc_info(sub_lst, envp)));
 			ft_lstclear(&sub_lst, free);
 			break ;
 		}
 		if (((t_token *)(iter->content))->type == PIPE)
 		{
 			sub_lst = separate_list_by_pipe(token_lst, iter);
-			ft_lstadd_back(&proc_info_lst, ft_lstnew(set_proc_info(sub_lst)));
+			ft_lstadd_back(&proc_info_lst, ft_lstnew(set_proc_info(sub_lst, envp)));
 			ft_lstclear(&sub_lst, free);
 			token_lst = iter->next;
 		}
@@ -74,7 +74,7 @@ t_list	*separate_list_by_pipe(t_list *start, t_list *end)
 }
 
 // 프로세스 하나의 구조체를 생성하고 정보를 담는다
-t_proc_info	*set_proc_info(t_list *sub_lst)
+t_proc_info	*set_proc_info(t_list *sub_lst, char **envp)
 {
 	t_proc_info	*proc_info;
 
@@ -84,7 +84,8 @@ t_proc_info	*set_proc_info(t_list *sub_lst)
 	proc_info->in_fd = find_in_fd(sub_lst);
 	proc_info->out_fd = find_out_fd(sub_lst);
 	proc_info->cmd_argv = find_cmd_argv(sub_lst);
-	proc_info->cmd_path = find_cmd_path((proc_info->cmd_argv)[0]);
+	proc_info->cmd_path = find_cmd_path((proc_info->cmd_argv)[0], parse_envp(envp));
+	proc_info->envp = envp;
 	return (proc_info);
 }
 
@@ -169,25 +170,48 @@ char	**find_cmd_argv(t_list *lst)
 }
 
 // 명령어 경로 찾기
-char	*find_cmd_path(char *cmd)
+char	*find_cmd_path(char *cmd, char **path_list)
 {
-	// int		i;
-	// char	*tmp;
-	// char	*path;
+	int		i;
+	char	*tmp;
+	char	*path;
 
 	if (access(cmd, X_OK) == 0)
 		return (cmd);
-	// i = 0;
-	// while (path_list && path_list[i])
-	// {
-	// 	tmp = ft_strjoin(path_list[i], "/");
-	// 	path = ft_strjoin(tmp, cmd);
-	// 	free(tmp);
-	// 	if (access(path, X_OK) == 0)
-	// 		return (path);
-	// 	free(path);
-	// 	i++;
-	// }
+	i = 0;
+	while (path_list && path_list[i])
+	{
+		tmp = ft_strjoin(path_list[i], "/");
+		path = ft_strjoin(tmp, cmd);
+		free(tmp);
+		if (access(path, X_OK) == 0)
+			return (path);
+		free(path);
+		i++;
+	}
 	// error(CMD_ERR);
 	return (NULL);
+}
+
+// 환경변수 path parsing하기
+char	**parse_envp(char **envp)
+{
+	int		i;
+	char	*tmp;
+	char	**path_list;
+
+	path_list = NULL;
+	i = 0;
+	while (envp[i])
+	{
+		if (ft_strncmp(envp[i], "PATH", 4) == 0)
+		{
+			tmp = ft_substr(envp[i], 5, ft_strlen(envp[i]));
+			path_list = ft_split(tmp, ':');
+			free(tmp);
+			break ;
+		}
+		i++;
+	}
+	return (path_list);
 }

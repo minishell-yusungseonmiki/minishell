@@ -43,6 +43,7 @@ typedef struct s_proc_info {
 	int		out_fd;
 	char	**cmd_argv;
 	char	*cmd_path;
+	char	**envp;
 }	t_proc_info;
 
 t_list 		*tokenize(char *s);
@@ -52,11 +53,12 @@ char		*heredoc(t_list *lst);
 char		*get_next_line(int fd);
 
 void		print_proc_info(void *proc_info);
-void		find_pipe(t_list *token_lst);
+void		find_pipe(t_list *token_lst, char **envp);
 t_list		*separate_list_by_pipe(t_list *start, t_list *end);
-t_proc_info	*set_proc_info(t_list *sub_lst);
+t_proc_info	*set_proc_info(t_list *sub_lst, char **envp);
 int			find_in_fd(t_list *lst);
 int			find_out_fd(t_list *lst);
 char		**find_cmd_argv(t_list *lst);
-char		*find_cmd_path(char *cmd);
+char		*find_cmd_path(char *cmd, char **path_list);
+char		**parse_envp(char **envp);
 #endif
