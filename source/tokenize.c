@@ -4,6 +4,7 @@ void	print_elem(void *token)
 {
 	printf("-----------\n");
 	printf("content: %s\n state: %d\n", ((t_token *)token)->elem, ((t_token *)token)->type);
+	printf("-----------\n");
 }
 
 t_token	*make_token(char *elem, e_type type)

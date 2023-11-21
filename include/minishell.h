@@ -61,4 +61,7 @@ int			find_out_fd(t_list *lst);
 char		**find_cmd_argv(t_list *lst);
 char		*find_cmd_path(char *cmd, char **path_list);
 char		**parse_envp(char **envp);
+
+void    	erase_quotes(t_list *lst);
+
 #endif
