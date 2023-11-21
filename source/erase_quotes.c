@@ -14,12 +14,12 @@ void	erase_quotes(t_list *lst)
 	char	q;
 	int		i;
 
-	new_elem = ""; //빈 문자열로 초기세팅
 	while (lst)
 	{
 		if (((t_token *)(lst->content))->type == ARG) //argument인 경우에만
 		{
 			elem = ((t_token *)(lst->content))->elem; //원본 저장
+			new_elem = ""; //빈 문자열로 초기세팅
 			i = 0;
 			q = 0;
 			while (elem[i])
