@@ -18,6 +18,9 @@
 # include <stdlib.h>
 # include <fcntl.h>
 
+# define READ 0
+# define WRITE 1
+
 typedef enum {
 	ARG,
 	PIPE,
@@ -39,6 +42,7 @@ typedef struct s_node {
 }	t_node;
 
 typedef struct s_proc_info {
+	int		prev;
 	int		in_fd;
 	int		out_fd;
 	char	**cmd_argv;
@@ -53,7 +57,7 @@ char		*heredoc(t_list *lst);
 char		*get_next_line(int fd);
 
 void		print_proc_info(void *proc_info);
-void		find_pipe(t_list *token_lst, char **envp);
+t_list		*find_pipe(t_list *token_lst, char **envp);
 t_list		*separate_list_by_pipe(t_list *start, t_list *end);
 t_proc_info	*set_proc_info(t_list *sub_lst, char **envp);
 int			find_in_fd(t_list *lst);
@@ -63,5 +67,5 @@ char		*find_cmd_path(char *cmd, char **path_list);
 char		**parse_envp(char **envp);
 
 void    	erase_quotes(t_list *lst);
-
+void    	exeute_pipe(t_list *proc_lst);
 #endif

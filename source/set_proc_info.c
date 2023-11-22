@@ -23,7 +23,7 @@ void	print_proc_info(void *proc_info)
 // 정보 구조체 담는 전체적인 흐름
 // token 순회하면서 파이프 만나거나 token 끝나면 sub_lst 만들기
 // sub_lst를 순회하면서 proc_info_lst에 정보 담기
-void	find_pipe(t_list *token_lst, char **envp)
+t_list	*find_pipe(t_list *token_lst, char **envp)
 {
 	t_list	*iter;
 	t_list	*sub_lst;
@@ -50,6 +50,7 @@ void	find_pipe(t_list *token_lst, char **envp)
 		iter = iter->next;
 	}
 	ft_lstiter(proc_info_lst, print_proc_info);
+	return (proc_info_lst);
 }
 
 // 전달받은 인덱스(start, end)로 새로운 리스트 생성

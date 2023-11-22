@@ -69,6 +69,7 @@ int main(int argc, char **argv, char **envp)
 {
     char    *line;
     t_list  *lst;
+    t_list	*proc_info_lst;
 
     if (argc != 1 && ft_strncmp(*argv, "./minishell", ft_strlen(*argv)))
         return (1);
@@ -88,15 +89,15 @@ int main(int argc, char **argv, char **envp)
             erase_quotes(lst); //따옴표 제거만 (환경변수 처리안함)
             // ft_lstiter(lst, print_elem);
             // printf("%s", heredoc(lst)); //히어독 먼저 처리, 마지막 히어독 리턴
-
-            find_pipe(lst, envp); //파이프별로 프로세스 정보 구조체에 담기
+            proc_info_lst = find_pipe(lst, envp); //파이프별로 프로세스 정보 구조체에 담기
+            exeute_pipe(proc_info_lst);
             add_history(line);
             free(line);
-            line = NULL;
+            // line = NULL;
         }
         else
         {
-            printf("exit");
+            printf("%s\n", line);
             return (0);
         }
     }
