@@ -98,11 +98,16 @@ int	find_in_fd(t_list *lst)
 	fd = 0;
 	while (lst)
 	{
-		if ((((t_node *)(lst->content))->type == IN)
-			|| ((t_node *)(lst->content))->type == HEREDOC)
+		if (((t_node *)(lst->content))->type == IN)
 		{
 			infile_name = ((t_node *)(lst->next->content))->elem;
 			fd = open(infile_name, O_RDONLY);
+			((t_node *)(lst->content))->visited = 1; // 방문 여부 확인(리다이렉션)
+			((t_node *)(lst->next->content))->visited = 1; // 방문 여부 확인(파일이름/리미터)
+		}
+		else if (((t_node *)(lst->content))->type == HEREDOC)
+		{
+			fd = open("/tmp/here_doc", O_RDONLY);
 			((t_node *)(lst->content))->visited = 1; // 방문 여부 확인(리다이렉션)
 			((t_node *)(lst->next->content))->visited = 1; // 방문 여부 확인(파일이름/리미터)
 		}

@@ -53,7 +53,7 @@ typedef struct s_proc_info {
 t_list 		*tokenize(char *s);
 void		print_elem(void *token);
 
-char		*heredoc(t_list *lst);
+void		heredoc(t_list *lst);
 char		*get_next_line(int fd);
 
 void		print_proc_info(void *proc_info);
