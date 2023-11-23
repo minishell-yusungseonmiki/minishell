@@ -50,6 +50,9 @@ typedef struct s_proc_info {
 	char	**envp;
 }	t_proc_info;
 
+void sigint_handler(int signum);
+
+
 t_list 		*tokenize(char *s);
 void		print_elem(void *token);
 

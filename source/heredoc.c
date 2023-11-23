@@ -17,7 +17,10 @@ void	heredoc(t_list *lst)
 			tmp = get_next_line(0);
 			while (tmp)
 			{
-				if (!ft_strncmp(limit, tmp, ft_strlen(limit)))
+				signal(SIGINT, sigint_handler);
+				signal(SIGQUIT, SIG_IGN);
+				if (!ft_strncmp(limit, tmp, ft_strlen(limit)) 
+					&& (ft_strlen(limit) == ft_strlen(tmp) - 1))
 				{
 					free(tmp);
 					break ;
