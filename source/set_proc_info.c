@@ -49,7 +49,7 @@ t_list	*find_pipe(t_list *token_lst, char **envp)
 		}
 		iter = iter->next;
 	}
-	// ft_lstiter(proc_info_lst, print_proc_info);
+	// ft_lstiter(proc_infom_lst, print_proc_info);
 	return (proc_info_lst);
 }
 
@@ -85,7 +85,7 @@ t_proc_info	*set_proc_info(t_list *sub_lst, char **envp)
 	proc_info->in_fd = find_in_fd(sub_lst);
 	proc_info->out_fd = find_out_fd(sub_lst);
 	proc_info->cmd_argv = find_cmd_argv(sub_lst);
-	proc_info->cmd_path = find_cmd_path((proc_info->cmd_argv)[0], parse_envp(envp));
+	proc_info->cmd_path = find_cmd_path(proc_info->cmd_argv, parse_envp(envp));
 	proc_info->envp = envp;
 	return (proc_info);
 }
@@ -154,6 +154,8 @@ char	**find_cmd_argv(t_list *lst)
 			arg_cnt++;
 		iter = iter->next;
 	}
+	if (arg_cnt == 0) // 실행할 명령어가 없는 경우
+		return (NULL);
 	find_arg = (char **)malloc(sizeof(char *) * (arg_cnt + 1));
 	i = 0;
 	iter = lst;
@@ -171,12 +173,16 @@ char	**find_cmd_argv(t_list *lst)
 }
 
 // 명령어 경로 찾기
-char	*find_cmd_path(char *cmd, char **path_list)
+char	*find_cmd_path(char **cmd_argv, char **path_list)
 {
 	int		i;
 	char	*tmp;
 	char	*path;
+	char	*cmd;
 
+	if (cmd_argv == NULL)
+		return (NULL);
+	cmd = cmd_argv[0];
 	i = 0;
 	while (path_list && path_list[i])
 	{

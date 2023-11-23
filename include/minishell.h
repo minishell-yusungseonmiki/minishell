@@ -63,7 +63,7 @@ t_proc_info	*set_proc_info(t_list *sub_lst, char **envp);
 int			find_in_fd(t_list *lst);
 int			find_out_fd(t_list *lst);
 char		**find_cmd_argv(t_list *lst);
-char		*find_cmd_path(char *cmd, char **path_list);
+char		*find_cmd_path(char **cmd_argv, char **path_list);
 char		**parse_envp(char **envp);
 
 void    	erase_quotes(t_list *lst);
