@@ -49,7 +49,7 @@ t_list	*find_pipe(t_list *token_lst, char **envp)
 		}
 		iter = iter->next;
 	}
-	ft_lstiter(proc_info_lst, print_proc_info);
+	// ft_lstiter(proc_info_lst, print_proc_info);
 	return (proc_info_lst);
 }
 
@@ -177,8 +177,6 @@ char	*find_cmd_path(char *cmd, char **path_list)
 	char	*tmp;
 	char	*path;
 
-	if (access(cmd, X_OK) == 0)
-		return (cmd);
 	i = 0;
 	while (path_list && path_list[i])
 	{
@@ -190,8 +188,7 @@ char	*find_cmd_path(char *cmd, char **path_list)
 		free(path);
 		i++;
 	}
-	// error(CMD_ERR);
-	return (NULL);
+	return (cmd);
 }
 
 // 환경변수 path parsing하기

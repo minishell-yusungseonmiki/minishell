@@ -24,11 +24,6 @@ void    exeute_pipe(t_list *proc_lst)
 	before = NULL;
     while (proc_lst)
     {
-		if (((t_proc_info *)(proc_lst->content))->cmd_path == NULL)
-		{
-			printf("not exist\n");
-			return;
-		}
         if (pipe(fd) < 0)
 			perror("pipe error");
         pid = fork();
@@ -44,9 +39,13 @@ void    exeute_pipe(t_list *proc_lst)
 				dup2(fd[WRITE], STDOUT_FILENO); //파이프의 쓰기 종단을 stdout으로
 			else
 				dup2(((t_proc_info *)(proc_lst->content))->out_fd, STDOUT_FILENO); //현재 노드의 outfile을 stdout으로
-			execve(((t_proc_info *)(proc_lst->content))->cmd_path, 
+			if (execve(((t_proc_info *)(proc_lst->content))->cmd_path, 
 					((t_proc_info *)(proc_lst->content))->cmd_argv, 
-					((t_proc_info *)(proc_lst->content))->envp);
+					((t_proc_info *)(proc_lst->content))->envp) < 0)
+			{
+				ft_putstr_fd("command not found\n", 2);
+				exit(1);
+			}
 			// error("execute failed");
 		}
 		else
