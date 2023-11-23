@@ -68,4 +68,10 @@ char		**parse_envp(char **envp);
 
 void    	erase_quotes(t_list *lst);
 void    	exeute_pipe(t_list *proc_lst);
+
+t_list	*envp_to_lst(char **envp);
+char	**lst_to_envp(t_list *env_lst);
+void	print_env_lst(void *env);
+void	print_envp(char **envp);
+
 #endif
