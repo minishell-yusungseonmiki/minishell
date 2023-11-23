@@ -1,11 +1,11 @@
 #include "../include/minishell.h"
 
-char	*heredoc(t_list *lst)
+void	heredoc(t_list *lst)
 {
 	t_list 	*cur;
 	char	*limit;
 	char	*tmp;
-	char	*ret;
+	int		fd;
 
 	cur = lst;
 	while (cur)
@@ -13,18 +13,21 @@ char	*heredoc(t_list *lst)
 		if (((t_token *)(cur->content))->type == HEREDOC)
 		{
 			limit = ((t_token *)(cur->next->content))->elem;
-			ret = "";
+			fd = open("/tmp/here_doc", O_RDWR | O_CREAT | O_TRUNC, 0666);
 			tmp = get_next_line(0);
 			while (tmp)
 			{
 				if (!ft_strncmp(limit, tmp, ft_strlen(limit)))
+				{
+					free(tmp);
 					break ;
-				ret = ft_strjoin(ret, tmp);
+				}
+				write(fd, tmp, ft_strlen(tmp));
 				free(tmp);
 				tmp = get_next_line(0);
 			}
+			close(fd);
 		}
 		cur = cur->next;
 	}
-	return (ret);
 }
