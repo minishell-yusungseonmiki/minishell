@@ -6,7 +6,7 @@ void sigint_handler(int signum)
         return;
     printf("\n");
     rl_on_new_line();
-    // rl_replace_lmakeine("", 0);
+    rl_replace_line("", 0);
     rl_redisplay();
 }
 
@@ -69,10 +69,12 @@ int main(int argc, char **argv, char **envp)
 {
     char    *line;
     t_list  *lst;
+    t_list  *denv;
     t_list	*proc_info_lst;
 
     if (argc != 1 && ft_strncmp(*argv, "./minishell", ft_strlen(*argv)))
         return (1);
+    denv = envp_to_lst(envp); //환경변수 복제
     while (1)
     {
         signal(SIGINT, sigint_handler);
@@ -86,7 +88,7 @@ int main(int argc, char **argv, char **envp)
             if (!lst || syntax_check(lst) == 1)
                continue;
             // ft_lstiter(lst, print_elem); //토큰 확인
-            erase_quotes(lst); //따옴표 제거만 (환경변수 처리안함)
+            erase_quotes(lst, denv); //따옴표 제거 및 환경변수 치환
             // ft_lstiter(lst, print_elem);
         	heredoc(lst); //히어독 먼저 처리, 마지막 히어독 리턴
             proc_info_lst = find_pipe(lst, envp); //파이프별로 프로세스 정보 구조체에 담기

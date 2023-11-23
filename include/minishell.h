@@ -69,7 +69,7 @@ char		**find_cmd_argv(t_list *lst);
 char		*find_cmd_path(char **cmd_argv, char **path_list);
 char		**parse_envp(char **envp);
 
-void    	erase_quotes(t_list *lst);
+void		erase_quotes(t_list *lst, t_list *envp);
 void    	exeute_pipe(t_list *proc_lst);
 
 t_list	*envp_to_lst(char **envp);
