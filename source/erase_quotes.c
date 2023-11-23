@@ -29,15 +29,23 @@ char	*double_quote(char *elem, int *i, t_list *env)
 	int		end;
 	char	*tmp;
 	char	q;
+	int		flag;
 
 	q = elem[*i];
 	start = *i;
 	*i += 1;
+	flag = 0;
 	while (elem[*i] && elem[*i] != q)
+	{
+		if (elem[*i] == '$' && elem[*i + 1] && elem[*i + 1] != ' ' && elem[*i + 1] != q && elem[*i + 1] != '\'')
+			flag = 1;
 		*i += 1;
+	}
 	end = *i;
 	tmp = ft_substr(elem, start + 1, end - start - 1);
 	*i += 1;
+	if (flag)
+		return (change_value(tmp, env));
 	return (tmp);
 }
 
@@ -46,12 +54,20 @@ char	*not_quote(char *elem, int *i, t_list *env)
 	int		start;
 	int		end;
 	char	*tmp;
+	int		flag;
 
 	start = *i;
+	flag = 0;
 	while (elem[*i] && elem[*i] != '\'' && elem[*i] != '\"')
+	{
+		if (elem[*i] == '$' && elem[*i + 1] && elem[*i + 1] != ' ')
+			flag = 1;
 		*i += 1;
+	}
 	end = *i;
 	tmp = ft_substr(elem, start, end - start);
+	if (flag)
+		return (change_value(tmp, env));
 	return (tmp);
 }
 
@@ -77,11 +93,13 @@ void	erase_quotes(t_list *lst, t_list *env)
 					tmp = double_quote(elem, &i, env);
 				else //2.따옴표 아닌경우
 					tmp = not_quote(elem, &i, env);
+				// printf("tmp: %s\n", tmp);
 				new_elem = ft_strjoin(new_elem, tmp);
 				free(tmp);
 			}
 			free(((t_token *)(lst->content))->elem);
 			((t_token *)(lst->content))->elem = new_elem;
+			// printf("%s\n",((t_token *)(lst->content))->elem = new_elem);
 		}
 		lst = lst->next;
 	}

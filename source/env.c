@@ -1,5 +1,17 @@
 #include "../include/minishell.h"
 
+t_env	*make_keyvalue(char *env)
+{
+	t_env	*node;
+	int		equal;
+
+	node = (t_env *)malloc(sizeof(t_env));
+	equal = ft_strchr(env, '=') - env;
+	node->key = ft_substr(env, 0, equal);
+	node->value = ft_substr(env, equal + 1, ft_strlen(env) - equal - 1);
+	return (node);
+}
+
 t_list	*envp_to_lst(char **envp)
 {
 	t_list	*env_lst;
@@ -11,7 +23,7 @@ t_list	*envp_to_lst(char **envp)
 	i = 0;
 	while (envp[i])
 	{
-		ft_lstadd_back(&env_lst, ft_lstnew(envp[i]));
+		ft_lstadd_back(&env_lst, ft_lstnew(make_keyvalue(envp[i])));
 		i++;
 	}
 	return (env_lst);

@@ -6,7 +6,7 @@ void sigint_handler(int signum)
         return;
     printf("\n");
     rl_on_new_line();
-    rl_replace_line("", 0);
+    // rl_replace_line("", 0);
     rl_redisplay();
 }
 
@@ -65,6 +65,13 @@ int    syntax_check(t_list *lst)
     return (0);
 }
 
+void	print_env(void *token)
+{
+	printf("-----------\n");
+	printf("key: %s\n, value: %s\n", ((t_env *)token)->key, ((t_env *)token)->value);
+	printf("-----------\n");
+}
+
 int main(int argc, char **argv, char **envp)
 {
     char    *line;
@@ -75,6 +82,7 @@ int main(int argc, char **argv, char **envp)
     if (argc != 1 && ft_strncmp(*argv, "./minishell", ft_strlen(*argv)))
         return (1);
     denv = envp_to_lst(envp); //환경변수 복제
+    // ft_lstiter(denv, print_env); //환경변수 복제 잘 되었는지 확인
     while (1)
     {
         signal(SIGINT, sigint_handler);
