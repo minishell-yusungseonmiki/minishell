@@ -5,22 +5,31 @@ void	find_pipe(t_list *token_lst, char **envp)
 	t_list	*iter;
 	t_list	*sub_lst;
 	int		child_cnt;
+	t_proc_info	*proc;
+	t_proc_info	*before;
 
 	child_cnt = 0;
 	iter = token_lst;
+	before = NULL;
 	while (token_lst != NULL)
 	{
 		if (iter == NULL)
 		{
 			sub_lst = separate_list_by_pipe(token_lst, iter);
-			child_cnt += execute_cmd(sub_lst, set_proc_cmd_info(sub_lst, envp), 0);
+			proc = set_proc_cmd_info(sub_lst, envp);
+			if (proc->cmd_argv != NULL)
+				child_cnt++;
+			before = execute_cmd(sub_lst, proc, before, 0);
 			ft_lstclear(&sub_lst, free);
 			break ;
 		}
 		if (((t_token *)(iter->content))->type == PIPE)
 		{
 			sub_lst = separate_list_by_pipe(token_lst, iter);
-			child_cnt += execute_cmd(sub_lst, set_proc_cmd_info(sub_lst, envp), 1);
+			proc = set_proc_cmd_info(sub_lst, envp);
+			if (proc->cmd_argv != NULL)
+				child_cnt++;
+			before = execute_cmd(sub_lst, proc, before, 1);
 			ft_lstclear(&sub_lst, free);
 			token_lst = iter->next;
 		}
@@ -46,18 +55,15 @@ t_proc_info	*set_proc_cmd_info(t_list *sub_lst, char **envp)
 	return (proc_info);
 }
 
-int    execute_cmd(t_list *sub_lst, t_proc_info *proc_info, int last)
+t_proc_info	*execute_cmd(t_list *sub_lst, t_proc_info *proc_info, t_proc_info *before, int last)
 {
     pid_t   pid;
     int     fd[2];
-	t_proc_info	*before;
 	
-	before = NULL;
 	if (proc_info->cmd_path == NULL)
-		return (0);
+		return (proc_info);
 	if (pipe(fd) < 0)
 		perror("pipe error");
-	
 	pid = fork();
 	if (pid < 0)
 		perror("fork error");
@@ -81,11 +87,8 @@ int    execute_cmd(t_list *sub_lst, t_proc_info *proc_info, int last)
 	}
 	else
 	{
-		before = proc_info;
-		// printf("--------before----------\n");
-		// print_proc_info(before);
-		before->prev = fd[READ];
+		proc_info->prev = fd[READ];
 		close(fd[WRITE]);
 	}
-	return (1);
+	return (proc_info);
 }

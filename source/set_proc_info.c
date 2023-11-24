@@ -119,6 +119,11 @@ int	find_in_fd(t_list *lst)
 		{
 			infile_name = ((t_node *)(lst->next->content))->elem;
 			fd = open(infile_name, O_RDONLY);
+			if (fd < 0)
+			{
+				perror(NULL);
+				exit(1);
+			}
 			((t_node *)(lst->content))->visited = 1; // 방문 여부 확인(리다이렉션)
 			((t_node *)(lst->next->content))->visited = 1; // 방문 여부 확인(파일이름/리미터)
 		}

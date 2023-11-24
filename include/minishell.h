@@ -75,7 +75,7 @@ char		**parse_envp(char **envp);
 
 void	find_pipe(t_list *token_lst, char **envp);
 t_proc_info	*set_proc_cmd_info(t_list *sub_lst, char **envp);
-int    execute_cmd(t_list *sub_lst, t_proc_info *proc_info, int last);
+t_proc_info	*execute_cmd(t_list *sub_lst, t_proc_info *proc_info, t_proc_info *before, int last);
 void	wait_process(int child_cnt);
 
 t_list	*envp_to_lst(char **envp);
