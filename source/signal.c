@@ -109,7 +109,7 @@ int main(int argc, char **argv, char **envp)
         }
         else
         {
-            printf("%s\n", line);
+            printf("exit\n");
             return (0);
         }
     }
