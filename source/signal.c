@@ -29,7 +29,7 @@ int    quote_check(char *s)
 		{
 			if (q == 0)
 				q = s[i];
-			else if (s[i] == q) //짝을 만나면 해제
+			else if (s[i] == q && s[i - 1] != '\\') //짝을 만나면 해제
 				q = 0;
 		}
         i++;
