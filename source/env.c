@@ -29,6 +29,19 @@ t_list	*envp_to_lst(char **envp)
 	return (env_lst);
 }
 
+char	*keyvalue_to_str(t_env *node)
+{
+	char	*str;
+	char	*tmp;
+
+	str = ft_strdup(node->key);
+	tmp = ft_strjoin(str, "=");
+	free(str);
+	str = ft_strjoin(tmp, node->value);
+	free(tmp);
+	return (str);
+}
+
 char	**lst_to_envp(t_list *env_lst)
 {
 	char	**envp;
@@ -49,16 +62,12 @@ char	**lst_to_envp(t_list *env_lst)
 	i = 0;
 	while (env_lst)
 	{
-		envp[i] = ft_strdup(((char *)(env_lst->content)));
+		envp[i] = keyvalue_to_str(((t_env *)(env_lst->content)));
 		env_lst = env_lst->next;
 		i++;
 	}
 	envp[i] = NULL;
 	return (envp);
-}
-void	print_env_lst(void *env)
-{
-	printf("%s\n", (char *)env);
 }
 
 void	print_envp(char **envp)

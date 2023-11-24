@@ -37,7 +37,8 @@ char	*double_quote(char *elem, int *i, t_list *env)
 	flag = 0;
 	while (elem[*i] && elem[*i] != q)
 	{
-		if (elem[*i] == '$' && elem[*i + 1] && elem[*i + 1] != ' ' && elem[*i + 1] != q && elem[*i + 1] != '\'')
+		if (elem[*i] == '$' && elem[*i + 1] && elem[*i + 1] != ' '
+			&& elem[*i + 1] != q && elem[*i + 1] != '\'')
 			flag = 1;
 		*i += 1;
 	}
