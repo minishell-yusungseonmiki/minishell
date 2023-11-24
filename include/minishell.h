@@ -35,6 +35,11 @@ typedef struct s_token {
 	e_type	type;
 }	t_token;
 
+typedef struct s_env {
+	char	*key;
+	char	*value;
+}	t_env;
+
 typedef struct s_node {
 	char	*elem;
 	e_type	type;
@@ -77,11 +82,15 @@ char		**find_cmd_argv(t_list *lst);
 char		*find_cmd_path(char **cmd_argv, char **path_list);
 char		**parse_envp(char **envp);
 
-void    	erase_quotes(t_list *lst);
+void    	erase_quotes(t_list *lst, t_list *envp);
+void    	exeute_pipe(t_list *proc_lst);
 
+t_env	*make_keyvalue(char *env);
 t_list	*envp_to_lst(char **envp);
 char	**lst_to_envp(t_list *env_lst);
 void	print_env_lst(void *env);
 void	print_envp(char **envp);
+
+char	*change_value(char *str, t_list *env);
 
 #endif
