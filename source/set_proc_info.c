@@ -1,11 +1,11 @@
 #include "../include/minishell.h"
 
 //구조체 내부의 값 출력(테스트용 함수)
-void	print_proc_info(void *proc_info)
+void	print_proc_info(t_proc_info *pi)
 {
-	t_proc_info *pi;
+	// t_proc_info *pi;
 
-	pi = (t_proc_info *)proc_info;
+	// pi = (t_proc_info *)proc_info;
 	printf("in_fd : %d, out_fd : %d\n", pi->in_fd, pi->out_fd);
 
 	printf("cmd_argv\n");
@@ -20,37 +20,22 @@ void	print_proc_info(void *proc_info)
 	printf("\n");
 }
 
-// 정보 구조체 담는 전체적인 흐름
-// token 순회하면서 파이프 만나거나 token 끝나면 sub_lst 만들기
-// sub_lst를 순회하면서 proc_info_lst에 정보 담기
-t_list	*find_pipe(t_list *token_lst, char **envp)
+// 구조체 할당항 프로세스 정보 담기
+// 파일은 열지 않고 0,1로 초기화 시켜둔다
+t_proc_info	*set_proc_info(t_list *sub_lst, char **envp)
 {
-	t_list	*iter;
-	t_list	*sub_lst;
-	t_list	*proc_info_lst;
+	t_proc_info	*proc_info;
 
-	proc_info_lst = NULL;
-	iter = token_lst;
-	while (token_lst != NULL)
-	{
-		if (iter == NULL)
-		{
-			sub_lst = separate_list_by_pipe(token_lst, iter);
-			ft_lstadd_back(&proc_info_lst, ft_lstnew(set_proc_info(sub_lst, envp)));
-			ft_lstclear(&sub_lst, free);
-			break ;
-		}
-		if (((t_token *)(iter->content))->type == PIPE)
-		{
-			sub_lst = separate_list_by_pipe(token_lst, iter);
-			ft_lstadd_back(&proc_info_lst, ft_lstnew(set_proc_info(sub_lst, envp)));
-			ft_lstclear(&sub_lst, free);
-			token_lst = iter->next;
-		}
-		iter = iter->next;
-	}
-	// ft_lstiter(proc_infom_lst, print_proc_info);
-	return (proc_info_lst);
+	proc_info = (t_proc_info *)malloc(sizeof(t_proc_info));
+	if (proc_info == NULL)
+		return (NULL);
+	check_redirection(sub_lst);
+	proc_info->cmd_argv = find_cmd_argv(sub_lst);
+	proc_info->cmd_path = find_cmd_path(proc_info->cmd_argv, parse_envp(envp));
+	proc_info->envp = envp;
+	proc_info->in_fd = 0;
+	proc_info->out_fd = 1;
+	return (proc_info);
 }
 
 // 전달받은 인덱스(start, end)로 새로운 리스트 생성
@@ -74,20 +59,22 @@ t_list	*separate_list_by_pipe(t_list *start, t_list *end)
 	return sub_lst;
 }
 
-// 프로세스 하나의 구조체를 생성하고 정보를 담는다
-t_proc_info	*set_proc_info(t_list *sub_lst, char **envp)
+// cmd_argv 담기 전에 리다이렉션은 visited 1로 설정해두기
+void	check_redirection(t_list *lst)
 {
-	t_proc_info	*proc_info;
-
-	proc_info = (t_proc_info *)malloc(sizeof(t_proc_info));
-	if (proc_info == NULL)
-		return (NULL);
-	proc_info->in_fd = find_in_fd(sub_lst);
-	proc_info->out_fd = find_out_fd(sub_lst);
-	proc_info->cmd_argv = find_cmd_argv(sub_lst);
-	proc_info->cmd_path = find_cmd_path(proc_info->cmd_argv, parse_envp(envp));
-	proc_info->envp = envp;
-	return (proc_info);
+	while (lst)
+	{
+		if (((t_node *)(lst->content))->type == IN
+			|| ((t_node *)(lst->content))->type == OUT
+			|| ((t_node *)(lst->content))->type == HEREDOC
+			|| ((t_node *)(lst->content))->type == APPEND
+		)
+		{
+			((t_node *)(lst->content))->visited = 1; // 방문 여부 확인(리다이렉션)
+			((t_node *)(lst->next->content))->visited = 1; // 방문 여부 확인(파일이름/리미터)
+		}
+		lst = lst->next;
+	}
 }
 
 int	find_in_fd(t_list *lst)
@@ -102,14 +89,20 @@ int	find_in_fd(t_list *lst)
 		{
 			infile_name = ((t_node *)(lst->next->content))->elem;
 			fd = open(infile_name, O_RDONLY);
-			((t_node *)(lst->content))->visited = 1; // 방문 여부 확인(리다이렉션)
-			((t_node *)(lst->next->content))->visited = 1; // 방문 여부 확인(파일이름/리미터)
+			if (fd < 0)
+			{
+				perror(NULL);
+				exit(1);
+			}
 		}
 		else if (((t_node *)(lst->content))->type == HEREDOC)
 		{
 			fd = open("/tmp/here_doc", O_RDONLY);
-			((t_node *)(lst->content))->visited = 1; // 방문 여부 확인(리다이렉션)
-			((t_node *)(lst->next->content))->visited = 1; // 방문 여부 확인(파일이름/리미터)
+			if (fd < 0)
+			{
+				perror(NULL);
+				exit(1);
+			}
 		}
 		lst = lst->next;
 	}
@@ -128,22 +121,28 @@ int	find_out_fd(t_list *lst)
 		{
 			outfile_name = ((t_node *)(lst->next->content))->elem;
 			fd = open(outfile_name, O_CREAT | O_RDWR | O_TRUNC, 0666);
-			((t_node *)(lst->content))->visited = 1; // 방문 여부 확인(리다이렉션)
-			((t_node *)(lst->next->content))->visited = 1; // 방문 여부 확인(파일이름/리미터)
+			if (fd < 0)
+			{
+				perror(NULL);
+				exit(1);
+			}
 		}
 		if (((t_node *)(lst->content))->type == APPEND)
 		{
 			outfile_name = ((t_node *)(lst->next->content))->elem;
 			fd = open(outfile_name, O_CREAT | O_RDWR | O_APPEND, 0666);
-			((t_node *)(lst->content))->visited = 1; // 방문 여부 확인(리다이렉션)
-			((t_node *)(lst->next->content))->visited = 1; // 방문 여부 확인(파일이름/리미터)
+			if (fd < 0)
+			{
+				perror(NULL);
+				exit(1);
+			}
 		}
 		lst = lst->next;
 	}
 	return (fd);
 }
 
-// 명령어 인자 리스트 2차원 배열로 할당하여 반한화기
+// 명령어 인자 리스트 2차원 배열로 할당하여 반환하기
 char	**find_cmd_argv(t_list *lst)
 {
 	char	**find_arg;
