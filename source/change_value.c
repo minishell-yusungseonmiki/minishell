@@ -17,16 +17,15 @@ char	*find_env(char *str, t_list *env, int *i)
 	lst = env;
 	while (lst)
 	{
-		if (!ft_strncmp(((t_env *)(env->content))->key, key, ft_strlen(key))
-		&& ft_strlen(((t_env *)(env->content))->key) == ft_strlen(key))
+		if (!ft_strncmp(((t_env *)(lst->content))->key, key, ft_strlen(key))
+		&& ft_strlen(((t_env *)(lst->content))->key) == ft_strlen(key))
 		{
-			tmp = ((t_env *)(env->content))->value;
+			tmp = ((t_env *)(lst->content))->value;
 			// printf("key: %s, value: %s\n", key, tmp);
 			free(key);
 			return (tmp);
 		}
-		lst = lst->
-		next;
+		lst = lst->next;
 	}
 	return (NULL);
 }
