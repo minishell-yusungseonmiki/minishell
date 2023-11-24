@@ -57,12 +57,16 @@ char	*not_quote(char *elem, int *i, t_list *env)
 	char	*tmp;
 	int		flag;
 
+	if (elem[*i] == '\\')
+		*i += 1;
 	start = *i;
 	flag = 0;
 	while (elem[*i] && elem[*i] != '\'' && elem[*i] != '\"')
 	{
 		if (elem[*i] == '$' && elem[*i + 1] && elem[*i + 1] != ' ')
 			flag = 1;
+		if (elem[*i] == '\\')
+			break ;
 		*i += 1;
 	}
 	end = *i;
