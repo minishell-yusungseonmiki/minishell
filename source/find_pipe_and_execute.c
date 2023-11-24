@@ -1,6 +1,7 @@
 #include "../include/minishell.h"
 
-void	find_pipe(t_list *token_lst, char **envp)
+// 토큰을 순회하면서 파이프를 만나면 리스트 생성 및 명령어 수행 함수를 호출한다
+void	find_pipe_and_execute(t_list *token_lst, char **envp)
 {
 	t_list	*iter;
 	t_list	*sub_lst;
@@ -16,20 +17,20 @@ void	find_pipe(t_list *token_lst, char **envp)
 		if (iter == NULL)
 		{
 			sub_lst = separate_list_by_pipe(token_lst, iter);
-			proc = set_proc_cmd_info(sub_lst, envp);
+			proc = set_proc_info(sub_lst, envp);
 			if (proc->cmd_argv != NULL)
 				child_cnt++;
-			before = execute_cmd(sub_lst, proc, before, 0);
+			before = execute_pipe(sub_lst, proc, before, 0);
 			ft_lstclear(&sub_lst, free);
 			break ;
 		}
 		if (((t_token *)(iter->content))->type == PIPE)
 		{
 			sub_lst = separate_list_by_pipe(token_lst, iter);
-			proc = set_proc_cmd_info(sub_lst, envp);
+			proc = set_proc_info(sub_lst, envp);
 			if (proc->cmd_argv != NULL)
 				child_cnt++;
-			before = execute_cmd(sub_lst, proc, before, 1);
+			before = execute_pipe(sub_lst, proc, before, 1);
 			ft_lstclear(&sub_lst, free);
 			token_lst = iter->next;
 		}
@@ -39,23 +40,10 @@ void	find_pipe(t_list *token_lst, char **envp)
 		wait_process(child_cnt);
 }
 
-t_proc_info	*set_proc_cmd_info(t_list *sub_lst, char **envp)
-{
-	t_proc_info	*proc_info;
-
-	proc_info = (t_proc_info *)malloc(sizeof(t_proc_info));
-	if (proc_info == NULL)
-		return (NULL);
-	check_redirection(sub_lst);
-	proc_info->cmd_argv = find_cmd_argv(sub_lst);
-	proc_info->cmd_path = find_cmd_path(proc_info->cmd_argv, parse_envp(envp));
-	proc_info->envp = envp;
-	proc_info->in_fd = 0;
-	proc_info->out_fd = 1;
-	return (proc_info);
-}
-
-t_proc_info	*execute_cmd(t_list *sub_lst, t_proc_info *proc_info, t_proc_info *before, int last)
+// 자식 프로세스 및 파이프를 생성하고 명령어를 실행
+// fork 이후에 자식 프로세스에서 리다이렉션 파일을 열어준다
+// 반환값 : 현재 실행한 파이프의 구조체 (before로 이용하기 위해서)
+t_proc_info	*execute_pipe(t_list *sub_lst, t_proc_info *proc_info, t_proc_info *before, int last)
 {
     pid_t   pid;
     int     fd[2];
@@ -91,4 +79,17 @@ t_proc_info	*execute_cmd(t_list *sub_lst, t_proc_info *proc_info, t_proc_info *b
 		close(fd[WRITE]);
 	}
 	return (proc_info);
+}
+
+void	wait_process(int child_cnt)
+{
+	int	i;
+
+	i = 0;
+	while (i < child_cnt)
+	{
+		if (wait(NULL) < 0)
+			perror("wait error");
+		i++;
+	}
 }
