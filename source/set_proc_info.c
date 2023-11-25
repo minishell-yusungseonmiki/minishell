@@ -22,7 +22,7 @@ void	print_proc_info(t_proc_info *pi)
 
 // 구조체 할당항 프로세스 정보 담기
 // 파일은 열지 않고 0,1로 초기화 시켜둔다
-t_proc_info	*set_proc_info(t_list *sub_lst, char **envp)
+t_proc_info	*set_proc_info(t_list *sub_lst, t_list *denv)
 {
 	t_proc_info	*proc_info;
 
@@ -31,8 +31,8 @@ t_proc_info	*set_proc_info(t_list *sub_lst, char **envp)
 		return (NULL);
 	check_redirection(sub_lst);
 	proc_info->cmd_argv = find_cmd_argv(sub_lst);
-	proc_info->cmd_path = find_cmd_path(proc_info->cmd_argv, parse_envp(envp));
-	proc_info->envp = envp;
+	proc_info->cmd_path = find_cmd_path(proc_info->cmd_argv, parse_envp(denv));
+	proc_info->envp = lst_to_envp(denv);
 	proc_info->in_fd = 0;
 	proc_info->out_fd = 1;
 	return (proc_info);
@@ -202,24 +202,22 @@ char	*find_cmd_path(char **cmd_argv, char **path_list)
 }
 
 // 환경변수 path parsing하기
-char	**parse_envp(char **envp)
+char	**parse_envp(t_list *denv)
 {
 	int		i;
-	char	*tmp;
 	char	**path_list;
 
 	path_list = NULL;
 	i = 0;
-	while (envp[i])
+	while (denv)
 	{
-		if (ft_strncmp(envp[i], "PATH", 4) == 0)
+		if (ft_strncmp(((t_env *)(denv->content))->key, "PATH", 4) == 0
+			&& ft_strlen(((t_env *)(denv->content))->key) == 4)
 		{
-			tmp = ft_substr(envp[i], 5, ft_strlen(envp[i]));
-			path_list = ft_split(tmp, ':');
-			free(tmp);
+			path_list = ft_split(((t_env *)(denv->content))->value, ':');
 			break ;
 		}
-		i++;
+		denv = denv->next;
 	}
 	return (path_list);
 }

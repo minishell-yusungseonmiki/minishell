@@ -67,20 +67,20 @@ char		*get_next_line(int fd);
 void	print_proc_info(t_proc_info *pi);
 
 // find_pipe_and_execute.c
-void	find_pipe_and_execute(t_list *token_lst, char **envp);
+void	find_pipe_and_execute(t_list *token_lst, t_list *denv);
 t_proc_info	*execute_pipe(t_list *sub_lst, t_proc_info *proc_info, t_proc_info *before, int last);
 void	wait_process(int child_cnt);
 
 // set_proc_info.c
 void		print_proc_info(t_proc_info *pi);
-t_proc_info	*set_proc_info(t_list *sub_lst, char **envp);
+t_proc_info	*set_proc_info(t_list *sub_lst, t_list *denv);
 t_list	*separate_list_by_pipe(t_list *start, t_list *end);
 void	check_redirection(t_list *lst);
 int			find_in_fd(t_list *lst);
 int			find_out_fd(t_list *lst);
 char		**find_cmd_argv(t_list *lst);
-char		*find_cmd_path(char **cmd_argv, char **path_list);
-char		**parse_envp(char **envp);
+char	*find_cmd_path(char **cmd_argv, char **path_list);
+char	**parse_envp(t_list *denv);
 
 void    	erase_quotes(t_list *lst, t_list *envp);
 void    	exeute_pipe(t_list *proc_lst);

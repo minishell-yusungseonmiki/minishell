@@ -1,7 +1,7 @@
 #include "../include/minishell.h"
 
 // 토큰을 순회하면서 파이프를 만나면 리스트 생성 및 명령어 수행 함수를 호출한다
-void	find_pipe_and_execute(t_list *token_lst, char **envp)
+void	find_pipe_and_execute(t_list *token_lst, t_list *denv)
 {
 	t_list	*iter;
 	t_list	*sub_lst;
@@ -17,7 +17,7 @@ void	find_pipe_and_execute(t_list *token_lst, char **envp)
 		if (iter == NULL)
 		{
 			sub_lst = separate_list_by_pipe(token_lst, iter);
-			proc = set_proc_info(sub_lst, envp);
+			proc = set_proc_info(sub_lst, denv);
 			if (proc->cmd_argv != NULL)
 				child_cnt++;
 			before = execute_pipe(sub_lst, proc, before, 0);
@@ -27,7 +27,7 @@ void	find_pipe_and_execute(t_list *token_lst, char **envp)
 		if (((t_token *)(iter->content))->type == PIPE)
 		{
 			sub_lst = separate_list_by_pipe(token_lst, iter);
-			proc = set_proc_info(sub_lst, envp);
+			proc = set_proc_info(sub_lst, denv);
 			if (proc->cmd_argv != NULL)
 				child_cnt++;
 			before = execute_pipe(sub_lst, proc, before, 1);

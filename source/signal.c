@@ -6,7 +6,7 @@ void sigint_handler(int signum)
         return;
     printf("\n");
     rl_on_new_line();
-    // rl_replace_line("", 0);
+    rl_replace_line("", 0);
     rl_redisplay();
 }
 
@@ -27,10 +27,18 @@ int    quote_check(char *s)
 	{
 		if (s[i] == '\'' || s[i] == '\"')
 		{
-			if (q == 0)
+			if (q == 0 && (i != 0 && s[i - 1] != '\\'))
 				q = s[i];
-			else if (s[i] == q && s[i - 1] != '\\') //짝을 만나면 해제
-				q = 0;
+            else if (q == '\"')
+            {
+                if (s[i] == q && s[i - 1] != '\\')
+                    q = 0;
+            }
+            else if (q == '\'')
+            {
+                if (s[i] == q)
+                    q = 0;
+            }
 		}
         i++;
     }
@@ -100,7 +108,7 @@ int main(int argc, char **argv, char **envp)
             erase_quotes(lst, denv); //따옴표 제거만 (환경변수 처리안함)
             // ft_lstiter(lst, print_elem);
         	heredoc(lst); //히어독 먼저 처리, 마지막 히어독 리턴
-            find_pipe_and_execute(lst, envp); //파이프 단위로 새로운 리스트 생성하여 실행
+            find_pipe_and_execute(lst, denv); //파이프 단위로 새로운 리스트 생성하여 실행
             add_history(line);
             free(line);
             // line = NULL;
