@@ -55,13 +55,22 @@ typedef struct s_proc_info {
 	char	**envp;
 }	t_proc_info;
 
-void sigint_handler(int signum);
+typedef enum {
+	SYNTAX,
+	MAX_HEREDOC
+}	e_error;
 
+
+
+void	sigint_handler(int signum);
+
+int		quote_check(char *s);
+int		syntax_check(t_list *lst);
 
 t_list 		*tokenize(char *s);
 void		print_elem(void *token);
 
-void		heredoc(t_list *lst);
+t_list	*heredoc(t_list *lst);
 char		*get_next_line(int fd);
 
 void	print_proc_info(t_proc_info *pi);
@@ -93,4 +102,7 @@ void	print_envp(char **envp);
 
 char	*change_value(char *str, t_list *env);
 
+int		error(e_error err);
+
+void	print_hfd(void	*h);
 #endif

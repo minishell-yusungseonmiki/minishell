@@ -14,24 +14,19 @@ void	find_pipe_and_execute(t_list *token_lst, t_list *denv)
 	before = NULL;
 	while (token_lst != NULL)
 	{
-		if (iter == NULL)
+		if (iter == NULL || ((t_token *)(iter->content))->type == PIPE)
 		{
 			sub_lst = separate_list_by_pipe(token_lst, iter);
 			proc = set_proc_info(sub_lst, denv);
 			if (proc->cmd_argv != NULL)
 				child_cnt++;
-			before = execute_pipe(sub_lst, proc, before, 0);
+			if (iter == NULL)
+				before = execute_pipe(sub_lst, proc, before, 0);
+			else
+				before = execute_pipe(sub_lst, proc, before, 1);
 			ft_lstclear(&sub_lst, free);
-			break ;
-		}
-		if (((t_token *)(iter->content))->type == PIPE)
-		{
-			sub_lst = separate_list_by_pipe(token_lst, iter);
-			proc = set_proc_info(sub_lst, denv);
-			if (proc->cmd_argv != NULL)
-				child_cnt++;
-			before = execute_pipe(sub_lst, proc, before, 1);
-			ft_lstclear(&sub_lst, free);
+			if (iter == NULL)
+				break ;
 			token_lst = iter->next;
 		}
 		iter = iter->next;
@@ -49,7 +44,13 @@ t_proc_info	*execute_pipe(t_list *sub_lst, t_proc_info *proc_info, t_proc_info *
     int     fd[2];
 	
 	if (proc_info->cmd_path == NULL)
+	{
+		proc_info->in_fd = find_in_fd(sub_lst);
+		proc_info->out_fd = find_out_fd(sub_lst);
 		return (proc_info);
+	}
+	// if (onlyone_builtin(proc_info))
+	// 	execute_builtin(proc_info->cmd_path, proc_info->cmd_argv, proc_info->envp);
 	if (pipe(fd) < 0)
 		perror("pipe error");
 	pid = fork();
@@ -67,11 +68,16 @@ t_proc_info	*execute_pipe(t_list *sub_lst, t_proc_info *proc_info, t_proc_info *
 			dup2(fd[WRITE], STDOUT_FILENO); //파이프의 쓰기 종단을 stdout으로
 		else
 			dup2(proc_info->out_fd, STDOUT_FILENO); //현재 노드의 outfile을 stdout으로
-		if (execve(proc_info->cmd_path, proc_info->cmd_argv, proc_info->envp) < 0)
-		{
-			ft_putstr_fd("command not found\n", 2);
-			exit(1);
-		}
+		// if (is_builtin(proc_info))
+		// 	execute_builtin(proc_info->cmd_path, proc_info->cmd_argv, proc_info->envp);
+		// else
+		// {
+			if (execve(proc_info->cmd_path, proc_info->cmd_argv, proc_info->envp) < 0)
+			{
+				perror(NULL);
+				exit(1);
+			}
+		// }
 	}
 	else
 	{

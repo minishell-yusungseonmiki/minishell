@@ -78,3 +78,10 @@ void	print_envp(char **envp)
 		printf("%s\n", envp[i++]);
 	}
 }
+
+void	print_env(void *token)
+{
+	printf("-----------\n");
+	printf("key: %s\n, value: %s\n", ((t_env *)token)->key, ((t_env *)token)->value);
+	printf("-----------\n");
+}
