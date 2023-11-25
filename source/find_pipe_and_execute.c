@@ -1,7 +1,7 @@
 #include "../include/minishell.h"
 
 // 토큰을 순회하면서 파이프를 만나면 리스트 생성 및 명령어 수행 함수를 호출한다
-void	find_pipe_and_execute(t_list *token_lst, t_list *denv)
+void	find_pipe_and_execute(t_list *token_lst, t_list *denv, t_list *hfile_lst)
 {
 	t_list	*iter;
 	t_list	*sub_lst;
@@ -17,7 +17,7 @@ void	find_pipe_and_execute(t_list *token_lst, t_list *denv)
 		if (iter == NULL || ((t_token *)(iter->content))->type == PIPE)
 		{
 			sub_lst = separate_list_by_pipe(token_lst, iter);
-			proc = set_proc_info(sub_lst, denv);
+			proc = set_proc_info(sub_lst, denv, hfile_lst);
 			if (proc->cmd_argv != NULL)
 				child_cnt++;
 			if (iter == NULL)
@@ -28,6 +28,7 @@ void	find_pipe_and_execute(t_list *token_lst, t_list *denv)
 			if (iter == NULL)
 				break ;
 			token_lst = iter->next;
+			hfile_lst = hfile_lst->next;
 		}
 		iter = iter->next;
 	}
@@ -45,7 +46,7 @@ t_proc_info	*execute_pipe(t_list *sub_lst, t_proc_info *proc_info, t_proc_info *
 	
 	if (proc_info->cmd_path == NULL)
 	{
-		proc_info->in_fd = find_in_fd(sub_lst);
+		proc_info->in_fd = find_in_fd(sub_lst, proc_info->h_filename);
 		proc_info->out_fd = find_out_fd(sub_lst);
 		return (proc_info);
 	}
@@ -58,7 +59,7 @@ t_proc_info	*execute_pipe(t_list *sub_lst, t_proc_info *proc_info, t_proc_info *
 		perror("fork error");
 	if (pid == 0)
 	{
-		proc_info->in_fd = find_in_fd(sub_lst);
+		proc_info->in_fd = find_in_fd(sub_lst, proc_info->h_filename);
 		proc_info->out_fd = find_out_fd(sub_lst);
 		if (before && proc_info->in_fd == STDIN_FILENO) //이전 노드가 있고, 현재 노드의 infile이 stdin일 경우
 			dup2(before->prev, STDIN_FILENO); //이전 노드 파이프의 읽기 종단을 stdin으로
