@@ -28,9 +28,8 @@ t_list	*heredoc(t_list *lst)
 		{
 			limit = ((t_token *)(cur->next->content))->elem;
 			h_filename = ft_strjoin(filename, ft_itoa(cnt)); //ft_itoa도 프리해야함
-			printf("h_F : %s\n", h_filename);
+			// printf("h_F : %s\n", h_filename);
 			fd = open(h_filename, O_RDWR | O_CREAT | O_TRUNC, 0666);
-			printf("%d\n", fd);
 			tmp = get_next_line(0);
 			while (tmp)
 			{
