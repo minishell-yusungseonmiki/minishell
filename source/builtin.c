@@ -19,6 +19,55 @@ int is_builtin(char *cmd)
     return (0);
 }
 
+void    execute_echo(char *cmd, char **cmd_argv, char **envp)
+{
+    (void) cmd;
+    (void) cmd_argv;
+    (void) envp;
+}
+
+void    execute_cd(char *cmd, char **cmd_argv, char **envp)
+{
+    (void) cmd;
+    (void) cmd_argv;
+    (void) envp;
+}
+
+void    execute_pwd(char *cmd, char **cmd_argv, char **envp)
+{
+    (void) cmd;
+    (void) cmd_argv;
+    (void) envp;
+}
+
+void    execute_export(char *cmd, char **cmd_argv, t_list *denv)
+{
+    (void) cmd;
+    (void) cmd_argv;
+    (void) denv;
+}
+
+void    execute_unset(char *cmd, char **cmd_argv, t_list *denv)
+{
+    (void) cmd;
+    (void) cmd_argv;
+    (void) denv;
+}
+
+void    execute_env(char *cmd, char **cmd_argv, t_list *denv)
+{
+    (void) cmd;
+    (void) cmd_argv;
+    (void) denv;
+}
+
+void    execute_exit(char *cmd, char **cmd_argv, char **envp)
+{
+    (void) cmd;
+    (void) cmd_argv;
+    (void) envp;
+}
+
 void    execute_builtin(char *cmd, char **cmd_argv, char **envp, t_list *denv)
 {
     if (ft_strncmp(cmd, "echo", ft_strlen(cmd)) == 0 && ft_strlen(cmd) == ft_strlen("echo"))

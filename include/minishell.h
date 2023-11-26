@@ -97,6 +97,9 @@ char	*get_next_line(int fd);
 // heredoc.c
 t_list	*heredoc(t_list *lst);
 
+// main.c
+void	sigint_handler(int signum);
+
 // pre_check.c
 int    quote_check(char *s);
 int    syntax_check(t_list *lst);
