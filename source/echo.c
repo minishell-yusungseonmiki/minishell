@@ -19,7 +19,7 @@ static int	is_option(char *s)
 
 void    execute_echo(t_proc_info *proc)
 {
-	printf("my echo\n");
+	// printf("my echo\n");
 	int		i;
 	int		option;
 	char	*result;

@@ -78,7 +78,10 @@ t_proc_info	*execute_pipe(t_list *sub_lst, t_proc_info *proc_info, t_proc_info *
 		else
 			dup2(proc_info->out_fd, STDOUT_FILENO); //현재 노드의 outfile을 stdout으로
 		if (is_builtin(proc_info->cmd_argv))
+		{
 			execute_builtin(proc_info);
+			exit(0); //자식 실행하고 종료시켜주는 코드 추가
+		}
 		else
 		{
 			if (execve(proc_info->cmd_path, proc_info->cmd_argv, proc_info->envp) < 0)
