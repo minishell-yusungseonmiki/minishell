@@ -33,7 +33,7 @@ t_proc_info	*set_proc_info(t_list *sub_lst, t_list *denv, t_list *hfile_lst)
 	proc_info->cmd_argv = find_cmd_argv(sub_lst);
 	proc_info->cmd_path = find_cmd_path(proc_info->cmd_argv, parse_envp(denv));
 	proc_info->envp = lst_to_envp(denv);
-	if (is_builtin(proc_info->cmd_path))
+	if (is_builtin(proc_info))
 		proc_info->denv = denv;
 	else
 		proc_info->denv = NULL;

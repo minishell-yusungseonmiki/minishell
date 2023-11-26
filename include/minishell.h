@@ -63,13 +63,16 @@ typedef enum {
 }	e_error;
 
 // builtin.c
-int		is_builtin(char *cmd);
+int		is_builtin(t_proc_info *proc_info);
 void    execute_builtin(char *cmd, char **cmd_argv, char **envp, t_list *denv);
 
 // change_value.c
 char	*find_env(char *str, t_list *env, int *i);
 char	*not_env(char *str, int *i);
 char	*change_value(char *str, t_list *env);
+
+// echo.c
+void    execute_echo(char **cmd_argv);
 
 // env.c
 t_env	*make_keyvalue(char *env);
