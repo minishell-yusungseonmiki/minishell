@@ -22,7 +22,7 @@ void	find_pipe_and_execute(t_list *token_lst, t_list *denv, t_list *hfile_lst)
 				child_cnt++;
 			if (iter == NULL)
 			{
-				if (!before && is_builtin(proc->cmd_argv))
+				if (!before && is_builtin(proc->cmd_argv)) // 빌트인 하나인 경우에만 child_cnt줄이기
 					child_cnt--;
 				before = execute_pipe(sub_lst, proc, before, 0);
 			}
@@ -55,7 +55,7 @@ t_proc_info	*execute_pipe(t_list *sub_lst, t_proc_info *proc_info, t_proc_info *
 		proc_info->out_fd = find_out_fd(sub_lst);
 		return (proc_info);
 	}
-	if (!before && is_builtin(proc_info->cmd_argv) && last == 0)
+	if (!before && is_builtin(proc_info->cmd_argv) && last == 0) // 빌트인 하나인 경우 -> before, last 모두 확인 필요
 	{
 		proc_info->in_fd = find_in_fd(sub_lst, proc_info->h_filename);
 		proc_info->out_fd = find_out_fd(sub_lst);
