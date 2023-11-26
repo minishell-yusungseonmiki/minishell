@@ -9,7 +9,7 @@ char	*find_env(char *str, t_list *env, int *i)
 	t_list	*lst;
 
 	start = *i + 1;
-	while (str[*i] && str[*i] != ' ' && str[*i] != '\'' && str[*i] != '=' && str[*i] != '\\')
+	while (str[*i] && str[*i] != ' ' && str[*i] != '\'' && str[*i] != '=' &&  str[*i] != ':' && str[*i] != '\\')
 		*i += 1;
 	end = *i;
 	key = ft_substr(str, start, end - start);

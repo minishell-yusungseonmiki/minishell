@@ -62,9 +62,18 @@ typedef enum {
 	MAX_HEREDOC
 }	e_error;
 
+// builtin_env.c
+void    execute_env(char **cmd_argv, t_list **denv);
+
+// builtin_export.c
+void    execute_export(char **cmd_argv, t_list *denv, t_proc_info *proc);
+
+// builtin_unset.c
+void    execute_unset(char **cmd_argv, t_list **denv);
+
 // builtin.c
-int		is_builtin(char *cmd);
-void    execute_builtin(char *cmd, char **cmd_argv, char **envp, t_list *denv);
+int		is_builtin(t_proc_info *proc_info);
+void    execute_builtin(char *cmd, char **cmd_argv, char **envp, t_list *denv, t_proc_info	*proc);
 
 // change_value.c
 char	*find_env(char *str, t_list *env, int *i);
@@ -74,8 +83,11 @@ char	*change_value(char *str, t_list *env);
 // env.c
 t_env	*make_keyvalue(char *env);
 t_list	*envp_to_lst(char **envp);
-char	*keyvalue_to_str(t_env *node);
-char	**lst_to_envp(t_list *env_lst);
+char	*keyvalue_to_str(t_env *node, int export);
+char	**lst_to_envp(t_list *env_lst, int export);
+void	print_env(void *token);
+void	print_envp(char **envp, int out_fd);
+void	free_envp(char **envp);
 
 // erase_quotes.c
 char	*single_quote(char *elem, int *i);
