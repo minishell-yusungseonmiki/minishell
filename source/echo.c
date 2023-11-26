@@ -5,8 +5,8 @@ static int	is_option(char *s)
 {
 	int	i;
 
-	if (ft_strncmp(s, "-n", 2) == 0)
-		return (1);
+	if (ft_strncmp(s, "-n", 2) != 0)
+		return (0);
 	i = 2;
 	while (!s[i])
 	{
@@ -14,12 +14,12 @@ static int	is_option(char *s)
 			return (0);
 		i++;
 	}
-	return (0);
+	return (1);
 }
 
 void    execute_echo(char **cmd_argv)
 {
-	printf("my echo\n");
+	// printf("my echo\n");
 	int		i;
 	int		option;
 	char	*result;
@@ -27,20 +27,19 @@ void    execute_echo(char **cmd_argv)
 
 	i = 1;
 	option = 0;
-	while (is_option(cmd_argv[i]) == 0)
+	result = "";
+	while (cmd_argv[i] && is_option(cmd_argv[i]) == 1)
 	{
 		option = 1;
 		i++;
 	}
-	while (cmd_argv[i] != NULL)
+	while (cmd_argv[i])
 	{
 		tmp = ft_strjoin(result, cmd_argv[i]);
 		result = tmp;
-		free(tmp);
 		i++;
 	}
 	printf("%s", result);
 	if (option == 0)
 		printf("\n");
-	free(result);
 }

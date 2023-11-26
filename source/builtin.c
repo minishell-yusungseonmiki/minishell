@@ -81,10 +81,7 @@ void    execute_builtin(char **cmd_argv, char **envp, t_list *denv)
         return ;
     cmd = cmd_argv[0];
     if (ft_strncmp(cmd, "echo", ft_strlen(cmd)) == 0 && ft_strlen(cmd) == ft_strlen("echo"))
-    {
-        printf("execute echo\n");
         execute_echo(cmd_argv);
-    }
     else if (ft_strncmp(cmd, "cd", ft_strlen(cmd)) == 0 && ft_strlen(cmd) == ft_strlen("cd"))
         execute_cd(cmd, cmd_argv, envp);
     else if (ft_strncmp(cmd, "pwd", ft_strlen(cmd)) == 0 && ft_strlen(cmd) == ft_strlen("pwd"))

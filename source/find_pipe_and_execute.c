@@ -45,7 +45,8 @@ t_proc_info	*execute_pipe(t_list *sub_lst, t_proc_info *proc_info, t_proc_info *
 {
     pid_t   pid;
     int     fd[2];
-	
+	// printf("-----------\n");
+	// print_proc_info(proc_info);
 	if (proc_info->cmd_path == NULL)
 	{
 		proc_info->in_fd = find_in_fd(sub_lst, proc_info->h_filename);
@@ -53,7 +54,10 @@ t_proc_info	*execute_pipe(t_list *sub_lst, t_proc_info *proc_info, t_proc_info *
 		return (proc_info);
 	}
 	if (!before && is_builtin(proc_info->cmd_argv))
+	{
 		execute_builtin(proc_info->cmd_argv, proc_info->envp, proc_info->denv);
+		return (proc_info);	
+	}
 	if (pipe(fd) < 0)
 		perror("pipe error");
 	pid = fork();
