@@ -1,12 +1,12 @@
 #include "../include/minishell.h"
 
-int is_builtin(t_proc_info *proc_info)
+int is_builtin(char **cmd_argv)
 {
     char    *cmd;
 
-    if (proc_info->cmd_argv == NULL)
+    if (cmd_argv == NULL)
         return (0);
-    cmd = (proc_info->cmd_argv)[0];
+    cmd = (cmd_argv)[0];
     if (ft_strncmp(cmd, "echo", ft_strlen(cmd)) == 0 && ft_strlen(cmd) == ft_strlen("echo"))
         return (1);
     else if (ft_strncmp(cmd, "cd", ft_strlen(cmd)) == 0 && ft_strlen(cmd) == ft_strlen("cd"))
@@ -73,10 +73,18 @@ void    execute_exit(char *cmd, char **cmd_argv, char **envp)
     (void) envp;
 }
 
-void    execute_builtin(char *cmd, char **cmd_argv, char **envp, t_list *denv)
+void    execute_builtin(char **cmd_argv, char **envp, t_list *denv)
 {
+    char    *cmd;
+
+    if (cmd_argv == NULL)
+        return ;
+    cmd = cmd_argv[0];
     if (ft_strncmp(cmd, "echo", ft_strlen(cmd)) == 0 && ft_strlen(cmd) == ft_strlen("echo"))
+    {
+        printf("execute echo\n");
         execute_echo(cmd_argv);
+    }
     else if (ft_strncmp(cmd, "cd", ft_strlen(cmd)) == 0 && ft_strlen(cmd) == ft_strlen("cd"))
         execute_cd(cmd, cmd_argv, envp);
     else if (ft_strncmp(cmd, "pwd", ft_strlen(cmd)) == 0 && ft_strlen(cmd) == ft_strlen("pwd"))
