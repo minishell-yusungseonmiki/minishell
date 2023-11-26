@@ -8,7 +8,7 @@ static int	is_option(char *s)
 	if (ft_strncmp(s, "-n", 2) != 0)
 		return (0);
 	i = 2;
-	while (!s[i])
+	while (s[i])
 	{
 		if (s[i] != 'n')
 			return (0);
@@ -17,9 +17,9 @@ static int	is_option(char *s)
 	return (1);
 }
 
-void    execute_echo(char **cmd_argv)
+void    execute_echo(t_proc_info *proc)
 {
-	// printf("my echo\n");
+	printf("my echo\n");
 	int		i;
 	int		option;
 	char	*result;
@@ -28,18 +28,21 @@ void    execute_echo(char **cmd_argv)
 	i = 1;
 	option = 0;
 	result = "";
-	while (cmd_argv[i] && is_option(cmd_argv[i]) == 1)
+	while ((proc->cmd_argv)[i] && is_option((proc->cmd_argv)[i]) == 1)
 	{
 		option = 1;
 		i++;
 	}
-	while (cmd_argv[i])
+	while ((proc->cmd_argv)[i])
 	{
-		tmp = ft_strjoin(result, cmd_argv[i]);
+		tmp = ft_strjoin(result, (proc->cmd_argv)[i]);
 		result = tmp;
 		i++;
 	}
-	printf("%s", result);
 	if (option == 0)
-		printf("\n");
+	{
+		tmp = ft_strjoin(result, "\n");
+		result = tmp;
+	}
+	ft_putstr_fd(result, proc->out_fd);
 }
