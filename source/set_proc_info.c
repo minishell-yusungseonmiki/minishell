@@ -33,6 +33,10 @@ t_proc_info	*set_proc_info(t_list *sub_lst, t_list *denv, t_list *hfile_lst)
 	proc_info->cmd_argv = find_cmd_argv(sub_lst);
 	proc_info->cmd_path = find_cmd_path(proc_info->cmd_argv, parse_envp(denv));
 	proc_info->envp = lst_to_envp(denv);
+	if (is_builtin(proc_info->cmd_path))
+		proc_info->denv = denv;
+	else
+		proc_info->denv = NULL;
 	proc_info->in_fd = 0;
 	proc_info->out_fd = 1;
 	proc_info->h_filename = hfile_lst->content;
@@ -96,16 +100,16 @@ int	find_in_fd(t_list *lst, char *h_filename)
 				exit(1);
 			}
 		}
-		lst = lst->next;
-	}
-	if (h_filename != 0)
-	{
-		fd = open(h_filename, O_RDONLY);
-		if (fd < 0)
+		else if (((t_node *)(lst->content))->type == HEREDOC)
 		{
-			perror(NULL);
-			exit(1);
+			fd = open(h_filename, O_RDONLY);
+			if (fd < 0)
+			{
+				perror(NULL);
+				exit(1);
+			}
 		}
+		lst = lst->next;
 	}
 	return (fd);
 }

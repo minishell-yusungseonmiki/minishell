@@ -54,6 +54,7 @@ typedef struct s_proc_info {
 	char	*cmd_path;
 	char	**envp;
 	char	*h_filename;
+	t_list	*denv;
 }	t_proc_info;
 
 typedef enum {
@@ -61,49 +62,60 @@ typedef enum {
 	MAX_HEREDOC
 }	e_error;
 
+// builtin.c
+int		is_builtin(char *cmd);
+void    execute_builtin(char *cmd, char **cmd_argv, char **envp, t_list *denv);
 
+// change_value.c
+char	*find_env(char *str, t_list *env, int *i);
+char	*not_env(char *str, int *i);
+char	*change_value(char *str, t_list *env);
 
-void	sigint_handler(int signum);
+// env.c
+t_env	*make_keyvalue(char *env);
+t_list	*envp_to_lst(char **envp);
+char	*keyvalue_to_str(t_env *node);
+char	**lst_to_envp(t_list *env_lst);
 
-int		quote_check(char *s);
-int		syntax_check(t_list *lst);
+// erase_quotes.c
+char	*single_quote(char *elem, int *i);
+char	*double_quote(char *elem, int *i, t_list *env);
+char	*not_quote(char *elem, int *i, t_list *env);
+void	erase_quotes(t_list *lst, t_list *env);
 
-t_list 		*tokenize(char *s);
-void		print_elem(void *token);
-
-t_list	*heredoc(t_list *lst);
-char		*get_next_line(int fd);
-
-void	print_proc_info(t_proc_info *pi);
+// error.c
+int		error(e_error err);
 
 // find_pipe_and_execute.c
-void	find_pipe_and_execute(t_list *token_lst, t_list *denv, t_list *h_file);
+void	find_pipe_and_execute(t_list *token_lst, t_list *denv, t_list *hfile_lst);
 t_proc_info	*execute_pipe(t_list *sub_lst, t_proc_info *proc_info, t_proc_info *before, int last);
 void	wait_process(int child_cnt);
 
+// get_next_line.c
+char	*get_next_line(int fd);
+
+// heredoc.c
+t_list	*heredoc(t_list *lst);
+
+// pre_check.c
+int    quote_check(char *s);
+int    syntax_check(t_list *lst);
+
 // set_proc_info.c
-void		print_proc_info(t_proc_info *pi);
+void	print_proc_info(t_proc_info *pi);
 t_proc_info	*set_proc_info(t_list *sub_lst, t_list *denv, t_list *hfile_lst);
 t_list	*separate_list_by_pipe(t_list *start, t_list *end);
 void	check_redirection(t_list *lst);
-int			find_in_fd(t_list *lst, char *h_filename);
-int			find_out_fd(t_list *lst);
-char		**find_cmd_argv(t_list *lst);
+int		find_in_fd(t_list *lst, char *h_filename);
+int		find_out_fd(t_list *lst);
+char	**find_cmd_argv(t_list *lst);
 char	*find_cmd_path(char **cmd_argv, char **path_list);
 char	**parse_envp(t_list *denv);
 
-void    	erase_quotes(t_list *lst, t_list *envp);
-void    	exeute_pipe(t_list *proc_lst);
+// tokenize.c
+t_token	*make_token(char *elem, e_type type);
+int		end_of_token(char *s);
+int		check_special(t_list **lst, char *s, int *start, int *i);
+t_list	*tokenize(char *s);
 
-t_env	*make_keyvalue(char *env);
-t_list	*envp_to_lst(char **envp);
-char	**lst_to_envp(t_list *env_lst);
-void	print_env_lst(void *env);
-void	print_envp(char **envp);
-
-char	*change_value(char *str, t_list *env);
-
-int		error(e_error err);
-
-void	print_hfd(void	*h);
 #endif
