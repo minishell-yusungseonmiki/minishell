@@ -6,32 +6,30 @@ t_list	*heredoc(t_list *lst)
 	char	*limit;
 	char	*tmp;
 	int		fd;
-	t_list	*h_fd;
+	t_list	*h_file;
 	char	*filename;
 	int		cnt;
 	char	*h_filename;
 
 	cur = lst;
-	h_fd = NULL;
+	h_file = NULL;
+	h_filename = NULL;
 	filename = "/tmp/here_doc";
 	cnt = 1;
-	fd = -1;
 	while (cur)
 	{
 		if (((t_token *)(cur->content))->type == PIPE)
 		{
-			ft_lstadd_back(&h_fd, ft_lstnew(&fd));
-			fd = -1;
+			ft_lstadd_back(&h_file, ft_lstnew(h_filename));
 			cnt++;
+			h_filename = NULL;
 		}
 		if (((t_token *)(cur->content))->type == HEREDOC)
 		{
 			limit = ((t_token *)(cur->next->content))->elem;
 			h_filename = ft_strjoin(filename, ft_itoa(cnt)); //ft_itoa도 프리해야함
-			printf("h_F : %s\n", h_filename);
+			// printf("h_F : %s\n", h_filename);
 			fd = open(h_filename, O_RDWR | O_CREAT | O_TRUNC, 0666);
-			printf("%d\n", fd);
-			free(h_filename);
 			tmp = get_next_line(0);
 			while (tmp)
 			{
@@ -51,8 +49,7 @@ t_list	*heredoc(t_list *lst)
 		}
 		cur = cur->next;
 	}
-	ft_lstadd_back(&h_fd, ft_lstnew(&fd));
-	ft_lstiter(h_fd, print_hfd); //히어독 먼저 처리, 마지막 히어독 리턴
-	printf("----------\n");
-	return (h_fd);
+	ft_lstadd_back(&h_file, ft_lstnew(h_filename));
+
+	return (h_file);
 }

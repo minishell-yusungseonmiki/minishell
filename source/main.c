@@ -6,13 +6,13 @@ void sigint_handler(int signum)
         return;
     printf("\n");
     rl_on_new_line();
-    rl_replace_line("", 0);
+    // rl_replace_line("", 0);
     rl_redisplay();
 }
 
 void	print_hfd(void	*h)
 {	
-	printf("fd : %d\n", *(int *)h);
+	printf("filename : %s\n", (char *)h);
 }
 
 int main(int argc, char **argv, char **envp)
@@ -42,8 +42,9 @@ int main(int argc, char **argv, char **envp)
             // ft_lstiter(lst, print_elem); //토큰 확인
             erase_quotes(lst, denv); //따옴표 제거만 (환경변수 처리안함)
             // ft_lstiter(lst, print_elem);
-        	ft_lstiter(heredoc(lst), print_hfd); //히어독 먼저 처리, 마지막 히어독 리턴
-            find_pipe_and_execute(lst, denv); //파이프 단위로 새로운 리스트 생성하여 실행
+
+        	// ft_lstiter(heredoc(lst), print_hfd); //히어독 먼저 처리, 마지막 히어독 리턴
+            find_pipe_and_execute(lst, denv, heredoc(lst)); //파이프 단위로 새로운 리스트 생성하여 실행
             add_history(line);
             free(line);
             // line = NULL;
