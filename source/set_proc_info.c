@@ -58,6 +58,7 @@ t_list	*separate_list_by_pipe(t_list *start, t_list *end)
 		node->elem = ((t_token *)(iter->content))->elem;
 		node->type = ((t_token *)(iter->content))->type;
 		node->visited = 0;
+		node->before_blank = ((t_token *)(iter->content))->before_blank;
 		ft_lstadd_back(&sub_lst, ft_lstnew(node));
 		iter = iter->next;
 	}

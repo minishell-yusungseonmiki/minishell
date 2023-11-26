@@ -33,6 +33,7 @@ typedef enum {
 typedef struct s_token {
 	char	*elem;
 	e_type	type;
+	int		before_blank;
 }	t_token;
 
 typedef struct s_env {
@@ -44,6 +45,7 @@ typedef struct s_node {
 	char	*elem;
 	e_type	type;
 	int		visited;
+	int		before_blank;
 }	t_node;
 
 typedef struct s_proc_info {
@@ -55,6 +57,7 @@ typedef struct s_proc_info {
 	char	**envp;
 	char	*h_filename;
 	t_list	*denv;
+	int		blank;
 }	t_proc_info;
 
 typedef enum {
@@ -64,7 +67,7 @@ typedef enum {
 
 // builtin.c
 int		is_builtin(char **cmd_argv);
-void    execute_builtin(t_proc_info *proc);
+void    execute_builtin(t_proc_info *proc, t_list *sub_lst);
 
 // change_value.c
 char	*find_env(char *str, t_list *env, int *i);
@@ -72,7 +75,7 @@ char	*not_env(char *str, int *i);
 char	*change_value(char *str, t_list *env);
 
 // echo.c
-void    execute_echo(t_proc_info *proc);
+void    execute_echo(t_proc_info *proc, t_list *sub_lst);
 
 // env.c
 t_env	*make_keyvalue(char *env);

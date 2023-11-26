@@ -61,7 +61,7 @@ void    execute_exit(t_proc_info *proc)
     (void) proc;
 }
 
-void    execute_builtin(t_proc_info *proc)
+void    execute_builtin(t_proc_info *proc, t_list *sub_lst)
 {
     char    *cmd;
 
@@ -69,7 +69,7 @@ void    execute_builtin(t_proc_info *proc)
         return ;
     cmd = (proc->cmd_argv)[0];
     if (ft_strncmp(cmd, "echo", ft_strlen(cmd)) == 0 && ft_strlen(cmd) == ft_strlen("echo"))
-        execute_echo(proc);
+        execute_echo(proc, sub_lst);
     else if (ft_strncmp(cmd, "cd", ft_strlen(cmd)) == 0 && ft_strlen(cmd) == ft_strlen("cd"))
         execute_cd(proc);
     else if (ft_strncmp(cmd, "pwd", ft_strlen(cmd)) == 0 && ft_strlen(cmd) == ft_strlen("pwd"))

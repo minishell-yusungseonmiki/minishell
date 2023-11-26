@@ -17,27 +17,48 @@ static int	is_option(char *s)
 	return (1);
 }
 
-void    execute_echo(t_proc_info *proc)
+void    execute_echo(t_proc_info *proc, t_list *sub_lst)
 {
 	// printf("my echo\n");
 	int		i;
 	int		option;
 	char	*result;
 	char	*tmp;
+	int		start;
+	
 
 	i = 1;
+	sub_lst = sub_lst->next;
 	option = 0;
 	result = "";
-	while ((proc->cmd_argv)[i] && is_option((proc->cmd_argv)[i]) == 1)
+	while (sub_lst && (proc->cmd_argv)[i])
 	{
-		option = 1;
-		i++;
+		// printf("%s %s\n", ((t_node *)(sub_lst->content))->elem, (proc->cmd_argv)[i]);
+		if (ft_strncmp(((t_node *)(sub_lst->content))->elem, (proc->cmd_argv)[i], ft_strlen((proc->cmd_argv)[i])) == 0
+			&& ft_strlen((proc->cmd_argv)[i]) == ft_strlen(((t_node *)(sub_lst->content))->elem))
+		{
+			if ((proc->cmd_argv)[i] == 0 || is_option((proc->cmd_argv)[i]) == 0)
+				break ;
+			option = 1;
+			i++;
+		}
+		sub_lst = sub_lst->next;
 	}
-	while ((proc->cmd_argv)[i])
+	start = i;
+	while (sub_lst && (proc->cmd_argv)[i])
 	{
-		tmp = ft_strjoin(result, (proc->cmd_argv)[i]);
-		result = tmp;
-		i++;
+		// printf("%s %s\n", ((t_node *)(sub_lst->content))->elem, (proc->cmd_argv)[i]);
+		if (ft_strncmp(((t_node *)(sub_lst->content))->elem, (proc->cmd_argv)[i], ft_strlen((proc->cmd_argv)[i])) == 0
+			&& ft_strlen((proc->cmd_argv)[i]) == ft_strlen(((t_node *)(sub_lst->content))->elem))
+		{
+			result = ft_strjoin(result, (proc->cmd_argv)[i]);
+			i++;
+			if (((t_node *)(sub_lst->content))->before_blank == 1 && i != start)
+			{
+				result = ft_strjoin(result, " ");
+			}
+		}
+		sub_lst = sub_lst->next;
 	}
 	if (option == 0)
 	{

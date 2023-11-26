@@ -12,6 +12,7 @@ t_token	*make_token(char *elem, e_type type)
 	t_token *token = (t_token *)malloc(sizeof(t_token));
 	token->elem = elem;
 	token->type = type;
+	token->before_blank = 1;
 	return (token);
 }
 
