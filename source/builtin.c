@@ -24,43 +24,6 @@ int is_builtin(char **cmd_argv)
     return (0);
 }
 
-// void    execute_echo(char *cmd, char **cmd_argv, char **envp)
-// {
-//     (void) cmd;
-//     (void) cmd_argv;
-//     (void) envp;
-// }
-
-// void    execute_cd(t_proc_info *proc)
-// {
-//     (void) proc;
-// }
-
-// void    execute_pwd(t_proc_info *proc)
-// {
-//     (void) proc;
-// }
-
-void    execute_export(t_proc_info *proc)
-{
-    (void) proc;
-}
-
-void    execute_unset(t_proc_info *proc)
-{
-    (void) proc;
-}
-
-void    execute_env(t_proc_info *proc)
-{
-    (void) proc;
-}
-
-void    execute_exit(t_proc_info *proc)
-{
-    (void) proc;
-}
-
 void    execute_builtin(t_proc_info *proc, t_list *sub_lst)
 {
     char    *cmd;
@@ -75,11 +38,11 @@ void    execute_builtin(t_proc_info *proc, t_list *sub_lst)
     else if (ft_strncmp(cmd, "pwd", ft_strlen(cmd)) == 0 && ft_strlen(cmd) == ft_strlen("pwd"))
         execute_pwd(proc);
     else if (ft_strncmp(cmd, "export", ft_strlen(cmd)) == 0 && ft_strlen(cmd) == ft_strlen("export"))
-        execute_export(proc);
+        execute_export(proc->cmd_argv, proc->denv, proc);
     else if (ft_strncmp(cmd, "unset", ft_strlen(cmd)) == 0 && ft_strlen(cmd) == ft_strlen("unset"))
-        execute_unset(proc);
+        execute_unset(proc->cmd_argv, &proc->denv);
     else if (ft_strncmp(cmd, "env", ft_strlen(cmd)) == 0 && ft_strlen(cmd) == ft_strlen("env"))
-        execute_env(proc);
-    else if (ft_strncmp(cmd, "exit", ft_strlen(cmd)) == 0 && ft_strlen(cmd) == ft_strlen("exit"))
-        execute_exit(proc);
+        execute_env(proc->cmd_argv, &proc->denv);
+    // else if (ft_strncmp(cmd, "exit", ft_strlen(cmd)) == 0 && ft_strlen(cmd) == ft_strlen("exit"))
+    //     execute_exit(proc);
 }

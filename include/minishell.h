@@ -65,26 +65,41 @@ typedef enum {
 	MAX_HEREDOC
 }	e_error;
 
+// builtin_cd.c
+void    execute_cd(t_proc_info *proc);
+
+// builtin_echo.c
+void    execute_echo(t_proc_info *proc, t_list *sub_lst);
+
+// builtin_env.c
+void    execute_env(char **cmd_argv, t_list **denv);
+
+// builtin_export.c
+void    execute_export(char **cmd_argv, t_list *denv, t_proc_info *proc);
+
+// builtin_pwd.c
+void    execute_pwd(t_proc_info *proc);
+
+// builtin_unset.c
+void    execute_unset(char **cmd_argv, t_list **denv);
+
 // builtin.c
 int		is_builtin(char **cmd_argv);
 void    execute_builtin(t_proc_info *proc, t_list *sub_lst);
-
-// cd.c
-void    execute_cd(t_proc_info *proc);
 
 // change_value.c
 char	*find_env(char *str, t_list *env, int *i);
 char	*not_env(char *str, int *i);
 char	*change_value(char *str, t_list *env);
 
-// echo.c
-void    execute_echo(t_proc_info *proc, t_list *sub_lst);
-
 // env.c
 t_env	*make_keyvalue(char *env);
 t_list	*envp_to_lst(char **envp);
-char	*keyvalue_to_str(t_env *node);
-char	**lst_to_envp(t_list *env_lst);
+char	*keyvalue_to_str(t_env *node, int export);
+char	**lst_to_envp(t_list *env_lst, int export);
+void	print_env(void *token);
+void	print_envp(char **envp, int out_fd);
+void	free_envp(char **envp);
 
 // erase_quotes.c
 char	*single_quote(char *elem, int *i);
@@ -112,9 +127,6 @@ void	sigint_handler(int signum);
 // pre_check.c
 int    quote_check(char *s);
 int    syntax_check(t_list *lst);
-
-// pwd.c
-void    execute_pwd(t_proc_info *proc);
 
 // set_proc_info.c
 void	print_proc_info(t_proc_info *pi);
