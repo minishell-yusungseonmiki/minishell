@@ -9,6 +9,16 @@ char	*find_env(char *str, t_list *env, int *i)
 	t_list	*lst;
 
 	start = *i + 1;
+	if (str[start] == '\0')
+	{
+		*i += 1;
+		return (ft_strdup("$"));
+	}
+	if (str[start] == '?')
+	{
+		*i += 2;
+		return (ft_itoa(exit_status));
+	}
 	while (str[*i] && str[*i] != ' ' && str[*i] != '\'' && str[*i] != '=' && str[*i] != '\\')
 		*i += 1;
 	end = *i;
