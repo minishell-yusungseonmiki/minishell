@@ -33,6 +33,7 @@ typedef enum {
 typedef struct s_token {
 	char	*elem;
 	e_type	type;
+	int		before_blank;
 }	t_token;
 
 typedef struct s_env {
@@ -44,6 +45,7 @@ typedef struct s_node {
 	char	*elem;
 	e_type	type;
 	int		visited;
+	int		before_blank;
 }	t_node;
 
 typedef struct s_proc_info {
@@ -55,6 +57,7 @@ typedef struct s_proc_info {
 	char	**envp;
 	char	*h_filename;
 	t_list	*denv;
+	int		blank;
 }	t_proc_info;
 
 typedef enum {
@@ -63,13 +66,19 @@ typedef enum {
 }	e_error;
 
 // builtin.c
-int		is_builtin(char *cmd);
-void    execute_builtin(char *cmd, char **cmd_argv, char **envp, t_list *denv);
+int		is_builtin(char **cmd_argv);
+void    execute_builtin(t_proc_info *proc, t_list *sub_lst);
+
+// cd.c
+void    execute_cd(t_proc_info *proc);
 
 // change_value.c
 char	*find_env(char *str, t_list *env, int *i);
 char	*not_env(char *str, int *i);
 char	*change_value(char *str, t_list *env);
+
+// echo.c
+void    execute_echo(t_proc_info *proc, t_list *sub_lst);
 
 // env.c
 t_env	*make_keyvalue(char *env);
@@ -104,6 +113,9 @@ void	sigint_handler(int signum);
 int    quote_check(char *s);
 int    syntax_check(t_list *lst);
 
+// pwd.c
+void    execute_pwd(t_proc_info *proc);
+
 // set_proc_info.c
 void	print_proc_info(t_proc_info *pi);
 t_proc_info	*set_proc_info(t_list *sub_lst, t_list *denv, t_list *hfile_lst);
@@ -116,7 +128,8 @@ char	*find_cmd_path(char **cmd_argv, char **path_list);
 char	**parse_envp(t_list *denv);
 
 // tokenize.c
-t_token	*make_token(char *elem, e_type type);
+void	print_elem(void *token);
+t_token	*make_token(char *elem, e_type type, int blank);
 int		end_of_token(char *s);
 int		check_special(t_list **lst, char *s, int *start, int *i);
 t_list	*tokenize(char *s);
