@@ -69,6 +69,8 @@ int	exit_status;
 
 // builtin_cd.c
 void    execute_cd(t_proc_info *proc);
+char	*find_value(t_list *denv, char *find);
+void	set_value(t_list **denv, char *key, char *new_value);
 
 // builtin_echo.c
 void    execute_echo(t_proc_info *proc, t_list *sub_lst);
