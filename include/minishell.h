@@ -5,10 +5,6 @@
 #  define BUFFER_SIZE 42
 # endif
 
-# if BUFFER_SIZE < 1
-#  error BUFFER_SIZE is too small
-# endif
-
 # include "../libft/include/libft.h"
 # include <signal.h>
 # include <stdio.h>

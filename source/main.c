@@ -21,8 +21,8 @@ int main(int argc, char **argv, char **envp)
     t_list  *lst;
     t_list  *denv;
 
-    if (argc != 1 && ft_strncmp(*argv, "./minishell", ft_strlen(*argv)))
-        return (1);
+    (void)argc;
+    (void)argv;
     denv = envp_to_lst(envp); //환경변수 복제
     // ft_lstiter(denv, print_env); //환경변수 복제 잘 되었는지 확인
     // char **ddenv = lst_to_envp(denv); //환경변수 다시 2차원 배열로
@@ -32,7 +32,7 @@ int main(int argc, char **argv, char **envp)
     {
         signal(SIGINT, sigint_handler);
         signal(SIGQUIT, SIG_IGN);
-        line = readline("input> ");
+        line = readline("minishell> ");
         if (line)
         {
             if (quote_check(line) == 1)
