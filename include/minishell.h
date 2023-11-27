@@ -122,7 +122,8 @@ char	*find_cmd_path(char **cmd_argv, char **path_list);
 char	**parse_envp(t_list *denv);
 
 // tokenize.c
-t_token	*make_token(char *elem, e_type type);
+void	print_elem(void *token);
+t_token	*make_token(char *elem, e_type type, int blank);
 int		end_of_token(char *s);
 int		check_special(t_list **lst, char *s, int *start, int *i);
 t_list	*tokenize(char *s);

@@ -51,12 +51,12 @@ void    execute_echo(t_proc_info *proc, t_list *sub_lst)
 		if (ft_strncmp(((t_node *)(sub_lst->content))->elem, (proc->cmd_argv)[i], ft_strlen((proc->cmd_argv)[i])) == 0
 			&& ft_strlen((proc->cmd_argv)[i]) == ft_strlen(((t_node *)(sub_lst->content))->elem))
 		{
-			result = ft_strjoin(result, (proc->cmd_argv)[i]);
-			i++;
 			if (((t_node *)(sub_lst->content))->before_blank == 1 && i != start)
 			{
 				result = ft_strjoin(result, " ");
 			}
+			result = ft_strjoin(result, (proc->cmd_argv)[i]);
+			i++;
 		}
 		sub_lst = sub_lst->next;
 	}
