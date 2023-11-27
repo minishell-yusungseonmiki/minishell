@@ -35,7 +35,7 @@ char	*keyvalue_to_str(t_env *node, int export)
 	char	*tmp;
 
 	str = ft_strdup(node->key);
-	if (export)
+	if (export && node->value[0] != '\0')
 	{
 		tmp = ft_strjoin(str, "=\"");
 		free(str);
@@ -47,6 +47,8 @@ char	*keyvalue_to_str(t_env *node, int export)
 	}
 	tmp = ft_strjoin(str, "=");
 	free(str);
+	if (export && node->value[0] == '\0')
+		return (tmp);
 	str = ft_strjoin(tmp, node->value);
 	free(tmp);
 	return (str);
@@ -126,6 +128,7 @@ void	print_envp(char **envp, int out_fd)
 
 void	print_env(void *token)
 {
-	
+	if (((t_env *)token)->value[0] == '\0')
+		return ;
 	printf("%s=%s\n", ((t_env *)token)->key, ((t_env *)token)->value);
 }
