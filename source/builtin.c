@@ -31,15 +31,15 @@ int is_builtin(char **cmd_argv)
 //     (void) envp;
 // }
 
-void    execute_cd(t_proc_info *proc)
-{
-    (void) proc;
-}
+// void    execute_cd(t_proc_info *proc)
+// {
+//     (void) proc;
+// }
 
-void    execute_pwd(t_proc_info *proc)
-{
-    (void) proc;
-}
+// void    execute_pwd(t_proc_info *proc)
+// {
+//     (void) proc;
+// }
 
 void    execute_export(t_proc_info *proc)
 {

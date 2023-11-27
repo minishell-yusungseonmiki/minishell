@@ -69,6 +69,9 @@ typedef enum {
 int		is_builtin(char **cmd_argv);
 void    execute_builtin(t_proc_info *proc, t_list *sub_lst);
 
+// cd.c
+void    execute_cd(t_proc_info *proc);
+
 // change_value.c
 char	*find_env(char *str, t_list *env, int *i);
 char	*not_env(char *str, int *i);
@@ -109,6 +112,9 @@ void	sigint_handler(int signum);
 // pre_check.c
 int    quote_check(char *s);
 int    syntax_check(t_list *lst);
+
+// pwd.c
+void    execute_pwd(t_proc_info *proc);
 
 // set_proc_info.c
 void	print_proc_info(t_proc_info *pi);
