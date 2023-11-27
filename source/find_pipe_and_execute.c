@@ -49,7 +49,7 @@ t_proc_info	*execute_pipe(t_list *sub_lst, t_proc_info *proc_info, t_proc_info *
     int     fd[2];
 	// printf("-----------\n");
 	// print_proc_info(proc_info);
-	if (proc_info->cmd_path == NULL)
+	if (proc_info->cmd_argv == NULL)
 	{
 		proc_info->in_fd = find_in_fd(sub_lst, proc_info->h_filename);
 		proc_info->out_fd = find_out_fd(sub_lst);
@@ -86,7 +86,12 @@ t_proc_info	*execute_pipe(t_list *sub_lst, t_proc_info *proc_info, t_proc_info *
 		}
 		else
 		{
-			if (execve(proc_info->cmd_path, proc_info->cmd_argv, proc_info->envp) < 0)
+			if (access(proc_info->cmd_path, X_OK) != 0)
+			{
+				write(2, "command not found\n", 19);
+				exit(127);
+			}
+			else if (execve(proc_info->cmd_path, proc_info->cmd_argv, proc_info->envp) < 0)
 			{
 				perror(NULL);
 				exit(1);
@@ -114,4 +119,5 @@ void	wait_process(int child_cnt, pid_t child_pid)
 		i++;
 	}
 	waitpid(child_pid, &exit_status, 0);
+	exit_status = exit_status >> 8;
 }

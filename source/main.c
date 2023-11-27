@@ -27,6 +27,7 @@ int main(int argc, char **argv, char **envp)
     // ft_lstiter(denv, print_env); //환경변수 복제 잘 되었는지 확인
     // char **ddenv = lst_to_envp(denv); //환경변수 다시 2차원 배열로
     // print_envp(ddenv); //2차원 배열 잘 만들어지는지 확인
+    exit_status = 0;
     while (1)
     {
         signal(SIGINT, sigint_handler);

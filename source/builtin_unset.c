@@ -12,7 +12,10 @@ void    execute_unset(char **cmd_argv, t_list **denv)
 	while (cmd_argv[i])
 	{
 		if (ft_isdigit(cmd_argv[i][0]) || ft_strchr(cmd_argv[i], '='))
+		{
 			write(2, "export: not a valid identifier\n", 31);
+			exit_status = 1;
+		}
 		else
 		{
 			iter = *denv;

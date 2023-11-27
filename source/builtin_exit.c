@@ -33,7 +33,7 @@ void	execute_exit(t_proc_info *proc, int only_builtin)
 		exit_status = 256 - exit_status;
 	}
 	exit_status = exit_status % 256;
-	printf("ec : %d\n", exit_status);
+	//printf("ec : %d\n", exit_status);
 	if (proc->cmd_argv[2]) // 인자가 두개 이상이면
 		printf("exit: too many arguments\n");
 	exit(exit_status);

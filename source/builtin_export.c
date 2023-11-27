@@ -75,35 +75,41 @@ void    execute_export(char **cmd_argv, t_list *denv, t_proc_info *proc)
         while (cmd_argv[i]) //인자 확인
         {
             if (ft_isdigit(cmd_argv[i][0])) //환경변수 이름은 숫자로 시작될 수 없음
+            {
                 write(2, "export: not a valid identifier\n", 31);
+                exit_status = 1;
+                return ;
+            }
             else
             {
                 equal = ft_strchr(cmd_argv[i], '=') - cmd_argv[i]; //value 값을 가지는지 확인
-                if (equal != 0) //'='로 시작할 수는 없음
+                if (equal == 0) //'='로 시작할 수는 없음
                 {
-                    if (equal < 0) //'='이 없을 때(key만 존재)
-                        key = cmd_argv[i];
-                    else //'='이 있을 때(key, value가 존재)
-                        key = ft_substr(cmd_argv[i], 0, equal);
-                    j = 0;
-                    while (key[j])
-                    {
-                        if (!ft_isalnum(key[j]) && key[j] != '_') //환경변수 이름은 숫자 혹은 알파벳 혹은 _ 만 가능
-                        {
-                            write(2, "export: not a valid identifier\n", 31);
-                            break ;
-                        }
-                        j++;
-                    }
-                    if (key[j] != '\0') //key값에 오류가 있을 경우
-                        continue;
-                    if (equal < 0) //'='이 없을 경우 value는 NULL
-                        renew_denv(&denv, key, ft_strdup(""));
-                    else
-                        renew_denv(&denv, key, ft_substr(cmd_argv[i], equal + 1, ft_strlen(cmd_argv[i]) - equal - 1));
-                }
-                else
                     write(2, "export: not a valid identifier\n", 31);
+                    exit_status = 1;
+                    return ;
+                }
+                if (equal < 0) //'='이 없을 때(key만 존재)
+                    key = cmd_argv[i];
+                else //'='이 있을 때(key, value가 존재)
+                    key = ft_substr(cmd_argv[i], 0, equal);
+                j = 0;
+                while (key[j])
+                {
+                    if (!ft_isalnum(key[j]) && key[j] != '_') //환경변수 이름은 숫자 혹은 알파벳 혹은 _ 만 가능
+                    {
+                        write(2, "export: not a valid identifier\n", 31);
+                        exit_status = 1;
+                        return ;
+                    }
+                    j++;
+                }
+                if (key[j] != '\0') //key값에 오류가 있을 경우
+                    continue;
+                if (equal < 0) //'='이 없을 경우 value는 NULL
+                    renew_denv(&denv, key, ft_strdup(""));
+                else
+                    renew_denv(&denv, key, ft_substr(cmd_argv[i], equal + 1, ft_strlen(cmd_argv[i]) - equal - 1));                    
             }
             i++;
         }
