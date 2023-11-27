@@ -59,7 +59,7 @@ t_proc_info	*execute_pipe(t_list *sub_lst, t_proc_info *proc_info, t_proc_info *
 	{
 		proc_info->in_fd = find_in_fd(sub_lst, proc_info->h_filename);
 		proc_info->out_fd = find_out_fd(sub_lst);
-		execute_builtin(proc_info, sub_lst);
+		execute_builtin(proc_info, sub_lst, 1);
 		return (proc_info);	
 	}
 	if (pipe(fd) < 0)
@@ -81,7 +81,7 @@ t_proc_info	*execute_pipe(t_list *sub_lst, t_proc_info *proc_info, t_proc_info *
 			dup2(proc_info->out_fd, STDOUT_FILENO); //현재 노드의 outfile을 stdout으로
 		if (is_builtin(proc_info->cmd_argv))
 		{
-			execute_builtin(proc_info, sub_lst);
+			execute_builtin(proc_info, sub_lst, 0);
 			exit(0); //자식 실행하고 종료시켜주는 코드 추가
 		}
 		else

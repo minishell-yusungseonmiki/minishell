@@ -24,7 +24,7 @@ int is_builtin(char **cmd_argv)
     return (0);
 }
 
-void    execute_builtin(t_proc_info *proc, t_list *sub_lst)
+void    execute_builtin(t_proc_info *proc, t_list *sub_lst, int only_builtin)
 {
     char    *cmd;
 
@@ -44,5 +44,5 @@ void    execute_builtin(t_proc_info *proc, t_list *sub_lst)
     else if (ft_strncmp(cmd, "env", ft_strlen(cmd)) == 0 && ft_strlen(cmd) == ft_strlen("env"))
         execute_env(proc->cmd_argv, &proc->denv);
     else if (ft_strncmp(cmd, "exit", ft_strlen(cmd)) == 0 && ft_strlen(cmd) == ft_strlen("exit"))
-        execute_exit(proc);
+        execute_exit(proc, only_builtin);
 }
