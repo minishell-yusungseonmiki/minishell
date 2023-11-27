@@ -65,6 +65,8 @@ typedef enum {
 	MAX_HEREDOC
 }	e_error;
 
+int	exit_code;
+
 // builtin_cd.c
 void    execute_cd(t_proc_info *proc);
 
@@ -73,6 +75,9 @@ void    execute_echo(t_proc_info *proc, t_list *sub_lst);
 
 // builtin_env.c
 void    execute_env(char **cmd_argv, t_list **denv);
+
+//builtin_exit.c
+void	execute_exit(t_proc_info *proc);
 
 // builtin_export.c
 void    execute_export(char **cmd_argv, t_list *denv, t_proc_info *proc);
