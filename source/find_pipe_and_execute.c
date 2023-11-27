@@ -38,6 +38,7 @@ void	find_pipe_and_execute(t_list *token_lst, t_list *denv, t_list *hfile_lst)
 	}
 	if (child_cnt)
 		wait_process(child_cnt, before->child_pid);
+	//unlink
 }
 
 // 자식 프로세스 및 파이프를 생성하고 명령어를 실행

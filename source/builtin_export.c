@@ -10,7 +10,7 @@ static t_env	*make_envnode(char *key, char *value)
 	return (node);
 }
 
-static void    renew_denv(t_list **denv, char *key, char *value)
+static void    renew_denv(t_list **denv, char *key, char *value, int flag)
 {
     t_list  *iter;
 
@@ -20,7 +20,8 @@ static void    renew_denv(t_list **denv, char *key, char *value)
         if (!ft_strncmp(((t_env *)(iter->content))->key, key, ft_strlen(key))
 		&& ft_strlen(((t_env *)(iter->content))->key) == ft_strlen(key))
         {
-            ((t_env *)(iter->content))->value = value;
+            if (flag != 0)
+                ((t_env *)(iter->content))->value = value;
             return ;
         }
         iter = iter->next;
@@ -107,9 +108,9 @@ void    execute_export(char **cmd_argv, t_list *denv, t_proc_info *proc)
                 if (key[j] != '\0') //key값에 오류가 있을 경우
                     continue;
                 if (equal < 0) //'='이 없을 경우 value는 NULL
-                    renew_denv(&denv, key, ft_strdup(""));
+                    renew_denv(&denv, key, ft_strdup(""), 0);
                 else
-                    renew_denv(&denv, key, ft_substr(cmd_argv[i], equal + 1, ft_strlen(cmd_argv[i]) - equal - 1));                    
+                    renew_denv(&denv, key, ft_substr(cmd_argv[i], equal + 1, ft_strlen(cmd_argv[i]) - equal - 1), 1);                    
             }
             i++;
         }

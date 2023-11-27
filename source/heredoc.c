@@ -1,5 +1,11 @@
 #include "../include/minishell.h"
 
+void	sigint_heredoc(int signum)
+{
+	(void)signum;
+	close(0);
+}
+
 t_list	*heredoc(t_list *lst)
 {
 	t_list 	*cur;
@@ -10,12 +16,16 @@ t_list	*heredoc(t_list *lst)
 	char	*filename;
 	int		cnt;
 	char	*h_filename;
+	int		backup_fd;
 
+	backup_fd = dup(0);
 	cur = lst;
 	h_file = NULL;
 	h_filename = NULL;
 	filename = "/tmp/here_doc";
 	cnt = 1;
+	signal(SIGINT, sigint_heredoc);
+	signal(SIGQUIT, SIG_IGN);
 	while (cur)
 	{
 		if (((t_token *)(cur->content))->type == PIPE)
@@ -33,8 +43,6 @@ t_list	*heredoc(t_list *lst)
 			tmp = get_next_line(0);
 			while (tmp)
 			{
-				signal(SIGINT, sigint_handler);
-				signal(SIGQUIT, SIG_IGN);
 				if (!ft_strncmp(limit, tmp, ft_strlen(limit)) 
 					&& (ft_strlen(limit) == ft_strlen(tmp) - 1))
 				{
@@ -50,6 +58,6 @@ t_list	*heredoc(t_list *lst)
 		cur = cur->next;
 	}
 	ft_lstadd_back(&h_file, ft_lstnew(h_filename));
-
+	dup2(backup_fd, 0);
 	return (h_file);
 }
