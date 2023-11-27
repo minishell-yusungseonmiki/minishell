@@ -58,6 +58,7 @@ typedef struct s_proc_info {
 	char	*h_filename;
 	t_list	*denv;
 	int		blank;
+	pid_t	child_pid;
 }	t_proc_info;
 
 typedef enum {
@@ -120,7 +121,7 @@ int		error(e_error err);
 // find_pipe_and_execute.c
 void	find_pipe_and_execute(t_list *token_lst, t_list *denv, t_list *hfile_lst);
 t_proc_info	*execute_pipe(t_list *sub_lst, t_proc_info *proc_info, t_proc_info *before, int last);
-void	wait_process(int child_cnt);
+void	wait_process(int child_cnt, pid_t child_pid);
 
 // get_next_line.c
 char	*get_next_line(int fd);

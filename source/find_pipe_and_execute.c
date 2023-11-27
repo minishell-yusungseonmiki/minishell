@@ -37,7 +37,7 @@ void	find_pipe_and_execute(t_list *token_lst, t_list *denv, t_list *hfile_lst)
 		iter = iter->next;
 	}
 	if (child_cnt)
-		wait_process(child_cnt);
+		wait_process(child_cnt, before->child_pid);
 }
 
 // 자식 프로세스 및 파이프를 생성하고 명령어를 실행
@@ -95,21 +95,23 @@ t_proc_info	*execute_pipe(t_list *sub_lst, t_proc_info *proc_info, t_proc_info *
 	}
 	else
 	{
+		proc_info->child_pid = pid;
 		proc_info->prev = fd[READ];
 		close(fd[WRITE]);
 	}
 	return (proc_info);
 }
 
-void	wait_process(int child_cnt)
+void	wait_process(int child_cnt, pid_t child_pid)
 {
 	int	i;
 
 	i = 0;
-	while (i < child_cnt)
+	while (i < child_cnt - 1)
 	{
 		if (wait(NULL) < 0)
 			perror("wait error");
 		i++;
 	}
+	waitpid(child_pid, &exit_status, 0);
 }

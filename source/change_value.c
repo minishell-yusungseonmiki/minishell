@@ -17,7 +17,7 @@ char	*find_env(char *str, t_list *env, int *i)
 	if (str[start] == '?')
 	{
 		*i += 2;
-		return (ft_itoa(exit_status));
+		return (ft_itoa(exit_status>>8));
 	}
 	while (str[*i] && str[*i] != ' ' && str[*i] != '\'' && str[*i] != '=' && str[*i] != '\\')
 		*i += 1;
