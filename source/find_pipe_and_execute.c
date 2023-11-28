@@ -50,13 +50,6 @@ t_proc_info	*execute_pipe(t_list *sub_lst, t_proc_info *proc_info, t_proc_info *
     int     fd[2];
 	// printf("-----------\n");
 	// print_proc_info(proc_info);
-	if (proc_info->cmd_argv == NULL)
-	{
-		proc_info->in_fd = find_in_fd(sub_lst, proc_info->h_filename);
-		proc_info->out_fd = find_out_fd(sub_lst);
-		exit_status = 0;
-		return (proc_info);
-	}
 	if (!before && is_builtin(proc_info->cmd_argv) && last == 0) // 빌트인 하나인 경우 -> before, last 모두 확인 필요
 	{
 		proc_info->in_fd = find_in_fd(sub_lst, proc_info->h_filename);
@@ -82,6 +75,8 @@ t_proc_info	*execute_pipe(t_list *sub_lst, t_proc_info *proc_info, t_proc_info *
 			dup2(fd[WRITE], STDOUT_FILENO); //파이프의 쓰기 종단을 stdout으로
 		else
 			dup2(proc_info->out_fd, STDOUT_FILENO); //현재 노드의 outfile을 stdout으로
+		if (proc_info->cmd_argv == NULL)
+			exit(0);
 		if (is_builtin(proc_info->cmd_argv))
 		{
 			execute_builtin(proc_info, sub_lst, 0);
