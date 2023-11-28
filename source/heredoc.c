@@ -1,11 +1,5 @@
 #include "../include/minishell.h"
 
-void	sigint_heredoc(int signum)
-{
-	(void)signum;
-	close(0);
-}
-
 t_list	*heredoc(t_list *lst)
 {
 	t_list 	*cur;

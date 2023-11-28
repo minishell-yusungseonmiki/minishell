@@ -13,6 +13,7 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <fcntl.h>
+#include <termios.h>
 
 # define READ 0
 # define WRITE 1
@@ -142,6 +143,13 @@ int		find_out_fd(t_list *lst);
 char	**find_cmd_argv(t_list *lst);
 char	*find_cmd_path(char **cmd_argv, char **path_list);
 char	**parse_envp(t_list *denv);
+
+// signal.c
+void	sigint_handler(int signum);
+void	sigint_heredoc(int signum);
+void	sigint_child(int signum);
+void	print_off_signal(void);
+void	print_on_signal(void);
 
 // tokenize.c
 void	print_elem(void *token);

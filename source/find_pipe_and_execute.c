@@ -50,6 +50,9 @@ t_proc_info	*execute_pipe(t_list *sub_lst, t_proc_info *proc_info, t_proc_info *
     int     fd[2];
 	// printf("-----------\n");
 	// print_proc_info(proc_info);
+
+	print_on_signal();
+	signal(SIGINT, sigint_child);
 	if (!before && is_builtin(proc_info->cmd_argv) && last == 0) // 빌트인 하나인 경우 -> before, last 모두 확인 필요
 	{
 		proc_info->in_fd = find_in_fd(sub_lst, proc_info->h_filename);

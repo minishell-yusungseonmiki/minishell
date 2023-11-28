@@ -1,15 +1,5 @@
 #include "../include/minishell.h"
 
-void sigint_handler(int signum)
-{
-    if (signum != SIGINT)
-        return;
-    printf("\n");
-    rl_on_new_line();
-    rl_replace_line("", 0);
-    rl_redisplay();
-}
-
 void	print_hfd(void	*h)
 {	
 	printf("filename : %s\n", (char *)h);
@@ -30,9 +20,10 @@ int main(int argc, char **argv, char **envp)
     exit_status = 0;
     while (1)
     {
+        print_off_signal();
         signal(SIGINT, sigint_handler);
         signal(SIGQUIT, SIG_IGN);
-        line = readline("minishell> ");
+        line = readline("\033[1;34mminishell> \033[0m");
         if (line)
         {
             if (quote_check(line) == 1)
