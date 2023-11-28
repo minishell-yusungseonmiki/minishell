@@ -59,5 +59,7 @@ t_list	*heredoc(t_list *lst)
 	}
 	ft_lstadd_back(&h_file, ft_lstnew(h_filename));
 	dup2(backup_fd, 0);
+	signal(SIGINT, sigint_handler);
+	signal(SIGQUIT, SIG_IGN);
 	return (h_file);
 }
