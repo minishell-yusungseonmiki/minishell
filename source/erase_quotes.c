@@ -38,7 +38,7 @@ char	*double_quote(char *elem, int *i, t_list *env)
 	while (elem[*i] && elem[*i] != q)
 	{
 		if (elem[*i] == '$' && elem[*i + 1] && elem[*i + 1] != ' '
-			&& elem[*i + 1] != q && elem[*i + 1] != '\'')
+			&& elem[*i + 1] != q)
 			flag = 1;
 		*i += 1;
 	}
@@ -65,8 +65,6 @@ char	*not_quote(char *elem, int *i, t_list *env)
 	{
 		if (elem[*i] == '$' && elem[*i + 1] && elem[*i + 1] != ' ')
 			flag = 1;
-		if (elem[*i] == '\\')
-			break ;
 		*i += 1;
 	}
 	end = *i;

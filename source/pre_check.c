@@ -11,18 +11,10 @@ int    quote_check(char *s)
 	{
 		if (s[i] == '\'' || s[i] == '\"')
 		{
-			if (q == 0 && (i == 0 || (i != 0 && s[i - 1] != '\\')))
+			if (q == 0)
 				q = s[i];
-            else if (q == '\"')
-            {
-                if (s[i] == q && s[i - 1] != '\\')
-                    q = 0;
-            }
-            else if (q == '\'')
-            {
-                if (s[i] == q)
-                    q = 0;
-            }
+            else if (q == s[i])
+                q = 0;
 		}
         i++;
     }
