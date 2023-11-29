@@ -17,7 +17,7 @@ t_token	*make_token(const char *elem, e_type type)
 	t_token	*token;
 
 	token = (t_token *)malloc(sizeof(t_token));
-	token->elem = strdup(elem);
+	token->elem = ft_strdup(elem);
 	token->type = type;
 	token->before_blank = 0;
 	return (token);
@@ -66,23 +66,19 @@ void	make_arg_token(t_list **lst, char *s, int i, int start)
 	free(elem);
 }
 
-int	is_quote(char c, int *i)
+int	in_quote(char c, char *q, int *i)
 {
-	char	q;
-	int		check;
-
-	q = 0;
-	check = 0;
 	if (c == '\'' || c == '\"')
 	{
-		if (q == 0)
-			q = c;
-		else if (c == q)
-			q = 0;
-		check = 1;
+		if (*q == 0)
+			(*q) = c;
+		else if (c == *q)
+			(*q) = 0;
 		(*i) += 1;
 	}
-	return (check);
+	else if (*q != 0) // 따옴표 내부에 있는 경우 인덱스 증가
+		(*i) += 1;
+	return (*q);
 }
 
 void	set_index(int type, int *i, int *start)
@@ -132,13 +128,15 @@ t_list	*tokenize(char *s)
 	t_list	*lst;
 	int		i;
 	int		start;
+	char	q;
 
 	i = 0;
 	start = 0;
 	lst = NULL;
+	q = 0;
 	while (s && s[i])
 	{
-		if (is_quote(s[i], &i) == 1)
+		if (in_quote(s[i], &q, &i))
 			continue ;
 		if (meet_special(s[i])) //명령어 이전까지(start~i-1)의 arg 저장
 		{
@@ -151,6 +149,6 @@ t_list	*tokenize(char *s)
 	if (i != start)
 		make_arg_token(&lst, s, i, start);
 	set_before_blank(lst, s);
-	ft_lstiter(lst, print_token);
+	// ft_lstiter(lst, print_token);
 	return (lst);
 }
