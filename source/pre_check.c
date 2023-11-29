@@ -23,19 +23,31 @@ int    quote_check(char *s)
     return (0);
 }
 
+static int	heredoc_cnt(t_list *lst)
+{
+    t_list	*cur;
+	int		hcnt;
+
+	hcnt = 0;
+    cur = lst;
+    while (cur)
+    {
+        if (((t_token *)(cur->content))->type == HEREDOC)
+            hcnt++;
+		cur = cur->next;
+    }
+	return (hcnt);
+}
+
 int    syntax_check(t_list *lst)
 {
     t_list  *cur;
-    int     hcnt;
 
     cur = lst;
     if (((t_token *)(cur->content))->type == PIPE) // 첫 시작이 파이프인 경우
         return (error(SYNTAX));
-    hcnt = 0;
     while (cur && cur->next)
     {
-        if (((t_token *)(cur->content))->type == HEREDOC)
-            hcnt++;
         if (((t_token *)(cur->content))->type != ARG)
         {
             if (((t_token *)(cur->content))->type == PIPE)
@@ -50,7 +62,7 @@ int    syntax_check(t_list *lst)
     }
     if (((t_token *)(cur->content))->type != ARG) // 맨 끝이 ARG가 아닌 경우
         return (error(SYNTAX));
-    if (hcnt > 16)
+    if (heredoc_cnt(lst) > 16)
         return (error(MAX_HEREDOC));
     return (0);
 }

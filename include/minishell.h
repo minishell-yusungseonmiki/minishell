@@ -60,7 +60,8 @@ typedef struct s_proc_info {
 
 typedef enum {
 	SYNTAX,
-	MAX_HEREDOC
+	MAX_HEREDOC,
+	INVALID_EXPORT
 }	e_error;
 
 int	g_exit_status;
@@ -81,6 +82,7 @@ void	execute_exit(t_proc_info *proc, int only_builtin);
 
 // builtin_export.c
 void    execute_export(char **cmd_argv, t_list *denv, t_proc_info *proc);
+void    print_export(t_list *denv, t_proc_info *proc);
 
 // builtin_pwd.c
 void    execute_pwd(t_proc_info *proc);
