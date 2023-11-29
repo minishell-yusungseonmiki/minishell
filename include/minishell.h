@@ -152,9 +152,6 @@ void	print_off_signal(void);
 void	print_on_signal(void);
 
 // tokenize.c
-t_token	*make_token(char *elem, e_type type, int blank);
-int		end_of_token(char *s);
-int		check_special(t_list **lst, char *s, int *start, int *i);
 t_list	*tokenize(char *s);
 
 void	print_token(void *token);
