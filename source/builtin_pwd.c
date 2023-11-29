@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtin_pwd.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yusung <yusung@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/29 17:04:46 by yusung            #+#    #+#             */
+/*   Updated: 2023/11/29 17:05:02 by yusung           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 
-void    execute_pwd(t_proc_info *proc)
+void	execute_pwd(t_proc_info *proc)
 {
 	char	*result;
 	char	*tmp;
