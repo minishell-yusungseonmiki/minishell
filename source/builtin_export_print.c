@@ -31,3 +31,17 @@ void	print_export(t_list *denv, t_proc_info *proc)
 	print_envp(env, proc->out_fd);
 	free_envp(env);
 }
+
+int	cmd_is_empty(char **cmd_argv)
+{
+	int	i;
+
+	i = 1;
+	while (cmd_argv[i])
+	{
+		if (cmd_argv[i][0] != '\0')
+			return (0);
+		i++;
+	}
+	return (1);
+}

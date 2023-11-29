@@ -75,20 +75,6 @@ void	run_export(char *cmd_argv, t_list *denv)
 	}
 }
 
-static int	cmd_is_empty(char **cmd_argv)
-{
-	int	i;
-
-	i = 1;
-	while (cmd_argv[i])
-	{
-		if (cmd_argv[i][0] != '\0')
-			return (0);
-		i++;
-	}
-	return (1);
-}
-
 void	execute_export(char **cmd_argv, t_list *denv, t_proc_info *proc)
 {
 	int	i;

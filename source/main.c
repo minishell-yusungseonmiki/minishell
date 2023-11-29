@@ -1,10 +1,5 @@
 #include "../include/minishell.h"
 
-void	print_hfd(void	*h)
-{	
-	printf("filename : %s\n", (char *)h);
-}
-
 int main(int argc, char **argv, char **envp)
 {
     char    *line;
