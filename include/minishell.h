@@ -63,7 +63,7 @@ typedef enum {
 	MAX_HEREDOC
 }	e_error;
 
-int	exit_status;
+int	g_exit_status;
 
 // builtin_cd.c
 void    execute_cd(t_proc_info *proc);

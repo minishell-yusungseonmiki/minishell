@@ -57,7 +57,7 @@ t_proc_info	*execute_pipe(t_list *sub_lst, t_proc_info *proc_info, t_proc_info *
 	{
 		proc_info->in_fd = find_in_fd(sub_lst, proc_info->h_filename);
 		proc_info->out_fd = find_out_fd(sub_lst);
-		exit_status = 0;
+		g_exit_status = 0;
 		execute_builtin(proc_info, sub_lst, 1);
 		return (proc_info);	
 	}
@@ -119,6 +119,6 @@ void	wait_process(int child_cnt, pid_t child_pid)
 			perror("wait error");
 		i++;
 	}
-	waitpid(child_pid, &exit_status, 0);
-	exit_status = exit_status >> 8;
+	waitpid(child_pid, &g_exit_status, 0);
+	g_exit_status = g_exit_status >> 8;
 }

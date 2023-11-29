@@ -9,7 +9,7 @@ void    execute_pwd(t_proc_info *proc)
 	if (!result)
 	{
 		perror(NULL);
-		exit_status = 1;
+		g_exit_status = 1;
 		return ;
 	}
 	tmp = ft_strjoin(result, "\n");

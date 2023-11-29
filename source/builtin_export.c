@@ -78,7 +78,7 @@ void    execute_export(char **cmd_argv, t_list *denv, t_proc_info *proc)
             if (ft_isdigit(cmd_argv[i][0])) //환경변수 이름은 숫자로 시작될 수 없음
             {
                 write(2, "export: not a valid identifier\n", 31);
-                exit_status = 1;
+                g_exit_status = 1;
                 return ;
             }
             else
@@ -87,7 +87,7 @@ void    execute_export(char **cmd_argv, t_list *denv, t_proc_info *proc)
                 if (equal == 0) //'='로 시작할 수는 없음
                 {
                     write(2, "export: not a valid identifier\n", 31);
-                    exit_status = 1;
+                    g_exit_status = 1;
                     return ;
                 }
                 if (equal < 0) //'='이 없을 때(key만 존재)
@@ -100,7 +100,7 @@ void    execute_export(char **cmd_argv, t_list *denv, t_proc_info *proc)
                     if (!ft_isalnum(key[j]) && key[j] != '_') //환경변수 이름은 숫자 혹은 알파벳 혹은 _ 만 가능
                     {
                         write(2, "export: not a valid identifier\n", 31);
-                        exit_status = 1;
+                        g_exit_status = 1;
                         return ;
                     }
                     j++;

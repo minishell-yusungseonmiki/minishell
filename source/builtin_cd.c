@@ -40,7 +40,7 @@ void    execute_cd(t_proc_info *proc)
 		if (chdir(proc->cmd_argv[1]) < 0)
 		{
 			perror(NULL);
-			exit_status = 1;
+			g_exit_status = 1;
 			return ;
 		}
 	}
