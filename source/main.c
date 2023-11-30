@@ -1,10 +1,5 @@
 #include "../include/minishell.h"
 
-void	print_hfd(void	*h)
-{	
-	printf("filename : %s\n", (char *)h);
-}
-
 int main(int argc, char **argv, char **envp)
 {
     char    *line;
@@ -23,10 +18,10 @@ int main(int argc, char **argv, char **envp)
         if (line)
         {
             if (quote_check(line) == 1)
-                continue;
+            	continue; //add_history &&free
             lst = tokenize(line);
             if (!lst || syntax_check(lst) == 1)
-               continue;
+            	continue; //add_history &&free
             erase_quotes(lst, denv);
             find_pipe_and_execute(lst, denv, heredoc(lst));
             add_history(line);
