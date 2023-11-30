@@ -1,125 +1,154 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tokenize.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yusung <yusung@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/29 15:05:41 by yusung            #+#    #+#             */
+/*   Updated: 2023/11/29 22:03:08 by yusung           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 
-void	print_elem(void *token)
+t_token	*make_token(const char *elem, e_type type)
 {
-	printf("-----------\n");
-	printf("content: %s@\n state: %d\n blank : %d\n", ((t_token *)token)->elem, ((t_token *)token)->type, ((t_token *)token)->before_blank);
-	printf("-----------\n");
-}
+	t_token	*token;
 
-t_token	*make_token(char *elem, e_type type, int blank)
-{
-	t_token *token = (t_token *)malloc(sizeof(t_token));
-	token->elem = elem;
+	token = (t_token *)malloc(sizeof(t_token));
+	token->elem = ft_strdup(elem);
 	token->type = type;
 	token->before_blank = 0;
-	if (blank == 2)
-		token->before_blank = 1;
 	return (token);
 }
 
-int	end_of_token(char *s)
+int	meet_special(char c)
 {
-	if (*s == '|')
-		return (0);
-	if (*s == '<')
-		return (0);
-	if (*s == '>')
-		return (0);
+	if (c == '|')
+		return (1);
+	if (c == '<')
+		return (1);
+	if (c == '>')
+		return (1);
+	if (c == ' ')
+		return (1);
+	return (0);
+}
+
+// 반환값 : arg 0, special(리다이렉션이나 파이프) 1 또는 2, blank(공백) 3
+int	make_special_token(t_list **lst, char *s)
+{
+	const char	special[5][3] = {"|", "<<", ">>", "<", ">"};
+	int			i;
+
 	if (*s == ' ')
-		return (0);
-	return (1);
+		return (3);
+	i = 0;
+	while (i < 5)
+	{
+		if (ft_strncmp(s, special[i], ft_strlen(special[i])) == 0)
+		{
+			ft_lstadd_back(lst, ft_lstnew(make_token(special[i], i + 1)));
+			return (ft_strlen(special[i]));
+		}
+		i++;
+	}
+	return (0);
 }
 
-int	check_special(t_list **lst, char *s, int *start, int *i)
+void	make_arg_token(t_list **lst, char *s, int i, int start)
 {
-	int	return_value;
+	char	*elem;
 
-	return_value = 1;
-	if (ft_strncmp(&s[*i], "<<", 2) == 0)
-	{
-		ft_lstadd_back(lst, ft_lstnew(make_token("<<", HEREDOC, 0)));
-		(*i) += 2;
-	}
-	else if (ft_strncmp(&s[*i], ">>", 2) == 0)
-	{
-		ft_lstadd_back(lst, ft_lstnew(make_token(">>", APPEND, 0)));
-		(*i) += 2;
-	}
-	else if (s[*i] == '|')
-	{
-		ft_lstadd_back(lst, ft_lstnew(make_token("|", PIPE, 0)));
-		(*i)++;
-	}
-	else if (s[*i] == '<')
-	{
-		ft_lstadd_back(lst, ft_lstnew(make_token("<", IN, 0)));
-		(*i)++;
-	}
-	else if (s[*i] == '>')
-	{
-		ft_lstadd_back(lst, ft_lstnew(make_token(">", OUT, 0)));
-		(*i)++;
-	}
-	else if (s[*i] == ' ')
-	{
-		return_value = 2;
-		(*i)++;
-	}
-	else // 명령어나 공백이 아니면(=인덱스 증가가 없으면) check가 0
-		return (0);
-	*start = *i;
-	return (return_value); // 명령어나 공백이면(=인덱스 증가가 있으면) check가 1
+	elem = ft_substr(s, start, i - start);
+	ft_lstadd_back(lst, ft_lstnew(make_token(elem, ARG)));
+	free(elem);
 }
 
-
-t_list *tokenize(char *s)
+int	in_quote(char c, char *q, int *i)
 {
-	t_list *lst;
-	int	i;
-	char q;
-	int	start = 0;
-	int	check = 0;
-	int	blank;
-	int	ch_sp;
+	if (c == '\'' || c == '\"')
+	{
+		if (*q == 0)
+			(*q) = c;
+		else if (c == *q)
+			(*q) = 0;
+		(*i) += 1;
+	}
+	else if (*q != 0) // 따옴표 내부에 있는 경우 인덱스 증가
+		(*i) += 1;
+	return (*q);
+}
+
+void	set_index(int type, int *i, int *start)
+{
+	if (type == 0) //arg
+		(*i) += 1;
+	else if (type == 1 || type == 2) //파이프, 리다이렉션
+	{	
+		(*i) += type;
+		(*start) = (*i);
+	}
+	else if (type == 3) //공백
+	{
+		(*i) += 1;
+		(*start) = (*i);
+	}
+}
+
+void	set_before_blank(t_list *lst, char *s)
+{
+	t_token	*token;
+	int		i;
+	int		blank;
 
 	i = 0;
-	lst = NULL;
-	q = 0;
 	blank = 0;
-	while (s != 0 && s[i] != 0)
+	while (s && s[i] && lst)
 	{
-		check = 0;
-		if (s[i] == '\'' || s[i] == '\"')
+		if (i != 0 && s[i - 1] == ' ')
+			blank = 1;
+		token = lst->content;
+		if (ft_strncmp(&s[i], token->elem, ft_strlen(token->elem)) == 0)
 		{
-			if (q == 0)
-				q = s[i];
-			else if (s[i] == q) //짝을 만나면 해제
-				q = 0;
-			i++;
-			check = 1;
+			if (blank)
+				token->before_blank = 1;
+			lst = lst->next;
+			i += ft_strlen(token->elem);
+			blank = 0;
 		}
-		if (q == 0)
-		{
-			if (end_of_token(&s[i]) == 0) //명령어 이전까지(start~i-1)의 arg 저장
-			{
-				if (i != start) // 공백인 경우에 들어오면 i==start인 노드가 생겨버리는 것을 방지
-				{
-					ft_lstadd_back(&lst, ft_lstnew(make_token(ft_substr(s, start, i - start), ARG, blank)));
-					blank = 0;
-				}
-				start = i;
-			}
-			ch_sp = check_special(&lst, s, &start, &i);
-			if (ch_sp == 2)
-				blank = 2;
-			check += ch_sp;
-		}
-		if (check == 0)
+		else
 			i++;
 	}
+}
+
+t_list	*tokenize(char *s)
+{
+	t_list	*lst;
+	int		i;
+	int		start;
+	char	q;
+
+	i = 0;
+	start = 0;
+	lst = NULL;
+	q = 0;
+	while (s && s[i])
+	{
+		if (in_quote(s[i], &q, &i))
+			continue ;
+		if (meet_special(s[i])) //명령어 이전까지(start~i-1)의 arg 저장
+		{
+			if (i != start) // 공백인 경우에 들어오면 i==start인 노드가 생겨버리는 것을 방지
+				make_arg_token(&lst, s, i, start);
+			start = i;
+		}
+		set_index(make_special_token(&lst, &s[i]), &i, &start);
+	}
 	if (i != start)
-		ft_lstadd_back(&lst, ft_lstnew(make_token(ft_substr(s, start, i - start), ARG, blank)));
-	// ft_lstiter(lst, print_elem);
+		make_arg_token(&lst, s, i, start);
+	set_before_blank(lst, s);
+	// ft_lstiter(lst, print_token);
 	return (lst);
 }
