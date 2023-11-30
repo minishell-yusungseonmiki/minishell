@@ -46,13 +46,13 @@ typedef struct s_node {
 }	t_node;
 
 typedef struct s_proc_info {
-	char	**envp;
 	t_list	*denv;
 	char	*h_filename;
-	int		in_fd;
-	int		out_fd;
 	char	**cmd_argv;
 	char	*cmd_path;
+	t_list	*node_lst;
+	int		in_fd;
+	int		out_fd;
 	pid_t	child_pid;
 	int		prev;
 }	t_proc_info;
@@ -117,10 +117,10 @@ void	erase_quotes(t_list *lst, t_list *env);
 // error.c
 int		error(e_error err);
 
-// find_pipe_and_execute.c
-void	find_pipe_and_execute(t_list *token_lst, t_list *denv, t_list *hfile_lst);
-t_proc_info	*execute_pipe(t_list *sub_lst, t_proc_info *proc_info, t_proc_info *before, int last);
-void	wait_process(int child_cnt, pid_t child_pid);
+// execute.c
+void	execute(t_list *proc_lst);
+void	execute_child(t_proc_info *proc_info);
+int	execute_only_builtin(t_list *proc_lst);
 
 // get_next_line.c
 char	*get_next_line(int fd);
@@ -132,20 +132,25 @@ void	heredoc(t_list *token_lst, t_list *proc_lst);
 void	sigint_handler(int signum);
 
 // make_proc_list.c
-t_proc_info	*init_proc_info(char **envp, t_list *denv);
-t_list	*make_proc_list(t_list *token_lst, char **envp, t_list *denv);
+t_proc_info	*init_proc_info(t_list *denv);
+t_list	*make_proc_list(t_list *token_lst, t_list *denv);
+
+// open_fd.c
+int	find_in_fd(t_list *lst, char *h_filename);
+int	find_out_fd(t_list *lst);
 
 // pre_check.c
 int    quote_check(char *s);
 int    syntax_check(t_list *lst);
 
-// set_proc_info.c
+// print.c
+void	print_token(void *token);
 void	print_proc_info(void *proc_info);
-t_proc_info	*set_proc_info(t_list *sub_lst, t_list *denv, t_list *hfile_lst);
+
+// set_proc_cmd.c
+void	set_cmd_info(t_list *token_lst, t_list *proc_lst);
 t_list	*separate_list_by_pipe(t_list *start, t_list *end);
 void	check_redirection(t_list *lst);
-int		find_in_fd(t_list *lst, char *h_filename);
-int		find_out_fd(t_list *lst);
 char	**find_cmd_argv(t_list *lst);
 char	*find_cmd_path(char **cmd_argv, char **path_list);
 char	**parse_envp(t_list *denv);
@@ -160,6 +165,5 @@ void	print_on_signal(void);
 // tokenize.c
 t_list	*tokenize(char *s);
 
-void	print_token(void *token);
 
 #endif

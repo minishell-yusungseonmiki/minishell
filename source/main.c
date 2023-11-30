@@ -24,10 +24,11 @@ int main(int argc, char **argv, char **envp)
             if (!token_lst || syntax_check(token_lst) == 1)
             	continue; //add_history &&free
             erase_quotes(token_lst, denv);
-            proc_lst = make_proc_list(token_lst, envp, denv);
-            heredoc(token_lst, proc_lst);
-            ft_lstiter(proc_lst, print_proc_info);
-            // find_pipe_and_execute(token_lst, proc_lst);
+            proc_lst = make_proc_list(token_lst, denv); // envp, denv
+            heredoc(token_lst, proc_lst); //h_filename
+			set_cmd_info(token_lst, proc_lst); //cmd_argv, cmd_path
+			ft_lstiter(proc_lst, print_proc_info);
+			execute(proc_lst); // in_fd, out_fd, child_pid
             add_history(line);
             free(line);
         }

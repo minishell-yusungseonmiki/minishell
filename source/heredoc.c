@@ -35,7 +35,6 @@ static void	make_heredoc(t_list *cur, t_list *proc_lst, char *filename)
 
 	h_filename = NULL;
 	cnt = 1;
-	ft_lstiter(proc_lst, print_proc_info);
 	while (cur && proc_lst)
 	{
 		if (((t_token *)(cur->content))->type == PIPE)
