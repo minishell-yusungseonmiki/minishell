@@ -1,11 +1,11 @@
 #include "../include/minishell.h"
 
 //구조체 내부의 값 출력(테스트용 함수)
-void	print_proc_info(t_proc_info *pi)
+void	print_proc_info(void *proc_info)
 {
-	// t_proc_info *pi;
+	t_proc_info *pi;
 
-	// pi = (t_proc_info *)proc_info;
+	pi = (t_proc_info *)proc_info;
 	printf("in_fd : %d, out_fd : %d\n", pi->in_fd, pi->out_fd);
 
 	printf("cmd_argv\n");
@@ -15,6 +15,8 @@ void	print_proc_info(t_proc_info *pi)
 		printf("%s\n", (pi->cmd_argv)[i]);
 		i++;
 	}
+	printf("--heredoc\n");
+	printf("%s\n", pi->h_filename);
 	printf("cmd_path\n");
 	printf("%s\n", pi->cmd_path);
 	printf("\n");

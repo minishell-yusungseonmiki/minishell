@@ -28,18 +28,21 @@ static char	*run_heredoc(t_list *cur, char *filename, char *cnt)
 	return (h_filename);
 }
 
-static void	make_heredoc(t_list *cur, t_list **h_file, char *filename)
+static void	make_heredoc(t_list *cur, t_list *proc_lst, char *filename)
 {
 	char	*h_filename;
 	int		cnt;
 
 	h_filename = NULL;
 	cnt = 1;
-	while (cur)
+	ft_lstiter(proc_lst, print_proc_info);
+	while (cur && proc_lst)
 	{
 		if (((t_token *)(cur->content))->type == PIPE)
 		{
-			ft_lstadd_back(h_file, ft_lstnew(h_filename));
+			if (h_filename)
+				((t_proc_info *)(proc_lst->content))->h_filename = ft_strdup(h_filename);
+			proc_lst = proc_lst->next;
 			cnt++;
 			h_filename = NULL;
 		}
@@ -47,21 +50,19 @@ static void	make_heredoc(t_list *cur, t_list **h_file, char *filename)
 			h_filename = run_heredoc(cur, filename, ft_itoa(cnt));
 		cur = cur->next;
 	}
-	ft_lstadd_back(h_file, ft_lstnew(h_filename));
+	if (h_filename)
+		((t_proc_info *)(proc_lst->content))->h_filename = ft_strdup(h_filename);
 }
 
-t_list	*heredoc(t_list *lst)
+void	heredoc(t_list *token_lst, t_list *proc_lst)
 {
-	t_list	*h_file;
 	char	*filename;
 	int		backup_fd;
 
 	backup_fd = dup(STDIN_FILENO);
-	h_file = NULL;
 	filename = "/tmp/here_doc";
 	signal(SIGINT, sigint_heredoc);
-	make_heredoc(lst, &h_file, filename);
+	make_heredoc(token_lst, proc_lst, filename);
 	dup2(backup_fd, STDIN_FILENO);
 	signal(SIGINT, sigint_handler);
-	return (h_file);
 }

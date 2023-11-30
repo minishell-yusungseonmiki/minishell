@@ -46,16 +46,15 @@ typedef struct s_node {
 }	t_node;
 
 typedef struct s_proc_info {
-	int		prev;
+	char	**envp;
+	t_list	*denv;
+	char	*h_filename;
 	int		in_fd;
 	int		out_fd;
 	char	**cmd_argv;
 	char	*cmd_path;
-	char	**envp;
-	char	*h_filename;
-	t_list	*denv;
-	int		blank;
 	pid_t	child_pid;
+	int		prev;
 }	t_proc_info;
 
 typedef enum {
@@ -127,17 +126,21 @@ void	wait_process(int child_cnt, pid_t child_pid);
 char	*get_next_line(int fd);
 
 // heredoc.c
-t_list	*heredoc(t_list *lst);
+void	heredoc(t_list *token_lst, t_list *proc_lst);
 
 // main.c
 void	sigint_handler(int signum);
+
+// make_proc_list.c
+t_proc_info	*init_proc_info(char **envp, t_list *denv);
+t_list	*make_proc_list(t_list *token_lst, char **envp, t_list *denv);
 
 // pre_check.c
 int    quote_check(char *s);
 int    syntax_check(t_list *lst);
 
 // set_proc_info.c
-void	print_proc_info(t_proc_info *pi);
+void	print_proc_info(void *proc_info);
 t_proc_info	*set_proc_info(t_list *sub_lst, t_list *denv, t_list *hfile_lst);
 t_list	*separate_list_by_pipe(t_list *start, t_list *end);
 void	check_redirection(t_list *lst);
