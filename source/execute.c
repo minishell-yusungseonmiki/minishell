@@ -23,7 +23,7 @@ void	execute_child(t_proc_info *proc_info)
 	if (is_builtin(proc_info->cmd_argv)) //builtin 실행
 	{
 		execute_builtin(proc_info, proc_info->node_lst, 0);
-		exit(0); //자식 실행하고 종료시켜주는 코드 추가
+		exit(g_exit_status); //자식 실행하고 종료시켜주는 코드 추가
 	}
 	else //execve 활용한 나머지 명령어
 	{
@@ -83,5 +83,22 @@ void	execute(t_list *proc_lst)
 			close(fd[WRITE]);
 		}
 		iter = iter->next;
+	}
+	wait_process(proc_lst);
+}
+
+void	wait_process(t_list *proc_lst)
+{
+	t_proc_info	*last_proc;
+	int		stat;
+	pid_t	pid;
+
+	while (proc_lst)
+	{
+		pid = wait3(&stat, 0, NULL);
+		last_proc = ft_lstlast(proc_lst)->content;
+		if (pid == last_proc->child_pid && !is_builtin(last_proc->cmd_argv))
+			g_exit_status = stat >> 8;
+		proc_lst = proc_lst->next;
 	}
 }

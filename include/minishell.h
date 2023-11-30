@@ -121,7 +121,7 @@ int		error(e_error err);
 void	execute(t_list *proc_lst);
 void	execute_child(t_proc_info *proc_info);
 int	execute_only_builtin(t_list *proc_lst);
-
+void	wait_process(t_list *proc_lst);
 // get_next_line.c
 char	*get_next_line(int fd);
 
