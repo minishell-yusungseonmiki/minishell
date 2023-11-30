@@ -74,31 +74,40 @@ void	execute(t_list *proc_lst)
 				dup2(fd[WRITE], STDOUT_FILENO); //파이프의 쓰기 종단을 stdout으로
 			else
 				dup2(proc_info->out_fd, STDOUT_FILENO); //현재 노드의 outfile을 stdout으로
+			close(fd[READ]);
+			close(fd[WRITE]);
 			execute_child(proc_info);
 		}
 		else
 		{
 			proc_info->child_pid = pid;
-			prev_fd = fd[READ];
+			close(prev_fd);
+			prev_fd = dup(fd[READ]);
 			close(fd[WRITE]);
+			close(fd[READ]);
 		}
 		iter = iter->next;
 	}
+	close(prev_fd);
 	wait_process(proc_lst);
 }
 
 void	wait_process(t_list *proc_lst)
 {
 	t_proc_info	*last_proc;
-	int		stat;
-	pid_t	pid;
 
-	while (proc_lst)
-	{
-		pid = wait3(&stat, 0, NULL);
-		last_proc = ft_lstlast(proc_lst)->content;
-		if (pid == last_proc->child_pid && !is_builtin(last_proc->cmd_argv))
-			g_exit_status = stat >> 8;
-		proc_lst = proc_lst->next;
-	}
+	last_proc = ft_lstlast(proc_lst)->content;
+	waitpid(last_proc->child_pid, &g_exit_status, 0);
+		g_exit_status = g_exit_status >> 8;
+	while (waitpid(0, NULL, 0) > 0)
+		;
+	// printf("%d\n", stat);
+	// while (proc_lst)
+	// {
+	// 	pid = wait3(&stat, 0, NULL);
+	// 	last_proc = ft_lstlast(proc_lst)->content;
+	// 	if (pid == last_proc->child_pid && !is_builtin(last_proc->cmd_argv))
+	// 		g_exit_status = stat >> 8;
+	// 	proc_lst = proc_lst->next;
+	// }
 }
