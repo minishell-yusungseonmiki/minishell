@@ -22,6 +22,9 @@ static void	renew_denv(t_list **denv, char *key, char *value, int flag)
 		{
 			if (flag != 0)
 				((t_env *)(iter->content))->value = value;
+			else
+				free(value);
+			free(key);
 			return ;
 		}
 		iter = iter->next;
