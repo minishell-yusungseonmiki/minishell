@@ -40,7 +40,7 @@ static void	make_heredoc(t_list *cur, t_list *proc_lst, char *filename)
 		if (((t_token *)(cur->content))->type == PIPE)
 		{
 			if (h_filename)
-				((t_proc_info *)(proc_lst->content))->h_filename = ft_strdup(h_filename);
+				((t_proc_info *)(proc_lst->content))->h_filename = h_filename;
 			proc_lst = proc_lst->next;
 			cnt++;
 			h_filename = NULL;
@@ -50,7 +50,7 @@ static void	make_heredoc(t_list *cur, t_list *proc_lst, char *filename)
 		cur = cur->next;
 	}
 	if (h_filename)
-		((t_proc_info *)(proc_lst->content))->h_filename = ft_strdup(h_filename);
+		((t_proc_info *)(proc_lst->content))->h_filename = h_filename;
 }
 
 void	heredoc(t_list *token_lst, t_list *proc_lst)
