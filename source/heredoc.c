@@ -1,15 +1,12 @@
 #include "../include/minishell.h"
 
-static char	*run_heredoc(t_list *cur, char *filename, char *cnt)
+static void	run_heredoc(t_list *cur, char *h_filename)
 {
 	int		fd;
 	char	*tmp;
 	char	*limit;
-	char	*h_filename;
 
 	limit = ((t_token *)(cur->next->content))->elem;
-	h_filename = ft_strjoin(filename, cnt);
-	free(cnt);
 	fd = open(h_filename, O_RDWR | O_CREAT | O_TRUNC, 0666);
 	tmp = get_next_line(0);
 	while (tmp)
@@ -25,35 +22,43 @@ static char	*run_heredoc(t_list *cur, char *filename, char *cnt)
 		tmp = get_next_line(0);
 	}
 	close(fd);
-	return (h_filename);
 }
 
-static void	make_heredoc(t_list *cur, t_list *proc_lst, char *filename)
+static void	make_heredoc(t_list *proc_lst, char *filename)
 {
 	char	*h_filename;
+	t_list	*iter;
 	int		cnt;
+	char	*tmp;
+	int		flag;
 
-	h_filename = NULL;
 	cnt = 1;
-	while (cur && proc_lst)
+	while (proc_lst)
 	{
-		if (((t_token *)(cur->content))->type == PIPE)
+		flag = 0;
+		iter = ((t_proc_info *)(proc_lst->content))->node_lst;
+		tmp = ft_itoa(cnt);
+		h_filename = ft_strjoin(filename, ft_itoa(cnt));
+		free(tmp);
+		while (iter)
 		{
-			if (h_filename)
-				((t_proc_info *)(proc_lst->content))->h_filename = h_filename;
-			proc_lst = proc_lst->next;
-			cnt++;
-			h_filename = NULL;
+			if (((t_token *)(iter->content))->type == HEREDOC)
+			{
+				flag = 1;
+				run_heredoc(iter, h_filename);
+			}
+			iter = iter->next;
 		}
-		if (((t_token *)(cur->content))->type == HEREDOC)
-			h_filename = run_heredoc(cur, filename, ft_itoa(cnt));
-		cur = cur->next;
+		cnt++;
+		if (flag)
+			((t_proc_info *)(proc_lst->content))->h_filename = h_filename;
+		else
+			((t_proc_info *)(proc_lst->content))->h_filename = NULL;
+		proc_lst = proc_lst->next;
 	}
-	if (h_filename)
-		((t_proc_info *)(proc_lst->content))->h_filename = h_filename;
 }
 
-void	heredoc(t_list *token_lst, t_list *proc_lst)
+void	heredoc(t_list *proc_lst)
 {
 	char	*filename;
 	int		backup_fd;
@@ -61,7 +66,7 @@ void	heredoc(t_list *token_lst, t_list *proc_lst)
 	backup_fd = dup(STDIN_FILENO);
 	filename = "/tmp/here_doc";
 	signal(SIGINT, sigint_heredoc);
-	make_heredoc(token_lst, proc_lst, filename);
+	make_heredoc(proc_lst, filename);
 	dup2(backup_fd, STDIN_FILENO);
 	close(backup_fd);
 	signal(SIGINT, sigint_handler);

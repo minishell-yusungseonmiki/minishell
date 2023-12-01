@@ -132,7 +132,7 @@ void	free_token(void *token);
 char	*get_next_line(int fd);
 
 // heredoc.c
-void	heredoc(t_list *token_lst, t_list *proc_lst);
+void	heredoc(t_list *proc_lst);
 
 // main.c
 void	sigint_handler(int signum);
