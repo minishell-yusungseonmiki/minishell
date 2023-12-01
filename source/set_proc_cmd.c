@@ -34,7 +34,7 @@ t_list	*separate_list_by_pipe(t_list *start, t_list *end)
 	while (iter != end)
 	{
 		t_node	*node = (t_node *)malloc(sizeof(t_node));
-		node->elem = ((t_token *)(iter->content))->elem;
+		node->elem = ft_strdup(((t_token *)(iter->content))->elem);
 		node->type = ((t_token *)(iter->content))->type;
 		node->visited = 0;
 		node->before_blank = ((t_token *)(iter->content))->before_blank;

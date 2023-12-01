@@ -33,3 +33,11 @@ void	free_node_list(void	*node)
 	n = node;
 	free(n->elem);
 }
+
+void	free_token(void *token)
+{
+	t_token	*t;
+
+	t = token;
+	free(t->elem);
+}

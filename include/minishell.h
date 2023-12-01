@@ -126,6 +126,7 @@ void	wait_process(t_list *proc_lst);
 void	free_env(void	*env);
 void	free_proc_info(void *proc);
 void	free_node_list(void	*node);
+void	free_token(void *token);
 
 // get_next_line.c
 char	*get_next_line(int fd);

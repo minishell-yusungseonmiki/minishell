@@ -34,7 +34,7 @@ int main(int argc, char **argv, char **envp)
             heredoc(token_lst, proc_lst); //h_filename
 			set_cmd_info(token_lst, proc_lst); //cmd_argv, cmd_path
 			execute(proc_lst); // in_fd, out_fd, child_pid
-            printf("end execute\n");
+            ft_lstclear(&token_lst, free_token);
             add_history(line);
             free(line);
             ft_lstclear(&proc_lst, free_proc_info);
