@@ -29,7 +29,7 @@ void	print_export(t_list *denv, t_proc_info *proc)
 		i++;
 	}
 	print_envp(env, proc->out_fd);
-	free_envp(env);
+	free_double_str(env);
 }
 
 int	cmd_is_empty(char **cmd_argv)

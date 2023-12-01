@@ -1,7 +1,13 @@
 #include "../include/minishell.h"
 
+void    leak()
+{
+    system("leaks minishell");
+}
+
 int main(int argc, char **argv, char **envp)
 {
+    atexit(leak);
     char    *line;
     t_list  *token_lst;
     t_list  *proc_lst;
@@ -26,16 +32,19 @@ int main(int argc, char **argv, char **envp)
             erase_quotes(token_lst, denv);
             proc_lst = make_proc_list(token_lst, denv); // envp, denv
             heredoc(token_lst, proc_lst); //h_filename
-			set_cmd_info(token_lst, proc_lst); //cmd_argv, cmd_path
 			execute(proc_lst); // in_fd, out_fd, child_pid
             add_history(line);
             free(line);
+            ft_lstclear(&token_lst, free_token);
+            ft_lstclear(&proc_lst, free_proc_info);
         }
         else
         {
+            ft_lstclear(&denv, free_env);
             printf("exit\n");
             return (0);
         }
     }
+    ft_lstclear(&denv, free_env);
     return (0);
 }

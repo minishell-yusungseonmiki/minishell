@@ -1,30 +1,6 @@
 #include "../include/minishell.h"
 
-void	set_cmd_info(t_list *token_lst, t_list *proc_lst)
-{
-	t_list	*iter;
-	t_proc_info	*proc_info;
-
-	iter = token_lst;
-	while (token_lst && proc_lst)
-	{
-		if (iter == NULL || ((t_token *)(iter->content))->type == PIPE)
-		{
-			proc_info = proc_lst->content;
-			proc_info->node_lst = separate_list_by_pipe(token_lst, iter);
-			check_redirection(proc_info->node_lst);
-			proc_info->cmd_argv = find_cmd_argv(proc_info->node_lst);
-			proc_info->cmd_path = find_cmd_path(proc_info->cmd_argv, parse_envp(proc_info->denv));
-			if (iter == NULL)
-				break ;
-			token_lst = iter->next;
-			proc_lst = proc_lst->next;
-		}
-		iter = iter->next;
-	}
-}
-
-t_list	*separate_list_by_pipe(t_list *start, t_list *end)
+t_list	*make_node_list(t_list *start, t_list *end)
 {
 	t_list	*sub_lst;
 	t_list	*iter;
@@ -34,7 +10,7 @@ t_list	*separate_list_by_pipe(t_list *start, t_list *end)
 	while (iter != end)
 	{
 		t_node	*node = (t_node *)malloc(sizeof(t_node));
-		node->elem = ((t_token *)(iter->content))->elem;
+		node->elem = ft_strdup(((t_token *)(iter->content))->elem);
 		node->type = ((t_token *)(iter->content))->type;
 		node->visited = 0;
 		node->before_blank = ((t_token *)(iter->content))->before_blank;
@@ -105,10 +81,16 @@ char	*find_cmd_path(char **cmd_argv, char **path_list)
 	char	*cmd;
 
 	if (cmd_argv == NULL)
+	{
+		free_double_str(path_list);
 		return (NULL);
+	}
 	cmd = cmd_argv[0];
 	if (is_builtin(cmd_argv))
+	{
+		free_double_str(path_list);
 		return (NULL);
+	}
 	i = 0;
 	while (path_list && path_list[i])
 	{
@@ -116,11 +98,15 @@ char	*find_cmd_path(char **cmd_argv, char **path_list)
 		path = ft_strjoin(tmp, cmd);
 		free(tmp);
 		if (access(path, X_OK) == 0)
+		{
+			free_double_str(path_list);
 			return (path);
+		}
 		free(path);
 		i++;
 	}
-	return (cmd);
+	free_double_str(path_list);
+	return (ft_strdup(cmd));
 }
 
 // 환경변수 path parsing하기

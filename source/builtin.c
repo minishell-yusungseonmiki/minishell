@@ -7,19 +7,19 @@ int is_builtin(char **cmd_argv)
     if (cmd_argv == NULL)
         return (0);
     cmd = (cmd_argv)[0];
-    if (ft_strncmp(cmd, "echo", ft_strlen(cmd)) == 0 && ft_strlen(cmd) == ft_strlen("echo"))
+    if (is_same(cmd, "echo"))
         return (1);
-    else if (ft_strncmp(cmd, "cd", ft_strlen(cmd)) == 0 && ft_strlen(cmd) == ft_strlen("cd"))
+    else if (is_same(cmd, "cd"))
         return (1);
-    else if (ft_strncmp(cmd, "pwd", ft_strlen(cmd)) == 0 && ft_strlen(cmd) == ft_strlen("pwd"))
+    else if (is_same(cmd, "pwd"))
         return (1);
-    else if (ft_strncmp(cmd, "export", ft_strlen(cmd)) == 0 && ft_strlen(cmd) == ft_strlen("export"))
+    else if (is_same(cmd, "export"))
         return (1);
-    else if (ft_strncmp(cmd, "unset", ft_strlen(cmd)) == 0 && ft_strlen(cmd) == ft_strlen("unset"))
+    else if (is_same(cmd, "unset"))
         return (1);
-    else if (ft_strncmp(cmd, "env", ft_strlen(cmd)) == 0 && ft_strlen(cmd) == ft_strlen("env"))
+    else if (is_same(cmd, "env"))
         return (1);
-    else if (ft_strncmp(cmd, "exit", ft_strlen(cmd)) == 0 && ft_strlen(cmd) == ft_strlen("exit"))
+    else if (is_same(cmd, "exit"))
         return (1);
     return (0);
 }
@@ -31,18 +31,18 @@ void    execute_builtin(t_proc_info *proc, t_list *sub_lst, int only_builtin)
     if (proc->cmd_argv == NULL)
         return ;
     cmd = (proc->cmd_argv)[0];
-    if (ft_strncmp(cmd, "echo", ft_strlen(cmd)) == 0 && ft_strlen(cmd) == ft_strlen("echo"))
+    if (is_same(cmd, "echo"))
         execute_echo(proc, sub_lst);
-    else if (ft_strncmp(cmd, "cd", ft_strlen(cmd)) == 0 && ft_strlen(cmd) == ft_strlen("cd"))
+    else if (is_same(cmd, "cd"))
         execute_cd(proc);
-    else if (ft_strncmp(cmd, "pwd", ft_strlen(cmd)) == 0 && ft_strlen(cmd) == ft_strlen("pwd"))
+    else if (is_same(cmd, "pwd"))
         execute_pwd(proc);
-    else if (ft_strncmp(cmd, "export", ft_strlen(cmd)) == 0 && ft_strlen(cmd) == ft_strlen("export"))
+    else if (is_same(cmd, "export"))
         execute_export(proc->cmd_argv, proc->denv, proc);
-    else if (ft_strncmp(cmd, "unset", ft_strlen(cmd)) == 0 && ft_strlen(cmd) == ft_strlen("unset"))
+    else if (is_same(cmd, "unset"))
         execute_unset(proc->cmd_argv, &proc->denv);
-    else if (ft_strncmp(cmd, "env", ft_strlen(cmd)) == 0 && ft_strlen(cmd) == ft_strlen("env"))
+    else if (is_same(cmd, "env"))
         execute_env(proc->cmd_argv, &proc->denv);
-    else if (ft_strncmp(cmd, "exit", ft_strlen(cmd)) == 0 && ft_strlen(cmd) == ft_strlen("exit"))
+    else if (is_same(cmd, "exit"))
         execute_exit(proc, only_builtin);
 }

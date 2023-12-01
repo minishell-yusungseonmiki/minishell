@@ -106,7 +106,6 @@ char	*keyvalue_to_str(t_env *node, int export);
 char	**lst_to_envp(t_list *env_lst, int export);
 void	print_env(void *token);
 void	print_envp(char **envp, int out_fd);
-void	free_envp(char **envp);
 
 // erase_quotes.c
 char	*single_quote(char *elem, int *i);
@@ -122,6 +121,13 @@ void	execute(t_list *proc_lst);
 void	execute_child(t_proc_info *proc_info);
 int	execute_only_builtin(t_list *proc_lst);
 void	wait_process(t_list *proc_lst);
+
+// free.c
+void	free_env(void	*env);
+void	free_proc_info(void *proc);
+void	free_node_list(void	*node);
+void	free_token(void *token);
+
 // get_next_line.c
 char	*get_next_line(int fd);
 
@@ -132,8 +138,8 @@ void	heredoc(t_list *token_lst, t_list *proc_lst);
 void	sigint_handler(int signum);
 
 // make_proc_list.c
-t_proc_info	*init_proc_info(t_list *denv);
-t_list	*make_proc_list(t_list *token_lst, t_list *denv);
+t_list		*make_proc_list(t_list *token_lst, t_list *denv);
+t_proc_info	*init_proc_info(t_list *denv, t_list *node_lst);
 
 // open_fd.c
 int	find_in_fd(t_list *lst, char *h_filename);
@@ -147,9 +153,8 @@ int    syntax_check(t_list *lst);
 void	print_token(void *token);
 void	print_proc_info(void *proc_info);
 
-// set_proc_cmd.c
-void	set_cmd_info(t_list *token_lst, t_list *proc_lst);
-t_list	*separate_list_by_pipe(t_list *start, t_list *end);
+// make_proc_info.c
+t_list	*make_node_list(t_list *start, t_list *end);
 void	check_redirection(t_list *lst);
 char	**find_cmd_argv(t_list *lst);
 char	*find_cmd_path(char **cmd_argv, char **path_list);
@@ -165,5 +170,8 @@ void	print_on_signal(void);
 // tokenize.c
 t_list	*tokenize(char *s);
 
+// util.c
+int		is_same(char *a, char *b);
+void	free_double_str(char **envp);
 
 #endif
