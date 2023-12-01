@@ -63,5 +63,6 @@ void	heredoc(t_list *token_lst, t_list *proc_lst)
 	signal(SIGINT, sigint_heredoc);
 	make_heredoc(token_lst, proc_lst, filename);
 	dup2(backup_fd, STDIN_FILENO);
+	close(backup_fd);
 	signal(SIGINT, sigint_handler);
 }
