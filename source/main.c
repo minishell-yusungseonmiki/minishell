@@ -3,7 +3,8 @@
 int main(int argc, char **argv, char **envp)
 {
     char    *line;
-    t_list  *lst;
+    t_list  *token_lst;
+    t_list  *proc_lst;
     t_list  *denv;
 
     (void)argc;
@@ -19,11 +20,14 @@ int main(int argc, char **argv, char **envp)
         {
             if (quote_check(line) == 1)
             	continue; //add_history &&free
-            lst = tokenize(line);
-            if (!lst || syntax_check(lst) == 1)
+            token_lst = tokenize(line);
+            if (!token_lst || syntax_check(token_lst) == 1)
             	continue; //add_history &&free
-            erase_quotes(lst, denv);
-            find_pipe_and_execute(lst, denv, heredoc(lst));
+            erase_quotes(token_lst, denv);
+            proc_lst = make_proc_list(token_lst, denv); // envp, denv
+            heredoc(token_lst, proc_lst); //h_filename
+			set_cmd_info(token_lst, proc_lst); //cmd_argv, cmd_path
+			execute(proc_lst); // in_fd, out_fd, child_pid
             add_history(line);
             free(line);
         }
