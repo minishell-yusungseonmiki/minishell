@@ -106,7 +106,6 @@ char	*keyvalue_to_str(t_env *node, int export);
 char	**lst_to_envp(t_list *env_lst, int export);
 void	print_env(void *token);
 void	print_envp(char **envp, int out_fd);
-void	free_envp(char **envp);
 
 // erase_quotes.c
 char	*single_quote(char *elem, int *i);
@@ -122,6 +121,12 @@ void	execute(t_list *proc_lst);
 void	execute_child(t_proc_info *proc_info);
 int	execute_only_builtin(t_list *proc_lst);
 void	wait_process(t_list *proc_lst);
+
+// free.c
+void	free_env(void	*env);
+void	free_proc_info(void *proc);
+void	free_node_list(void	*node);
+
 // get_next_line.c
 char	*get_next_line(int fd);
 
@@ -165,5 +170,8 @@ void	print_on_signal(void);
 // tokenize.c
 t_list	*tokenize(char *s);
 
+// util.c
+int		is_same(char *a, char *b);
+void	free_double_str(char **envp);
 
 #endif

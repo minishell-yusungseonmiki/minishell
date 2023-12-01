@@ -6,7 +6,7 @@
 /*   By: yusung <yusung@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 16:14:07 by yusung            #+#    #+#             */
-/*   Updated: 2023/11/29 16:55:18 by yusung           ###   ########.fr       */
+/*   Updated: 2023/12/01 14:27:56 by yusung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,14 +27,6 @@ static int	is_option(char *s)
 		i++;
 	}
 	return (1);
-}
-
-int	is_same(char *node, char *cmd)
-{
-	if (ft_strncmp(node, cmd, ft_strlen(cmd)) == 0
-		&& ft_strlen(cmd) == ft_strlen(node))
-		return (1);
-	return (0);
 }
 
 char	*make_result(char *result, t_list *sub_lst, t_proc_info *proc, int i)

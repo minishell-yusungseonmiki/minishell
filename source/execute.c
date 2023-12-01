@@ -20,7 +20,7 @@ void	execute_child(t_proc_info *proc_info)
 {
 	if (proc_info->cmd_argv == NULL) //명령어가 없으면(리다이렉션만 존재)
 		exit(0);
-	if (is_builtin(proc_info->cmd_argv)) //builtin 실행
+	else if (is_builtin(proc_info->cmd_argv)) //builtin 실행
 	{
 		execute_builtin(proc_info, proc_info->node_lst, 0);
 		exit(g_exit_status); //자식 실행하고 종료시켜주는 코드 추가

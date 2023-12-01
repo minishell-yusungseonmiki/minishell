@@ -82,19 +82,6 @@ char	**lst_to_envp(t_list *env_lst, int export)
 	return (envp);
 }
 
-void	free_envp(char **envp)
-{
-	int	i;
-
-	i = 0;
-	while (envp[i])
-	{
-		free(envp[i]);
-		i++;
-	}
-	free(envp);
-}
-
 void	print_envp(char **envp, int out_fd)
 {
 	int	i;
