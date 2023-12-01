@@ -78,6 +78,7 @@ void	execute(t_list *proc_lst)
 				dup2(proc_info->out_fd, STDOUT_FILENO); //현재 노드의 outfile을 stdout으로
 			close(fd[READ]);
 			close(fd[WRITE]);
+			signal(SIGQUIT, SIG_DFL);
 			execute_child(proc_info);
 		}
 		else
