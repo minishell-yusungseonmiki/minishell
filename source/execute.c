@@ -18,6 +18,7 @@ int	execute_only_builtin(t_list *proc_lst)
 
 void	execute_child(t_proc_info *proc_info)
 {
+	signal(SIGQUIT, SIG_DFL);
 	if (proc_info->cmd_argv == NULL) //명령어가 없으면(리다이렉션만 존재)
 		exit(0);
 	else if (is_builtin(proc_info->cmd_argv)) //builtin 실행
