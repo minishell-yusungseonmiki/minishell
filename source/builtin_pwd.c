@@ -6,7 +6,7 @@
 /*   By: yusung <yusung@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 17:04:46 by yusung            #+#    #+#             */
-/*   Updated: 2023/11/29 17:05:02 by yusung           ###   ########.fr       */
+/*   Updated: 2023/12/01 20:07:54 by yusung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ void	execute_pwd(t_proc_info *proc)
 		return ;
 	}
 	tmp = ft_strjoin(result, "\n");
+	free(result);
 	result = tmp;
 	ft_putstr_fd(result, proc->out_fd);
 	free(result);

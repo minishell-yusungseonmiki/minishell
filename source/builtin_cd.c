@@ -6,7 +6,7 @@
 /*   By: yusung <yusung@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 16:13:11 by yusung            #+#    #+#             */
-/*   Updated: 2023/11/29 16:14:00 by yusung           ###   ########.fr       */
+/*   Updated: 2023/12/01 19:58:31 by yusung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,4 +59,5 @@ void	execute_cd(t_proc_info *proc)
 	set_value(&proc->denv, "OLDPWD", old_pwd);
 	now_pwd = getcwd(NULL, 0);
 	set_value(&proc->denv, "PWD", now_pwd);
+	free(now_pwd);
 }
