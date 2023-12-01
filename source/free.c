@@ -7,6 +7,7 @@ void	free_env(void	*env)
 	e = env;
 	free(e->key);
 	free(e->value);
+	free(env);
 }
 
 void	free_proc_info(void *proc_info)
@@ -24,6 +25,7 @@ void	free_proc_info(void *proc_info)
 	if (proc->cmd_path)
 		free(proc->cmd_path);
 	ft_lstclear(&proc->node_lst, free_node_list);
+	free(proc);
 }
 
 void	free_node_list(void	*node)
@@ -32,6 +34,7 @@ void	free_node_list(void	*node)
 
 	n = node;
 	free(n->elem);
+	free(n);
 }
 
 void	free_token(void *token)
@@ -40,4 +43,5 @@ void	free_token(void *token)
 
 	t = token;
 	free(t->elem);
+	free(t);
 }
