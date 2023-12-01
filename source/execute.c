@@ -53,6 +53,7 @@ void	execute(t_list *proc_lst)
 	if (execute_only_builtin(proc_lst))
 		return ;
 	iter = proc_lst;
+	prev_fd = -1;
 	while (iter)
 	{
 		proc_info = iter->content;
@@ -81,7 +82,8 @@ void	execute(t_list *proc_lst)
 		else
 		{
 			proc_info->child_pid = pid;
-			close(prev_fd);
+			if (prev_fd >= 0)
+				close(prev_fd);
 			prev_fd = dup(fd[READ]);
 			close(fd[WRITE]);
 			close(fd[READ]);
