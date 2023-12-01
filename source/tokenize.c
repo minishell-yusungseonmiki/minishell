@@ -33,6 +33,8 @@ int	meet_special(char c)
 		return (1);
 	if (c == ' ')
 		return (1);
+	if (c == '\t')
+		return (1);
 	return (0);
 }
 
@@ -42,7 +44,7 @@ int	make_special_token(t_list **lst, char *s)
 	const char	special[5][3] = {"|", "<<", ">>", "<", ">"};
 	int			i;
 
-	if (*s == ' ')
+	if (*s == ' ' || *s == '\t')
 		return (3);
 	i = 0;
 	while (i < 5)
@@ -107,7 +109,7 @@ void	set_before_blank(t_list *lst, char *s)
 	blank = 0;
 	while (s && s[i] && lst)
 	{
-		if (i != 0 && s[i - 1] == ' ')
+		if (i != 0 && (s[i - 1] == ' ' || s[i - 1] == '\t'))
 			blank = 1;
 		token = lst->content;
 		if (ft_strncmp(&s[i], token->elem, ft_strlen(token->elem)) == 0)
