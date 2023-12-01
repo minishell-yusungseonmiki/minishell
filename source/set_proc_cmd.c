@@ -4,7 +4,6 @@ void	set_cmd_info(t_list *token_lst, t_list *proc_lst)
 {
 	t_list		*iter;
 	t_proc_info	*proc_info;
-	char		**find_path;
 
 	iter = token_lst;
 	while (token_lst && proc_lst)
@@ -15,11 +14,7 @@ void	set_cmd_info(t_list *token_lst, t_list *proc_lst)
 			proc_info->node_lst = separate_list_by_pipe(token_lst, iter);
 			check_redirection(proc_info->node_lst);
 			proc_info->cmd_argv = find_cmd_argv(proc_info->node_lst);
-			//proc_info->cmd_path = find_cmd_path(proc_info->cmd_argv, parse_envp(proc_info->denv));
-
-			find_path = parse_envp(proc_info->denv);
-			proc_info->cmd_path = find_cmd_path(proc_info->cmd_argv, find_path);
-			//free_double_str(find_path);
+			proc_info->cmd_path = find_cmd_path(proc_info->cmd_argv, parse_envp(proc_info->denv));
 			if (iter == NULL)
 				break ;
 			token_lst = iter->next;
@@ -110,10 +105,16 @@ char	*find_cmd_path(char **cmd_argv, char **path_list)
 	char	*cmd;
 
 	if (cmd_argv == NULL)
+	{
+		free_double_str(path_list);
 		return (NULL);
+	}
 	cmd = cmd_argv[0];
 	if (is_builtin(cmd_argv))
+	{
+		free_double_str(path_list);
 		return (NULL);
+	}
 	i = 0;
 	while (path_list && path_list[i])
 	{
@@ -121,10 +122,14 @@ char	*find_cmd_path(char **cmd_argv, char **path_list)
 		path = ft_strjoin(tmp, cmd);
 		free(tmp);
 		if (access(path, X_OK) == 0)
+		{
+			free_double_str(path_list);
 			return (path);
+		}
 		free(path);
 		i++;
 	}
+	free_double_str(path_list);
 	return (ft_strdup(cmd));
 }
 
