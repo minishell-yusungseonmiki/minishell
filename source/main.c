@@ -31,7 +31,7 @@ int main(int argc, char **argv, char **envp)
             	continue; //add_history &&free
             erase_quotes(token_lst, denv);
             proc_lst = make_proc_list(token_lst, denv); // envp, denv
-            heredoc(token_lst, proc_lst); //h_filename
+            heredoc(proc_lst); //h_filename
 			execute(proc_lst); // in_fd, out_fd, child_pid
             add_history(line);
             free(line);

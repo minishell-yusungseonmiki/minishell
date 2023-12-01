@@ -32,28 +32,31 @@ static void	make_heredoc(t_list *proc_lst, char *filename)
 	char	*tmp;
 	int		flag;
 
-	cnt = 1;
+	cnt = 0;
 	while (proc_lst)
 	{
 		flag = 0;
 		iter = ((t_proc_info *)(proc_lst->content))->node_lst;
-		tmp = ft_itoa(cnt);
-		h_filename = ft_strjoin(filename, ft_itoa(cnt));
-		free(tmp);
 		while (iter)
 		{
 			if (((t_token *)(iter->content))->type == HEREDOC)
 			{
+				if (flag == 0)
+				{
+					cnt++;
+					tmp = ft_itoa(cnt);
+					h_filename = ft_strjoin(filename, tmp);
+					free(tmp);
+				}
 				flag = 1;
 				run_heredoc(iter, h_filename);
 			}
 			iter = iter->next;
 		}
-		cnt++;
 		if (flag)
 			((t_proc_info *)(proc_lst->content))->h_filename = h_filename;
 		else
-			((t_proc_info *)(proc_lst->content))->h_filename = NULL;
+			((t_proc_info *)(proc_lst->content))->h_filename = NULL; 
 		proc_lst = proc_lst->next;
 	}
 }
