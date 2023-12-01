@@ -13,8 +13,11 @@ int main(int argc, char **argv, char **envp)
     t_list  *proc_lst;
     t_list  *denv;
 
-    (void)argc;
-    (void)argv;
+    if (argc != 1 || ft_strncmp(*argv, "./minishell", ft_strlen(*argv)))
+    {
+        write(2, "invalid argument\n", 18);
+        return (1);
+    }
     denv = envp_to_lst(envp); //환경변수 복제
     while (1)
     {
