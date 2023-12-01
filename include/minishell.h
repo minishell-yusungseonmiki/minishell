@@ -138,8 +138,8 @@ void	heredoc(t_list *token_lst, t_list *proc_lst);
 void	sigint_handler(int signum);
 
 // make_proc_list.c
-t_proc_info	*init_proc_info(t_list *denv);
-t_list	*make_proc_list(t_list *token_lst, t_list *denv);
+t_list		*make_proc_list(t_list *token_lst, t_list *denv);
+t_proc_info	*init_proc_info(t_list *denv, t_list *node_lst);
 
 // open_fd.c
 int	find_in_fd(t_list *lst, char *h_filename);
@@ -153,9 +153,8 @@ int    syntax_check(t_list *lst);
 void	print_token(void *token);
 void	print_proc_info(void *proc_info);
 
-// set_proc_cmd.c
-void	set_cmd_info(t_list *token_lst, t_list *proc_lst);
-t_list	*separate_list_by_pipe(t_list *start, t_list *end);
+// make_proc_info.c
+t_list	*make_node_list(t_list *start, t_list *end);
 void	check_redirection(t_list *lst);
 char	**find_cmd_argv(t_list *lst);
 char	*find_cmd_path(char **cmd_argv, char **path_list);

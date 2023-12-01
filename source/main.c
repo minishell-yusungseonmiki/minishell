@@ -32,7 +32,6 @@ int main(int argc, char **argv, char **envp)
             erase_quotes(token_lst, denv);
             proc_lst = make_proc_list(token_lst, denv); // envp, denv
             heredoc(token_lst, proc_lst); //h_filename
-			set_cmd_info(token_lst, proc_lst); //cmd_argv, cmd_path
 			execute(proc_lst); // in_fd, out_fd, child_pid
             add_history(line);
             free(line);
