@@ -18,6 +18,7 @@ static void	unset_keyvalue(t_list **denv, char *key)
 				*denv = iter->next;
 			free(((t_env *)(iter->content))->key);
 			free(((t_env *)(iter->content))->value);
+			free(iter);
 			return ;
 		}
 		before = iter;
