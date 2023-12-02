@@ -74,7 +74,7 @@ void	set_value(t_list **denv, char *key, char *new_value);
 void    execute_echo(t_proc_info *proc, t_list *sub_lst);
 
 // builtin_env.c
-void    execute_env(char **cmd_argv, t_list **denv);
+void    execute_env(char **cmd_argv, t_list *denv);
 
 //builtin_exit.c
 void	execute_exit(t_proc_info *proc, int only_builtin);
@@ -88,7 +88,7 @@ int		cmd_is_empty(char **cmd_argv);
 void    execute_pwd(t_proc_info *proc);
 
 // builtin_unset.c
-void    execute_unset(char **cmd_argv, t_list **denv);
+void    execute_unset(char **cmd_argv, t_list *denv);
 
 // builtin.c
 int		is_builtin(char **cmd_argv);
@@ -138,8 +138,8 @@ void	heredoc(t_list *proc_lst);
 void	sigint_handler(int signum);
 
 // make_proc_list.c
-t_list		*make_proc_list(t_list *token_lst, t_list *denv);
-t_proc_info	*init_proc_info(t_list *denv, t_list *node_lst);
+t_list		*make_proc_list(t_list *token_lst, t_list **denv);
+t_proc_info	*init_proc_info(t_list **denv, t_list *node_lst);
 
 // open_fd.c
 int	find_in_fd(t_list *lst, char *h_filename);

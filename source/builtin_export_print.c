@@ -16,6 +16,8 @@ void	print_export(t_list *denv, t_proc_info *proc)
 	int		j;
 
 	env = lst_to_envp(denv, 1);
+	if (!env)
+		return ;
 	i = 0;
 	while (env[i + 1])
 	{

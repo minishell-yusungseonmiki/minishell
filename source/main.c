@@ -39,9 +39,12 @@ int main(int argc, char **argv, char **envp)
             	continue; //add_history &&free
             }
             erase_quotes(token_lst, denv);
-            proc_lst = make_proc_list(token_lst, denv); // envp, denv
+            // printf("before proc_lst\n");
+            proc_lst = make_proc_list(token_lst, &denv); // envp, denv
+            // printf("proc_lst\n");
             heredoc(proc_lst); //h_filename
 			execute(proc_lst); // in_fd, out_fd, child_pid
+            // ft_lstiter(denv, print_env);
             add_history(line);
             free(line);
             ft_lstclear(&token_lst, free_token);

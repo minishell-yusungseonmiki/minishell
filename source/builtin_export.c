@@ -13,15 +13,21 @@ static t_env	*make_envnode(char *key, char *value)
 static void	renew_denv(t_list **denv, char *key, char *value, int flag)
 {
 	t_list	*iter;
+	char	*tmp;
 
 	iter = *denv;
+	// printf("key: %s, value: %s\n", key, value);
 	while (iter)
 	{
 		if (!ft_strncmp(((t_env *)(iter->content))->key, key, ft_strlen(key))
 		&& ft_strlen(((t_env *)(iter->content))->key) == ft_strlen(key))
 		{
 			if (flag != 0)
+			{
+				tmp = ((t_env *)(iter->content))->value;
 				((t_env *)(iter->content))->value = value;
+				free(tmp);
+			}
 			else
 				free(value);
 			free(key);

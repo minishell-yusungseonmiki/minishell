@@ -1,6 +1,6 @@
 #include "../include/minishell.h"
 
-void    execute_env(char **cmd_argv, t_list **denv)
+void    execute_env(char **cmd_argv, t_list *denv)
 {
     if (cmd_argv[1])
     {
@@ -8,5 +8,9 @@ void    execute_env(char **cmd_argv, t_list **denv)
         g_exit_status = 127;
     }
     else
-        ft_lstiter(*denv, print_env);
+    {
+        // printf("test\n");
+        if (denv)
+            ft_lstiter(denv, print_env);
+    }
 }

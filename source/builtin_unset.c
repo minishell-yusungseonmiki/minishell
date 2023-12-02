@@ -5,6 +5,8 @@ static void	unset_keyvalue(t_list **denv, char *key)
 	t_list	*iter;
 	t_list	*before;
 
+	if (!denv)
+		return ;
 	iter = *denv;
 	before = NULL;
 	while (iter)
@@ -18,6 +20,7 @@ static void	unset_keyvalue(t_list **denv, char *key)
 				*denv = iter->next;
 			free(((t_env *)(iter->content))->key);
 			free(((t_env *)(iter->content))->value);
+			free(iter->content);
 			free(iter);
 			return ;
 		}
@@ -26,7 +29,7 @@ static void	unset_keyvalue(t_list **denv, char *key)
 	}
 }
 
-void	execute_unset(char **cmd_argv, t_list **denv)
+void	execute_unset(char **cmd_argv, t_list *denv)
 {
 	int		i;
 
@@ -39,7 +42,9 @@ void	execute_unset(char **cmd_argv, t_list **denv)
 			g_exit_status = 1;
 		}
 		else
-			unset_keyvalue(denv, cmd_argv[i]);
+			unset_keyvalue(&denv, cmd_argv[i]);
 		i++;
 	}
+	// ft_lstiter(denv, print_env);
+	// printf("finish\n");
 }

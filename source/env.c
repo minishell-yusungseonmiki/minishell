@@ -62,6 +62,8 @@ char	**lst_to_envp(t_list *env_lst, int export)
 	int		i;
 
 	cnt = 0;
+	if (!env_lst)
+		return (NULL);
 	iter = env_lst;
 	while (iter)
 	{
