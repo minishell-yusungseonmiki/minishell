@@ -60,7 +60,7 @@ char	*key_check(char *cmd_argv, int equal)
 	return (key);
 }
 
-void	run_export(char *cmd_argv, t_list *denv)
+void	run_export(char *cmd_argv, t_list **denv)
 {
 	char	*key;
 	int		equal;
@@ -76,15 +76,15 @@ void	run_export(char *cmd_argv, t_list *denv)
 	if (!key)
 		return ;
 	if (equal < 0)
-		renew_denv(&denv, key, ft_strdup(""), 0);
+		renew_denv(denv, key, ft_strdup(""), 0);
 	else
 	{
 		size = ft_strlen(cmd_argv) - equal - 1;
-		renew_denv(&denv, key, ft_substr(cmd_argv, equal + 1, size), 1);
+		renew_denv(denv, key, ft_substr(cmd_argv, equal + 1, size), 1);
 	}
 }
 
-void	execute_export(char **cmd_argv, t_list *denv, t_proc_info *proc)
+void	execute_export(char **cmd_argv, t_list **denv, t_proc_info *proc)
 {
 	int	i;
 
@@ -102,4 +102,5 @@ void	execute_export(char **cmd_argv, t_list *denv, t_proc_info *proc)
 			i++;
 		}
 	}
+	printf("export: %p\n", *denv);
 }

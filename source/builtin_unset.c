@@ -29,7 +29,7 @@ static void	unset_keyvalue(t_list **denv, char *key)
 	}
 }
 
-void	execute_unset(char **cmd_argv, t_list *denv)
+void	execute_unset(char **cmd_argv, t_list **denv)
 {
 	int		i;
 
@@ -42,9 +42,9 @@ void	execute_unset(char **cmd_argv, t_list *denv)
 			g_exit_status = 1;
 		}
 		else
-			unset_keyvalue(&denv, cmd_argv[i]);
+			unset_keyvalue(denv, cmd_argv[i]);
 		i++;
 	}
-	// ft_lstiter(denv, print_env);
-	// printf("finish\n");
+	ft_lstiter(*denv, print_env);
+	printf("unset: %p\n", *denv);
 }

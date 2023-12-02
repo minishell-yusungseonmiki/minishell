@@ -38,11 +38,11 @@ void    execute_builtin(t_proc_info *proc, t_list *sub_lst, int only_builtin)
     else if (is_same(cmd, "pwd"))
         execute_pwd(proc);
     else if (is_same(cmd, "export"))
-        execute_export(proc->cmd_argv, proc->denv, proc);
+        execute_export(proc->cmd_argv, &(proc->denv), proc);
     else if (is_same(cmd, "unset"))
-        execute_unset(proc->cmd_argv, proc->denv);
+        execute_unset(proc->cmd_argv, &(proc->denv));
     else if (is_same(cmd, "env"))
-        execute_env(proc->cmd_argv, proc->denv);
+        execute_env(proc->cmd_argv, &(proc->denv));
     else if (is_same(cmd, "exit"))
         execute_exit(proc, only_builtin);
 }

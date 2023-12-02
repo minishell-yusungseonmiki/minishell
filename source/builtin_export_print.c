@@ -9,13 +9,13 @@ static void	swap_env(char **now, char **next)
 	*next = tmp;
 }
 
-void	print_export(t_list *denv, t_proc_info *proc)
+void	print_export(t_list **denv, t_proc_info *proc)
 {
 	char	**env;
 	int		i;
 	int		j;
 
-	env = lst_to_envp(denv, 1);
+	env = lst_to_envp(*denv, 1);
 	if (!env)
 		return ;
 	i = 0;

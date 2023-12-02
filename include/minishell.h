@@ -74,21 +74,21 @@ void	set_value(t_list **denv, char *key, char *new_value);
 void    execute_echo(t_proc_info *proc, t_list *sub_lst);
 
 // builtin_env.c
-void    execute_env(char **cmd_argv, t_list *denv);
+void    execute_env(char **cmd_argv, t_list **denv);
 
 //builtin_exit.c
 void	execute_exit(t_proc_info *proc, int only_builtin);
 
 // builtin_export.c
-void    execute_export(char **cmd_argv, t_list *denv, t_proc_info *proc);
-void    print_export(t_list *denv, t_proc_info *proc);
+void    execute_export(char **cmd_argv, t_list **denv, t_proc_info *proc);
+void    print_export(t_list **denv, t_proc_info *proc);
 int		cmd_is_empty(char **cmd_argv);
 
 // builtin_pwd.c
 void    execute_pwd(t_proc_info *proc);
 
 // builtin_unset.c
-void    execute_unset(char **cmd_argv, t_list *denv);
+void    execute_unset(char **cmd_argv, t_list **denv);
 
 // builtin.c
 int		is_builtin(char **cmd_argv);
