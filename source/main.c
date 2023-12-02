@@ -7,7 +7,7 @@ void    leak()
 
 int main(int argc, char **argv, char **envp)
 {
-    // atexit(leak);
+    atexit(leak);
     char    *line;
     t_list  *token_lst;
     t_list  *proc_lst;
@@ -18,8 +18,6 @@ int main(int argc, char **argv, char **envp)
     denv = envp_to_lst(envp); //환경변수 복제
     while (1)
     {
-        // ft_lstiter(denv, print_env);
-        printf("%p\n", denv);
         print_off_signal();
         signal(SIGINT, sigint_handler);
         signal(SIGQUIT, SIG_IGN);
@@ -41,15 +39,13 @@ int main(int argc, char **argv, char **envp)
             	continue; //add_history &&free
             }
             erase_quotes(token_lst, denv);
-            // printf("before proc_lst\n");
             proc_lst = make_proc_list(token_lst, &denv); // envp, denv
-            printf("%p\n", ((t_proc_info *)(proc_lst->content))->denv);
-            // printf("proc_lst\n");
             heredoc(proc_lst); //h_filename
+            // printf("before: %p\n", denv);
 			execute(proc_lst); // in_fd, out_fd, child_pid
-            printf("-----------------\n");
+            // printf("after: %p\n", denv);
             // printf("%p\n", ((t_proc_info *)(proc_lst->content))->denv);
-            // printf("%p\n", denv);
+            denv = ((t_proc_info *)(proc_lst->content))->denv;
             add_history(line);
             free(line);
             ft_lstclear(&token_lst, free_token);

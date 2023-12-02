@@ -80,7 +80,8 @@ char	*find_cmd_path(char **cmd_argv, char **path_list)
 	char	*path;
 	char	*cmd;
 
-	// printf("find_cmd_path\n");
+	if (!path_list)
+		return (NULL);
 	if (cmd_argv == NULL)
 	{
 		free_double_str(path_list);

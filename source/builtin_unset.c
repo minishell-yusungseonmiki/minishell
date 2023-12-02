@@ -45,6 +45,5 @@ void	execute_unset(char **cmd_argv, t_list **denv)
 			unset_keyvalue(denv, cmd_argv[i]);
 		i++;
 	}
-	ft_lstiter(*denv, print_env);
 	printf("unset: %p\n", *denv);
 }
