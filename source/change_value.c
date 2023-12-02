@@ -11,12 +11,13 @@ static char	*switch_value(t_list *env, char *key)
 		if (!ft_strncmp(((t_env *)(lst->content))->key, key, ft_strlen(key))
 		&& ft_strlen(((t_env *)(lst->content))->key) == ft_strlen(key))
 		{
-			tmp = ((t_env *)(lst->content))->value;
+			tmp = ft_strdup(((t_env *)(lst->content))->value);
 			free(key);
 			return (tmp);
 		}
 		lst = lst->next;
 	}
+	free(key);
 	return (NULL);
 }
 
@@ -57,8 +58,9 @@ char	*not_env(char *str, int *i)
 
 char	*change_value(char *str, t_list *env)
 {
-	char	*tmp;
 	char	*new_str;
+	char	*get_str;
+	char	*tmp;
 	int		i;
 
 	i = 0;
@@ -66,16 +68,15 @@ char	*change_value(char *str, t_list *env)
 	while (str[i])
 	{
 		if (str[i] == '$')
-		{
-			tmp = find_env(str, env, &i);
-			if (tmp)
-				new_str = ft_strjoin(new_str, tmp);
-		}
+			get_str = find_env(str, env, &i);
 		else
+			get_str = not_env(str, &i);
+		if (get_str)
 		{
-			tmp = not_env(str, &i);
-			new_str = ft_strjoin(new_str, tmp);
+			tmp = new_str;
+			new_str = ft_strjoin(tmp, get_str);
 			free(tmp);
+			free(get_str);
 		}
 	}
 	free(str);

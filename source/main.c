@@ -25,10 +25,19 @@ int main(int argc, char **argv, char **envp)
         if (line)
         {
             if (quote_check(line) == 1)
+            {
+                add_history(line);
+                free(line);
             	continue; //add_history &&free
+            }
             token_lst = tokenize(line);
             if (!token_lst || syntax_check(token_lst) == 1)
+            {
+                add_history(line);
+                free(line);
+                ft_lstclear(&token_lst, free_token);
             	continue; //add_history &&free
+            }
             erase_quotes(token_lst, denv);
             proc_lst = make_proc_list(token_lst, denv); // envp, denv
             heredoc(proc_lst); //h_filename
