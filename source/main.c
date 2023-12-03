@@ -7,7 +7,7 @@ void    leak()
 
 int main(int argc, char **argv, char **envp)
 {
-    atexit(leak);
+    // atexit(leak);
     char    *line;
     t_list  *token_lst;
     t_list  *proc_lst;
