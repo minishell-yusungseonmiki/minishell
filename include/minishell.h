@@ -173,5 +173,7 @@ t_list	*tokenize(char *s);
 // util.c
 int		is_same(char *a, char *b);
 void	free_double_str(char **envp);
+void	pipe_open(int fd[2]);
+pid_t	make_fork(void);
 
 #endif

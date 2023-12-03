@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtin_export_print.c                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: seonmiki <seonmiki@student.42seoul.kr>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/03 16:50:03 by seonmiki          #+#    #+#             */
+/*   Updated: 2023/12/03 16:50:05 by seonmiki         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 
 static void	swap_env(char **now, char **next)
@@ -15,6 +27,7 @@ void	print_export(t_list **denv, t_proc_info *proc)
 	int		i;
 	int		j;
 
+	printf("print_export: %p\n", *denv);
 	env = lst_to_envp(*denv, 1);
 	if (!env)
 		return ;
