@@ -173,5 +173,6 @@ t_list	*tokenize(char *s);
 // util.c
 int		is_same(char *a, char *b);
 void	free_double_str(char **envp);
+int		ft_isspace(char c);
 
 #endif

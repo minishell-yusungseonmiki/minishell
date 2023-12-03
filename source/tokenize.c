@@ -31,9 +31,7 @@ int	meet_special(char c)
 		return (1);
 	if (c == '>')
 		return (1);
-	if (c == ' ')
-		return (1);
-	if (c == '\t')
+	if (ft_isspace(c))
 		return (1);
 	return (0);
 }
@@ -44,7 +42,7 @@ int	make_special_token(t_list **lst, char *s)
 	const char	special[5][3] = {"|", "<<", ">>", "<", ">"};
 	int			i;
 
-	if (*s == ' ' || *s == '\t')
+	if (ft_isspace(*s))
 		return (3);
 	i = 0;
 	while (i < 5)

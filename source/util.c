@@ -12,6 +12,8 @@ void	free_double_str(char **envp)
 {
 	int	i;
 
+	if (!envp)
+		return ;
 	i = 0;
 	while (envp[i])
 	{
@@ -19,4 +21,21 @@ void	free_double_str(char **envp)
 		i++;
 	}
 	free(envp);
+}
+
+int	ft_isspace(char c)
+{
+	if (c == ' ')
+		return (1);
+	if (c == '\t')
+		return (1);
+	//if (c == '\n') 개행문자는 제외?
+	//	return (1);
+	if (c == '\v')
+		return (1);
+	if (c == '\f')
+		return (1);
+	if (c == '\r')
+		return (1);
+	return (0);
 }
