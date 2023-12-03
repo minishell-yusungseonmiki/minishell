@@ -105,17 +105,11 @@ char	*find_cmd_path(char **cmd_argv, char **path_list)
 	char	*path;
 	char	*cmd;
 
-	if (!path_list)
-	{
-		if (access(cmd_argv[0], X_OK) == 0)
-			return (ft_strdup(cmd_argv[0]));
-		return (NULL);
-	}
 	if (cmd_argv == NULL || is_builtin(cmd_argv))
 		return (free_and_return(path_list, NULL));
 	cmd = cmd_argv[0];
 	i = 0;
-	while (path_list && path_list[i++])
+	while (path_list && path_list[i])
 	{
 		tmp = ft_strjoin(path_list[i], "/");
 		path = ft_strjoin(tmp, cmd);
@@ -123,6 +117,7 @@ char	*find_cmd_path(char **cmd_argv, char **path_list)
 		if (access(path, X_OK) == 0)
 			return (free_and_return(path_list, path));
 		free(path);
+		i++;
 	}
 	return (free_and_return(path_list, ft_strdup(cmd)));
 }

@@ -62,6 +62,8 @@ void	free_double_str(char **envp)
 {
 	int	i;
 
+	if (!envp)
+		return ;
 	i = 0;
 	while (envp[i])
 	{
