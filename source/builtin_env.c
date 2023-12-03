@@ -6,7 +6,7 @@
 /*   By: seonmiki <seonmiki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 16:49:44 by seonmiki          #+#    #+#             */
-/*   Updated: 2023/12/03 16:49:47 by seonmiki         ###   ########.fr       */
+/*   Updated: 2023/12/03 19:36:30 by seonmiki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@ void    execute_env(char **cmd_argv, t_list **denv)
 {
     if (cmd_argv[1])
     {
-        write(2, "No such file or directory\n", 26);
+        write(2, cmd_argv[1], ft_strlen(cmd_argv[1]));
+        write(2, ": No such file or directory\n", 28);
         g_exit_status = 127;
     }
     else
@@ -24,5 +25,4 @@ void    execute_env(char **cmd_argv, t_list **denv)
         if (denv && *denv)
             ft_lstiter(*denv, print_env);
     }
-    printf("env: %p\n", *denv);
 }
