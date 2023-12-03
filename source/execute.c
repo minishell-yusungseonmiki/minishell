@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execute.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: seonmiki <seonmiki@student.42seoul.kr>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/03 16:54:45 by seonmiki          #+#    #+#             */
+/*   Updated: 2023/12/03 17:17:26 by seonmiki         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 
 int	execute_only_builtin(t_list *proc_lst)
@@ -41,6 +53,35 @@ void	execute_child(t_proc_info *proc_info)
 	}
 }
 
+void	process_child(t_list *iter, int fd[2], int prev_fd, t_list *proc_lst)
+{
+	t_proc_info	*proc_info;
+
+	proc_info = iter->content;
+	proc_info->in_fd = find_in_fd(proc_info->node_lst, proc_info->h_filename);
+	proc_info->out_fd = find_out_fd(proc_info->node_lst);
+	if (iter != proc_lst && proc_info->in_fd == STDIN_FILENO) //이전 노드가 있고, 현재 노드의 infile이 stdin일 경우
+		dup2(prev_fd, STDIN_FILENO); //이전 노드 파이프의 읽기 종단을 stdin으로
+	else                                                                 //이전 노드가 없거나, 현재 노드의 infile이 stdin이 아닐 경우
+		dup2(proc_info->in_fd, STDIN_FILENO); //현재 노드의 infile을 stdin으로
+	if (iter->next != NULL && proc_info->out_fd == STDOUT_FILENO) //현재 노드의 outfile이 stdout일 경우(단, 마지막이면 패스)
+		dup2(fd[WRITE], STDOUT_FILENO); //파이프의 쓰기 종단을 stdout으로
+	else
+		dup2(proc_info->out_fd, STDOUT_FILENO); //현재 노드의 outfile을 stdout으로
+	close(fd[READ]);
+	close(fd[WRITE]);
+	execute_child(proc_info);
+}
+
+void	process_parent(t_proc_info *proc_info, int fd[2], int *prev_fd, int pid)
+{
+	proc_info->child_pid = pid;
+	close(*prev_fd);
+	*prev_fd = dup(fd[READ]);
+	close(fd[WRITE]);
+	close(fd[READ]);
+}
+
 void	execute(t_list *proc_lst)
 {
 	t_list	*iter;
@@ -53,43 +94,17 @@ void	execute(t_list *proc_lst)
 	signal(SIGINT, sigint_child);
 	if (execute_only_builtin(proc_lst))
 		return ;
+	prev_fd = -1;
 	iter = proc_lst;
-	// prev_fd = -1;
 	while (iter)
 	{
 		proc_info = iter->content;
-		if (pipe(fd) < 0)
-			perror("pipe error");
-		pid = fork();
-		if (pid < 0)
-			perror("fork error");
+		pipe_open(fd);
+		pid = make_fork();
 		if (pid == 0)
-		{
-			// 파일 열고, 이전 파이프와 연결하기 ->모든 명령어 동일
-			proc_info->in_fd = find_in_fd(proc_info->node_lst, proc_info->h_filename);
-			proc_info->out_fd = find_out_fd(proc_info->node_lst);
-			if (iter != proc_lst && proc_info->in_fd == STDIN_FILENO) //이전 노드가 있고, 현재 노드의 infile이 stdin일 경우
-				dup2(prev_fd, STDIN_FILENO); //이전 노드 파이프의 읽기 종단을 stdin으로
-			else                                                                 //이전 노드가 없거나, 현재 노드의 infile이 stdin이 아닐 경우
-				dup2(proc_info->in_fd, STDIN_FILENO); //현재 노드의 infile을 stdin으로
-			if (iter->next != NULL && proc_info->out_fd == STDOUT_FILENO) //현재 노드의 outfile이 stdout일 경우(단, 마지막이면 패스)
-				dup2(fd[WRITE], STDOUT_FILENO); //파이프의 쓰기 종단을 stdout으로
-			else
-				dup2(proc_info->out_fd, STDOUT_FILENO); //현재 노드의 outfile을 stdout으로
-			close(fd[READ]);
-			close(fd[WRITE]);
-			signal(SIGQUIT, SIG_DFL);
-			execute_child(proc_info);
-		}
+			process_child(iter, fd, prev_fd, proc_lst);
 		else
-		{
-			proc_info->child_pid = pid;
-			// if (prev_fd >= 0)
-				close(prev_fd);
-			prev_fd = dup(fd[READ]);
-			close(fd[WRITE]);
-			close(fd[READ]);
-		}
+			process_parent(proc_info, fd, &prev_fd, pid);
 		iter = iter->next;
 	}
 	close(prev_fd);
@@ -105,13 +120,4 @@ void	wait_process(t_list *proc_lst)
 		g_exit_status = g_exit_status >> 8;
 	while (waitpid(0, NULL, 0) > 0)
 		;
-	// printf("%d\n", stat);
-	// while (proc_lst)
-	// {
-	// 	pid = wait3(&stat, 0, NULL);
-	// 	last_proc = ft_lstlast(proc_lst)->content;
-	// 	if (pid == last_proc->child_pid && !is_builtin(last_proc->cmd_argv))
-	// 		g_exit_status = stat >> 8;
-	// 	proc_lst = proc_lst->next;
-	// }
 }

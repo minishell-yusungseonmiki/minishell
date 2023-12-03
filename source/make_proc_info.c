@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   make_proc_info.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: seonmiki <seonmiki@student.42seoul.kr>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/03 17:33:09 by seonmiki          #+#    #+#             */
+/*   Updated: 2023/12/03 18:28:44 by seonmiki         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 
 t_list	*make_node_list(t_list *start, t_list *end)
@@ -38,18 +50,20 @@ void	check_redirection(t_list *lst)
 	}
 }
 
-static int	count_arg(t_list *lst)
+static int	get_arg_cnt(t_list *lst)
 {
-	int	cnt;
+	t_list	*iter;
+	int		arg_cnt;
 
-	cnt = 0;
-	while (lst)
+	arg_cnt = 0;
+	iter = lst;
+	while (iter)
 	{
-		if (((t_node *)(lst->content))->visited == 0)
-			cnt++;
-		lst = lst->next;
+		if (((t_node *)(iter->content))->visited == 0)
+			arg_cnt++;
+		iter = iter->next;
 	}
-	return (cnt);
+	return (arg_cnt);
 }
 
 // 명령어 인자 리스트 2차원 배열로 할당하여 반환하기
@@ -57,9 +71,10 @@ char	**find_cmd_argv(t_list *lst)
 {
 	char	**find_arg;
 	int		arg_cnt;
+	t_list	*iter;
 	int		i;
 
-	arg_cnt = count_arg(lst);
+	arg_cnt = get_arg_cnt(lst);
 	if (arg_cnt == 0) // 실행할 명령어가 없는 경우
 		return (NULL);
 	find_arg = (char **)malloc(sizeof(char *) * (arg_cnt + 1));

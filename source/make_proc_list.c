@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   make_proc_list.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: seonmiki <seonmiki@student.42seoul.kr>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/03 17:33:15 by seonmiki          #+#    #+#             */
+/*   Updated: 2023/12/03 18:28:57 by seonmiki         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 
-t_list	*make_proc_list(t_list *token_lst, t_list *denv)
+t_list	*make_proc_list(t_list *token_lst, t_list **denv)
 {
 	t_list	*proc_lst;
 	t_list	*iter;
@@ -22,18 +34,18 @@ t_list	*make_proc_list(t_list *token_lst, t_list *denv)
 	return (proc_lst);
 }
 
-t_proc_info	*init_proc_info(t_list *denv, t_list *node_lst)
+t_proc_info	*init_proc_info(t_list **denv, t_list *node_lst)
 {
 	t_proc_info	*proc_info;
 
 	proc_info = (t_proc_info *)malloc(sizeof(t_proc_info));
 	if (proc_info == NULL)
 		return (NULL);
-	proc_info->denv = denv;
+	proc_info->denv = *denv;
 	proc_info->node_lst = node_lst;
 	check_redirection(proc_info->node_lst);
 	proc_info->cmd_argv = find_cmd_argv(proc_info->node_lst);
-	proc_info->cmd_path = find_cmd_path(proc_info->cmd_argv, parse_envp(proc_info->denv));		
+	proc_info->cmd_path = find_cmd_path(proc_info->cmd_argv, parse_envp(proc_info->denv));
 	proc_info->h_filename = NULL;
 	proc_info->in_fd = 0;
 	proc_info->out_fd = 1;

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   erase_quotes.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: seonmiki <seonmiki@student.42seoul.kr>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/03 16:54:26 by seonmiki          #+#    #+#             */
+/*   Updated: 2023/12/03 16:54:27 by seonmiki         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 
 char	*single_quote(char *elem, int *i)
@@ -73,21 +85,24 @@ static void	erase_quotes_arg(t_list *lst, t_list *env)
 {
 	char	*elem;
 	char	*new_elem;
+	char	*str;
 	char	*tmp;
 	int		i;
 
 	elem = ((t_token *)(lst->content))->elem;
-	new_elem = "";
+	new_elem = ft_strdup("");
 	i = 0;
 	while (elem[i])
 	{
 		if (elem[i] == '\'')
-			tmp = single_quote(elem, &i);
+			str = single_quote(elem, &i);
 		else if (elem[i] == '\"')
-			tmp = double_quote(elem, &i, env);
+			str = double_quote(elem, &i, env);
 		else
-			tmp = not_quote(elem, &i, env);
-		new_elem = ft_strjoin(new_elem, tmp);
+			str= not_quote(elem, &i, env);
+		tmp = new_elem;
+		new_elem = ft_strjoin(tmp, str);
+		free(str);
 		free(tmp);
 	}
 	free(((t_token *)(lst->content))->elem);

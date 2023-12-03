@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtin_env.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: seonmiki <seonmiki@student.42seoul.kr>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/03 16:49:44 by seonmiki          #+#    #+#             */
+/*   Updated: 2023/12/03 16:49:47 by seonmiki         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 
 void    execute_env(char **cmd_argv, t_list **denv)
@@ -8,5 +20,9 @@ void    execute_env(char **cmd_argv, t_list **denv)
         g_exit_status = 127;
     }
     else
-        ft_lstiter(*denv, print_env);
+    {
+        if (denv && *denv)
+            ft_lstiter(*denv, print_env);
+    }
+    printf("env: %p\n", *denv);
 }

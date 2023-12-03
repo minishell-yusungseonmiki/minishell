@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   signal.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: seonmiki <seonmiki@student.42seoul.kr>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/03 17:33:50 by seonmiki          #+#    #+#             */
+/*   Updated: 2023/12/03 17:33:50 by seonmiki         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 
 void	sigint_handler(int signum)
@@ -5,7 +17,7 @@ void	sigint_handler(int signum)
 	(void)signum;
     printf("\n");
     rl_on_new_line();
-	// rl_replace_line("", 0);
+    // rl_replace_line("", 0);
     rl_redisplay();
 }
 

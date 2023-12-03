@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   heredoc.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: seonmiki <seonmiki@student.42seoul.kr>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/03 16:56:00 by seonmiki          #+#    #+#             */
+/*   Updated: 2023/12/03 17:32:23 by seonmiki         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 
 static void	run_heredoc(t_list *cur, char *h_filename)
@@ -24,35 +36,46 @@ static void	run_heredoc(t_list *cur, char *h_filename)
 	close(fd);
 }
 
-static void	make_heredoc(t_list *proc_lst, char *filename)
+static char	*check_node_lst(t_list *proc_lst, int *cnt, int *flag, char *filename)
+{
+	t_list	*iter;
+	char	*tmp;
+	char	*h_filename;
+
+	h_filename = NULL;
+	iter = ((t_proc_info *)(proc_lst->content))->node_lst;
+	while (iter)
+	{
+		if (((t_token *)(iter->content))->type == HEREDOC)
+		{
+			if (*flag == 0)
+			{
+				*cnt += 1;
+				tmp = ft_itoa(*cnt);
+				h_filename = ft_strjoin(filename, tmp);
+				free(tmp);
+			}
+			*flag = 1;
+			run_heredoc(iter, h_filename);
+		}
+		iter = iter->next;
+	}
+	return (h_filename);
+}
+
+static void	make_heredoc(t_list *proc_lst)
 {
 	char	*h_filename;
-	t_list	*iter;
+	char	*filename;
 	int		cnt;
-	char	*tmp;
 	int		flag;
 
 	cnt = 0;
+	filename = "/tmp/here_doc";
 	while (proc_lst)
 	{
 		flag = 0;
-		iter = ((t_proc_info *)(proc_lst->content))->node_lst;
-		while (iter)
-		{
-			if (((t_token *)(iter->content))->type == HEREDOC)
-			{
-				if (flag == 0)
-				{
-					cnt++;
-					tmp = ft_itoa(cnt);
-					h_filename = ft_strjoin(filename, tmp);
-					free(tmp);
-				}
-				flag = 1;
-				run_heredoc(iter, h_filename);
-			}
-			iter = iter->next;
-		}
+		h_filename = check_node_lst(proc_lst, &cnt, &flag, filename);
 		if (flag)
 			((t_proc_info *)(proc_lst->content))->h_filename = h_filename;
 		else
@@ -63,13 +86,11 @@ static void	make_heredoc(t_list *proc_lst, char *filename)
 
 void	heredoc(t_list *proc_lst)
 {
-	char	*filename;
 	int		backup_fd;
 
 	backup_fd = dup(STDIN_FILENO);
-	filename = "/tmp/here_doc";
 	signal(SIGINT, sigint_heredoc);
-	make_heredoc(proc_lst, filename);
+	make_heredoc(proc_lst);
 	dup2(backup_fd, STDIN_FILENO);
 	close(backup_fd);
 	signal(SIGINT, sigint_handler);
