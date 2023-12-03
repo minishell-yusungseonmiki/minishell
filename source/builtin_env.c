@@ -6,7 +6,7 @@
 /*   By: seonmiki <seonmiki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 16:49:44 by seonmiki          #+#    #+#             */
-/*   Updated: 2023/12/03 16:49:47 by seonmiki         ###   ########.fr       */
+/*   Updated: 2023/12/03 18:41:13 by seonmiki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,5 +24,4 @@ void    execute_env(char **cmd_argv, t_list **denv)
         if (denv && *denv)
             ft_lstiter(*denv, print_env);
     }
-    printf("env: %p\n", *denv);
 }

@@ -6,7 +6,7 @@
 /*   By: seonmiki <seonmiki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 16:50:14 by seonmiki          #+#    #+#             */
-/*   Updated: 2023/12/03 18:27:59 by seonmiki         ###   ########.fr       */
+/*   Updated: 2023/12/03 19:05:54 by seonmiki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ char	*key_check(char *cmd_argv, int equal)
 	{
 		if (!ft_isalnum(key[j]) && key[j] != '_')
 		{
-			error(INVALID_EXPORT);
+			error(INVALID_EXPORT, key);
 			free(key);
 			return (NULL);
 		}
@@ -81,7 +81,7 @@ void	run_export(char *cmd_argv, t_list **denv)
 	equal = ft_strchr(cmd_argv, '=') - cmd_argv;
 	if (equal == 0)
 	{
-		error(INVALID_EXPORT);
+		error(INVALID_EXPORT, cmd_argv);
 		return ;
 	}
 	key = key_check(cmd_argv, equal);
@@ -108,7 +108,7 @@ void	execute_export(char **cmd_argv, t_list **denv, t_proc_info *proc)
 		while (cmd_argv[i])
 		{
 			if (ft_isdigit(cmd_argv[i][0]))
-				error(INVALID_EXPORT);
+				error(INVALID_EXPORT, cmd_argv[i]);
 			else
 				run_export(cmd_argv[i], denv);
 			i++;
