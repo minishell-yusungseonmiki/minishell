@@ -6,7 +6,7 @@
 /*   By: seonmiki <seonmiki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 17:33:33 by seonmiki          #+#    #+#             */
-/*   Updated: 2023/12/03 17:33:34 by seonmiki         ###   ########.fr       */
+/*   Updated: 2023/12/03 19:09:20 by seonmiki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	quote_check(char *s)
 		i++;
 	}
 	if (q != 0)
-		return (error(SYNTAX));
+		return (error(SYNTAX, NULL));
 	return (0);
 }
 
@@ -57,7 +57,7 @@ int	syntax_check(t_list *lst)
 
 	cur = lst;
 	if (((t_token *)(cur->content))->type == PIPE)
-		return (error(SYNTAX));
+		return (error(SYNTAX, NULL));
 	while (cur && cur->next)
 	{
 		if (((t_token *)(cur->content))->type != ARG)
@@ -65,16 +65,16 @@ int	syntax_check(t_list *lst)
 			if (((t_token *)(cur->content))->type == PIPE)
 			{
 				if (((t_token *)(cur->next->content))->type == PIPE)
-					return (error(SYNTAX));
+					return (error(SYNTAX, NULL));
 			}
 			else if (((t_token *)(cur->next->content))->type != ARG)
-				return (error(SYNTAX));
+				return (error(SYNTAX, NULL));
 		}
 		cur = cur->next;
 	}
 	if (((t_token *)(cur->content))->type != ARG)
-		return (error(SYNTAX));
+		return (error(SYNTAX, NULL));
 	if (heredoc_cnt(lst) > 16)
-		return (error(MAX_HEREDOC));
+		return (error(MAX_HEREDOC, NULL));
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: seonmiki <seonmiki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 16:54:45 by seonmiki          #+#    #+#             */
-/*   Updated: 2023/12/03 17:17:26 by seonmiki         ###   ########.fr       */
+/*   Updated: 2023/12/03 18:55:18 by seonmiki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,8 @@ void	execute_child(t_proc_info *proc_info)
 		stat(proc_info->cmd_path, &stat_path);
 		if (access(proc_info->cmd_path, X_OK) != 0)
 		{
-			write(2, "command not found\n", 19);
+			write(2, proc_info->cmd_argv[0], ft_strlen(proc_info->cmd_argv[0]));
+			write(2, " : command not found\n", 22);
 			exit(127);
 		}
 		else if (dir_in_pwd(proc_info->cmd_path))

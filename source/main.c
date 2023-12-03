@@ -12,7 +12,7 @@ int main(int argc, char **argv, char **envp)
     t_list  *denv;
 
     if (argc > 1 || argv[1])
-        error(START);
+        error(START, NULL);
     denv = envp_to_lst(envp);
     while (1)
     {
