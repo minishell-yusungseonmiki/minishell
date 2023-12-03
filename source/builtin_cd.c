@@ -16,7 +16,8 @@ static void	builtin_cd_error(char *str)
 {
 	write(2, "cd: ", 5);
 	write(2, str, ft_strlen(str));
-	write(2, ": No such file or directory\n", 29);
+	write(2, ": ", 3);
+	perror(NULL);
 	g_exit_status = 1;
 }
 
