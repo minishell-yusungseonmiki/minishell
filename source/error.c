@@ -47,6 +47,5 @@ int	error(e_error err, char *str)
 		write(2, "': not a valid identifier\n", 26);
         g_exit_status = 1;
 	}
-
 	return (1);
 }

@@ -50,7 +50,9 @@ void	execute_unset(char **cmd_argv, t_list **denv)
 	{
 		if (ft_isdigit(cmd_argv[i][0]) || ft_strchr(cmd_argv[i], '='))
 		{
-			write(2, "export: not a valid identifier\n", 31);
+			write(2, "unset: '", 9);
+			write(2, cmd_argv[i], ft_strlen(cmd_argv[i]));
+			write(2, "': not a valid identifier\n", 27);
 			g_exit_status = 1;
 		}
 		else
