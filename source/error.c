@@ -6,7 +6,7 @@
 /*   By: seonmiki <seonmiki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 16:54:38 by seonmiki          #+#    #+#             */
-/*   Updated: 2023/12/03 17:42:58 by seonmiki         ###   ########.fr       */
+/*   Updated: 2023/12/03 17:58:04 by seonmiki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,12 @@
 
 int	error(e_error err)
 {
-	if (err == SYNTAX)
+	if (err == START)
+	{
+		perror("only ./minishell");
+		exit(1);
+	}
+	else if (err == SYNTAX)
 		perror("syntax error");
 	else if (err == MAX_HEREDOC)
 	{

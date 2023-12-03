@@ -6,7 +6,7 @@
 /*   By: seonmiki <seonmiki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 16:50:14 by seonmiki          #+#    #+#             */
-/*   Updated: 2023/12/03 16:50:17 by seonmiki         ###   ########.fr       */
+/*   Updated: 2023/12/03 17:51:59 by seonmiki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static void	renew_denv(t_list **denv, char *key, char *value, int flag)
 	}
 	printf("key:%s, value:%s.\n", key, value);
 	ft_lstadd_back(denv, ft_lstnew(make_envnode(key, value)));
-	// ft_lstiter(*denv, print_env);
+	ft_lstiter(*denv, print_env);
 }
 
 char	*key_check(char *cmd_argv, int equal)

@@ -58,6 +58,7 @@ typedef struct s_proc_info {
 }	t_proc_info;
 
 typedef enum {
+	START,
 	SYNTAX,
 	MAX_HEREDOC,
 	INVALID_EXPORT,
