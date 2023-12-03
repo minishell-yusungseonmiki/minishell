@@ -71,7 +71,6 @@ char	**find_cmd_argv(t_list *lst)
 {
 	char	**find_arg;
 	int		arg_cnt;
-	t_list	*iter;
 	int		i;
 
 	arg_cnt = get_arg_cnt(lst);
