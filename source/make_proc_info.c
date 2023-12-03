@@ -79,18 +79,23 @@ char	**find_cmd_argv(t_list *lst)
 		return (NULL);
 	find_arg = (char **)malloc(sizeof(char *) * (arg_cnt + 1));
 	i = 0;
-	iter = lst;
-	while (iter)
+	while (lst)
 	{
-		if (((t_node *)(iter->content))->visited == 0)
+		if (((t_node *)(lst->content))->visited == 0)
 		{
-			find_arg[i] = ft_strdup(((t_node *)(iter->content))->elem);
+			find_arg[i] = ft_strdup(((t_node *)(lst->content))->elem);
 			i++;
 		}
-		iter = iter->next;
+		lst = lst->next;
 	}
 	find_arg[i] = NULL;
 	return (find_arg);
+}
+
+static char	*free_and_return(char **pathlist, char *result)
+{
+	free_double_str(pathlist);
+	return (result);
 }
 
 // 명령어 경로 찾기
@@ -101,19 +106,9 @@ char	*find_cmd_path(char **cmd_argv, char **path_list)
 	char	*path;
 	char	*cmd;
 
-	if (!path_list)
-		return (NULL);
-	if (cmd_argv == NULL)
-	{
-		free_double_str(path_list);
-		return (NULL);
-	}
+	if (cmd_argv == NULL || is_builtin(cmd_argv))
+		return (free_and_return(path_list, NULL));
 	cmd = cmd_argv[0];
-	if (is_builtin(cmd_argv))
-	{
-		free_double_str(path_list);
-		return (NULL);
-	}
 	i = 0;
 	while (path_list && path_list[i])
 	{
@@ -121,15 +116,11 @@ char	*find_cmd_path(char **cmd_argv, char **path_list)
 		path = ft_strjoin(tmp, cmd);
 		free(tmp);
 		if (access(path, X_OK) == 0)
-		{
-			free_double_str(path_list);
-			return (path);
-		}
+			return (free_and_return(path_list, path));
 		free(path);
 		i++;
 	}
-	free_double_str(path_list);
-	return (ft_strdup(cmd));
+	return (free_and_return(path_list, ft_strdup(cmd)));
 }
 
 // 환경변수 path parsing하기

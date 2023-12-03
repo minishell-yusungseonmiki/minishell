@@ -12,6 +12,25 @@
 
 #include "../include/minishell.h"
 
+static int	open_file(char *filename, int option)
+{
+	int	fd;
+
+	fd = -1;
+	if (option == 0) // <, <<
+		fd = open(filename, O_RDONLY);
+	else if (option == 1) // >
+		fd = open(filename, O_CREAT | O_RDWR | O_TRUNC, 0666);
+	else if (option == 2) // >>
+		fd = open(filename, O_CREAT | O_RDWR | O_APPEND, 0666);
+	if (fd < 0)
+	{
+		perror(NULL);
+		exit(1);
+	}
+	return (fd);
+}
+
 int	find_in_fd(t_list *lst, char *h_filename)
 {
 	int		fd;
