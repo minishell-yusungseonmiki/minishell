@@ -28,8 +28,30 @@ int	execute_only_builtin(t_list *proc_lst)
 	return (0);
 }
 
+static int	dir_in_pwd(char *path)
+{
+	DIR *dir;
+	struct dirent *ent;
+
+	dir = opendir(".");
+	while (1) {
+		ent = readdir(dir);
+		if (!ent)
+			break ;
+		if (is_same(ent->d_name, path))
+		{
+			closedir(dir);
+			return (1);
+		}
+	}
+	closedir(dir);
+	return (0);
+}
+
 void	execute_child(t_proc_info *proc_info)
 {
+	struct stat stat_path;
+
 	signal(SIGQUIT, SIG_DFL);
 	if (proc_info->cmd_argv == NULL) //명령어가 없으면(리다이렉션만 존재)
 		exit(0);
@@ -40,10 +62,21 @@ void	execute_child(t_proc_info *proc_info)
 	}
 	else //execve 활용한 나머지 명령어
 	{
+		stat(proc_info->cmd_path, &stat_path);
 		if (access(proc_info->cmd_path, X_OK) != 0)
 		{
 			write(2, "command not found\n", 19);
 			exit(127);
+		}
+		else if (dir_in_pwd(proc_info->cmd_path))
+		{
+			write(2, "command not found\n", 19);
+			exit(127);
+		}
+		else if (S_ISDIR(stat_path.st_mode))
+		{
+			write(2, "is a directory\n", 15);
+			exit(126);
 		}
 		else if (execve(proc_info->cmd_path, proc_info->cmd_argv, lst_to_envp(proc_info->denv, 0)) < 0)
 		{

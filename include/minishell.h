@@ -14,6 +14,8 @@
 # include <stdlib.h>
 # include <fcntl.h>
 #include <termios.h>
+#include <sys/stat.h>
+#include <dirent.h>
 
 # define READ 0
 # define WRITE 1
