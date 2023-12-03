@@ -6,7 +6,7 @@
 /*   By: seonmiki <seonmiki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 16:55:54 by seonmiki          #+#    #+#             */
-/*   Updated: 2023/12/03 16:55:55 by seonmiki         ###   ########.fr       */
+/*   Updated: 2023/12/03 18:26:33 by seonmiki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,4 +56,17 @@ void	free_token(void *token)
 	t = token;
 	free(t->elem);
 	free(t);
+}
+
+void	free_double_str(char **envp)
+{
+	int	i;
+
+	i = 0;
+	while (envp[i])
+	{
+		free(envp[i]);
+		i++;
+	}
+	free(envp);
 }

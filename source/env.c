@@ -6,7 +6,7 @@
 /*   By: seonmiki <seonmiki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 16:51:47 by seonmiki          #+#    #+#             */
-/*   Updated: 2023/12/03 16:54:02 by seonmiki         ###   ########.fr       */
+/*   Updated: 2023/12/03 18:22:39 by seonmiki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,10 +57,10 @@ char	*keyvalue_to_str(t_env *node, int export)
 		free(str);
 			return (tmp);
 	}
+	if (export && node->value[0] == '\0')
+		return (str);
 	tmp = ft_strjoin(str, "=");
 	free(str);
-	if (export && node->value[0] == '\0')
-		return (tmp);
 	str = ft_strjoin(tmp, node->value);
 	free(tmp);
 	return (str);

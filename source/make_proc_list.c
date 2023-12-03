@@ -6,7 +6,7 @@
 /*   By: seonmiki <seonmiki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 17:33:15 by seonmiki          #+#    #+#             */
-/*   Updated: 2023/12/03 17:33:15 by seonmiki         ###   ########.fr       */
+/*   Updated: 2023/12/03 18:28:57 by seonmiki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,7 @@ t_proc_info	*init_proc_info(t_list **denv, t_list *node_lst)
 	proc_info->node_lst = node_lst;
 	check_redirection(proc_info->node_lst);
 	proc_info->cmd_argv = find_cmd_argv(proc_info->node_lst);
-	// printf("before cmd_path\n");
 	proc_info->cmd_path = find_cmd_path(proc_info->cmd_argv, parse_envp(proc_info->denv));
-	// printf("after cmd_path\n");
 	proc_info->h_filename = NULL;
 	proc_info->in_fd = 0;
 	proc_info->out_fd = 1;

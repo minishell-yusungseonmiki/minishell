@@ -6,7 +6,7 @@
 /*   By: seonmiki <seonmiki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 17:33:09 by seonmiki          #+#    #+#             */
-/*   Updated: 2023/12/03 17:38:10 by seonmiki         ###   ########.fr       */
+/*   Updated: 2023/12/03 18:28:44 by seonmiki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,10 +137,7 @@ char	**parse_envp(t_list *denv)
 {
 	char	**path_list;
 
-	// printf("parse_envp\n");
 	path_list = NULL;
-	// ft_lstiter(denv, print_env);
-	// printf("%p\n", denv);
 	while (denv)
 	{
 		if (ft_strncmp(((t_env *)(denv->content))->key, "PATH", 4) == 0
@@ -151,6 +148,5 @@ char	**parse_envp(t_list *denv)
 		}
 		denv = denv->next;
 	}
-	// printf("end parse_envp\n");
 	return (path_list);
 }

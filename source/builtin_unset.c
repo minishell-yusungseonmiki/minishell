@@ -6,7 +6,7 @@
 /*   By: seonmiki <seonmiki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 16:50:42 by seonmiki          #+#    #+#             */
-/*   Updated: 2023/12/03 16:50:43 by seonmiki         ###   ########.fr       */
+/*   Updated: 2023/12/03 18:28:16 by seonmiki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,5 +57,4 @@ void	execute_unset(char **cmd_argv, t_list **denv)
 			unset_keyvalue(denv, cmd_argv[i]);
 		i++;
 	}
-	printf("unset: %p\n", *denv);
 }

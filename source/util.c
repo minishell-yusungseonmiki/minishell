@@ -6,7 +6,7 @@
 /*   By: seonmiki <seonmiki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 17:34:17 by seonmiki          #+#    #+#             */
-/*   Updated: 2023/12/03 17:34:17 by seonmiki         ###   ########.fr       */
+/*   Updated: 2023/12/03 18:26:24 by seonmiki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,19 +18,6 @@ int	is_same(char *a, char *b)
 		&& ft_strlen(a) == ft_strlen(b))
 		return (1);
 	return (0);
-}
-
-void	free_double_str(char **envp)
-{
-	int	i;
-
-	i = 0;
-	while (envp[i])
-	{
-		free(envp[i]);
-		i++;
-	}
-	free(envp);
 }
 
 void	pipe_open(int fd[2])
@@ -55,3 +42,21 @@ pid_t	make_fork(void)
 	return (pid);
 }
 
+int	line_check(char *line, t_list **token_lst)
+{
+	if (quote_check(line) == 1)
+	{
+		add_history(line);
+		free(line);
+		return (0);
+	}
+	*token_lst = tokenize(line);
+	if (!(*token_lst) || syntax_check(*token_lst) == 1)
+	{
+		add_history(line);
+		free(line);
+		ft_lstclear(token_lst, free_token);
+		return (0);
+	}
+	return (1);
+}

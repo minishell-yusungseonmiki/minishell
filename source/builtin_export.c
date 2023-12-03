@@ -6,7 +6,7 @@
 /*   By: seonmiki <seonmiki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 16:50:14 by seonmiki          #+#    #+#             */
-/*   Updated: 2023/12/03 17:51:59 by seonmiki         ###   ########.fr       */
+/*   Updated: 2023/12/03 18:27:59 by seonmiki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,7 @@ static void	renew_denv(t_list **denv, char *key, char *value, int flag)
 		}
 		iter = iter->next;
 	}
-	printf("key:%s, value:%s.\n", key, value);
 	ft_lstadd_back(denv, ft_lstnew(make_envnode(key, value)));
-	ft_lstiter(*denv, print_env);
 }
 
 char	*key_check(char *cmd_argv, int equal)
@@ -57,7 +55,7 @@ char	*key_check(char *cmd_argv, int equal)
 	int		j;
 
 	if (equal < 0)
-		key = cmd_argv;
+		key = ft_strdup(cmd_argv);
 	else
 		key = ft_substr(cmd_argv, 0, equal);
 	j = 0;
@@ -66,6 +64,7 @@ char	*key_check(char *cmd_argv, int equal)
 		if (!ft_isalnum(key[j]) && key[j] != '_')
 		{
 			error(INVALID_EXPORT);
+			free(key);
 			return (NULL);
 		}
 		j++;
@@ -115,7 +114,4 @@ void	execute_export(char **cmd_argv, t_list **denv, t_proc_info *proc)
 			i++;
 		}
 	}
-	// printf("export: %p\n", *denv);
-	// printf("-------------\n");
-	// ft_lstiter(*denv, print_env);
 }

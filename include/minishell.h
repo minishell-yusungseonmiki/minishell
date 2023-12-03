@@ -125,10 +125,11 @@ int	execute_only_builtin(t_list *proc_lst);
 void	wait_process(t_list *proc_lst);
 
 // free.c
-void	free_env(void	*env);
+void	free_env(void *env);
 void	free_proc_info(void *proc);
 void	free_node_list(void	*node);
 void	free_token(void *token);
+void	free_double_str(char **envp);
 
 // get_next_line.c
 char	*get_next_line(int fd);
@@ -137,7 +138,7 @@ char	*get_next_line(int fd);
 void	heredoc(t_list *proc_lst);
 
 // main.c
-void	sigint_handler(int signum);
+void    run_minishell(char *line, t_list **denv);
 
 // make_proc_list.c
 t_list		*make_proc_list(t_list *token_lst, t_list **denv);
@@ -174,8 +175,8 @@ t_list	*tokenize(char *s);
 
 // util.c
 int		is_same(char *a, char *b);
-void	free_double_str(char **envp);
 void	pipe_open(int fd[2]);
 pid_t	make_fork(void);
+int		line_check(char *line, t_list **token_lst);
 
 #endif
