@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   make_proc_info.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: seonmiki <seonmiki@student.42seoul.kr>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/03 17:33:09 by seonmiki          #+#    #+#             */
+/*   Updated: 2023/12/03 18:28:44 by seonmiki         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 
 t_list	*make_node_list(t_list *start, t_list *end)
@@ -38,13 +50,10 @@ void	check_redirection(t_list *lst)
 	}
 }
 
-// 명령어 인자 리스트 2차원 배열로 할당하여 반환하기
-char	**find_cmd_argv(t_list *lst)
+static int	get_arg_cnt(t_list *lst)
 {
-	char	**find_arg;
-	int		arg_cnt;
 	t_list	*iter;
-	int		i;
+	int		arg_cnt;
 
 	arg_cnt = 0;
 	iter = lst;
@@ -54,6 +63,18 @@ char	**find_cmd_argv(t_list *lst)
 			arg_cnt++;
 		iter = iter->next;
 	}
+	return (arg_cnt);
+}
+
+// 명령어 인자 리스트 2차원 배열로 할당하여 반환하기
+char	**find_cmd_argv(t_list *lst)
+{
+	char	**find_arg;
+	int		arg_cnt;
+	t_list	*iter;
+	int		i;
+
+	arg_cnt = get_arg_cnt(lst);
 	if (arg_cnt == 0) // 실행할 명령어가 없는 경우
 		return (NULL);
 	find_arg = (char **)malloc(sizeof(char *) * (arg_cnt + 1));
@@ -80,6 +101,8 @@ char	*find_cmd_path(char **cmd_argv, char **path_list)
 	char	*path;
 	char	*cmd;
 
+	if (!path_list)
+		return (NULL);
 	if (cmd_argv == NULL)
 	{
 		free_double_str(path_list);

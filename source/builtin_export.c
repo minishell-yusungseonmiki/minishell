@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtin_export.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: seonmiki <seonmiki@student.42seoul.kr>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/03 16:50:14 by seonmiki          #+#    #+#             */
+/*   Updated: 2023/12/03 18:27:59 by seonmiki         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 
 static t_env	*make_envnode(char *key, char *value)
@@ -13,6 +25,7 @@ static t_env	*make_envnode(char *key, char *value)
 static void	renew_denv(t_list **denv, char *key, char *value, int flag)
 {
 	t_list	*iter;
+	char	*tmp;
 
 	iter = *denv;
 	while (iter)
@@ -21,7 +34,11 @@ static void	renew_denv(t_list **denv, char *key, char *value, int flag)
 		&& ft_strlen(((t_env *)(iter->content))->key) == ft_strlen(key))
 		{
 			if (flag != 0)
+			{
+				tmp = ((t_env *)(iter->content))->value;
 				((t_env *)(iter->content))->value = value;
+				free(tmp);
+			}
 			else
 				free(value);
 			free(key);
@@ -38,7 +55,7 @@ char	*key_check(char *cmd_argv, int equal)
 	int		j;
 
 	if (equal < 0)
-		key = cmd_argv;
+		key = ft_strdup(cmd_argv);
 	else
 		key = ft_substr(cmd_argv, 0, equal);
 	j = 0;
@@ -47,6 +64,7 @@ char	*key_check(char *cmd_argv, int equal)
 		if (!ft_isalnum(key[j]) && key[j] != '_')
 		{
 			error(INVALID_EXPORT);
+			free(key);
 			return (NULL);
 		}
 		j++;
@@ -54,7 +72,7 @@ char	*key_check(char *cmd_argv, int equal)
 	return (key);
 }
 
-void	run_export(char *cmd_argv, t_list *denv)
+void	run_export(char *cmd_argv, t_list **denv)
 {
 	char	*key;
 	int		equal;
@@ -70,15 +88,15 @@ void	run_export(char *cmd_argv, t_list *denv)
 	if (!key)
 		return ;
 	if (equal < 0)
-		renew_denv(&denv, key, ft_strdup(""), 0);
+		renew_denv(denv, key, ft_strdup(""), 0);
 	else
 	{
 		size = ft_strlen(cmd_argv) - equal - 1;
-		renew_denv(&denv, key, ft_substr(cmd_argv, equal + 1, size), 1);
+		renew_denv(denv, key, ft_substr(cmd_argv, equal + 1, size), 1);
 	}
 }
 
-void	execute_export(char **cmd_argv, t_list *denv, t_proc_info *proc)
+void	execute_export(char **cmd_argv, t_list **denv, t_proc_info *proc)
 {
 	int	i;
 

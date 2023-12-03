@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtin_unset.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: seonmiki <seonmiki@student.42seoul.kr>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/03 16:50:42 by seonmiki          #+#    #+#             */
+/*   Updated: 2023/12/03 18:28:16 by seonmiki         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 
 static void	unset_keyvalue(t_list **denv, char *key)
@@ -5,6 +17,8 @@ static void	unset_keyvalue(t_list **denv, char *key)
 	t_list	*iter;
 	t_list	*before;
 
+	if (!denv)
+		return ;
 	iter = *denv;
 	before = NULL;
 	while (iter)
@@ -18,6 +32,7 @@ static void	unset_keyvalue(t_list **denv, char *key)
 				*denv = iter->next;
 			free(((t_env *)(iter->content))->key);
 			free(((t_env *)(iter->content))->value);
+			free(iter->content);
 			free(iter);
 			return ;
 		}

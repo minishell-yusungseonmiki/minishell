@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   env.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: seonmiki <seonmiki@student.42seoul.kr>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/03 16:51:47 by seonmiki          #+#    #+#             */
+/*   Updated: 2023/12/03 18:22:39 by seonmiki         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 
 t_env	*make_keyvalue(char *env)
@@ -45,10 +57,10 @@ char	*keyvalue_to_str(t_env *node, int export)
 		free(str);
 			return (tmp);
 	}
+	if (export && node->value[0] == '\0')
+		return (str);
 	tmp = ft_strjoin(str, "=");
 	free(str);
-	if (export && node->value[0] == '\0')
-		return (tmp);
 	str = ft_strjoin(tmp, node->value);
 	free(tmp);
 	return (str);
@@ -62,6 +74,8 @@ char	**lst_to_envp(t_list *env_lst, int export)
 	int		i;
 
 	cnt = 0;
+	if (!env_lst)
+		return (NULL);
 	iter = env_lst;
 	while (iter)
 	{
@@ -74,9 +88,8 @@ char	**lst_to_envp(t_list *env_lst, int export)
 	i = 0;
 	while (env_lst)
 	{
-		envp[i] = keyvalue_to_str(((t_env *)(env_lst->content)), export);
+		envp[i++] = keyvalue_to_str(((t_env *)(env_lst->content)), export);
 		env_lst = env_lst->next;
-		i++;
 	}
 	envp[i] = NULL;
 	return (envp);
@@ -95,23 +108,6 @@ void	print_envp(char **envp, int out_fd)
 		i++;
 	}
 }
-
-// void	print_envp(char **envp)
-// {
-// 	int	i = 0;
-// 	while (envp && envp[i])
-// 	{
-// 		printf("%s\n", envp[i++]);
-// 	}
-// }
-
-// void	print_env(void *token)
-// {
-// 	printf("declare -x ");
-// 	printf("%s", ((t_env *)token)->key);
-// 	printf("=");
-// 	printf("\"%s\"\n", ((t_env *)token)->value);
-// }
 
 void	print_env(void *token)
 {

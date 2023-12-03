@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   util.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: seonmiki <seonmiki@student.42seoul.kr>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/03 17:34:17 by seonmiki          #+#    #+#             */
+/*   Updated: 2023/12/03 18:26:24 by seonmiki         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 
 int	is_same(char *a, char *b)
@@ -8,15 +20,43 @@ int	is_same(char *a, char *b)
 	return (0);
 }
 
-void	free_double_str(char **envp)
+void	pipe_open(int fd[2])
 {
-	int	i;
-
-	i = 0;
-	while (envp[i])
+	if (pipe(fd) < 0)
 	{
-		free(envp[i]);
-		i++;
+		perror("pipe error");
+		exit(1);
 	}
-	free(envp);
+}
+
+pid_t	make_fork(void)
+{
+	pid_t	pid;
+
+	pid = fork();
+	if (pid < 0)
+	{
+		perror("fork error");
+		exit(1);
+	}
+	return (pid);
+}
+
+int	line_check(char *line, t_list **token_lst)
+{
+	if (quote_check(line) == 1)
+	{
+		add_history(line);
+		free(line);
+		return (0);
+	}
+	*token_lst = tokenize(line);
+	if (!(*token_lst) || syntax_check(*token_lst) == 1)
+	{
+		add_history(line);
+		free(line);
+		ft_lstclear(token_lst, free_token);
+		return (0);
+	}
+	return (1);
 }

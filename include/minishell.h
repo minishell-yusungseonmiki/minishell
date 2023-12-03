@@ -58,9 +58,11 @@ typedef struct s_proc_info {
 }	t_proc_info;
 
 typedef enum {
+	START,
 	SYNTAX,
 	MAX_HEREDOC,
-	INVALID_EXPORT
+	INVALID_EXPORT,
+	OPEN_FAILED
 }	e_error;
 
 int	g_exit_status;
@@ -80,8 +82,8 @@ void    execute_env(char **cmd_argv, t_list **denv);
 void	execute_exit(t_proc_info *proc, int only_builtin);
 
 // builtin_export.c
-void    execute_export(char **cmd_argv, t_list *denv, t_proc_info *proc);
-void    print_export(t_list *denv, t_proc_info *proc);
+void    execute_export(char **cmd_argv, t_list **denv, t_proc_info *proc);
+void    print_export(t_list **denv, t_proc_info *proc);
 int		cmd_is_empty(char **cmd_argv);
 
 // builtin_pwd.c
@@ -123,10 +125,11 @@ int	execute_only_builtin(t_list *proc_lst);
 void	wait_process(t_list *proc_lst);
 
 // free.c
-void	free_env(void	*env);
+void	free_env(void *env);
 void	free_proc_info(void *proc);
 void	free_node_list(void	*node);
 void	free_token(void *token);
+void	free_double_str(char **envp);
 
 // get_next_line.c
 char	*get_next_line(int fd);
@@ -135,11 +138,11 @@ char	*get_next_line(int fd);
 void	heredoc(t_list *proc_lst);
 
 // main.c
-void	sigint_handler(int signum);
+void    run_minishell(char *line, t_list **denv);
 
 // make_proc_list.c
-t_list		*make_proc_list(t_list *token_lst, t_list *denv);
-t_proc_info	*init_proc_info(t_list *denv, t_list *node_lst);
+t_list		*make_proc_list(t_list *token_lst, t_list **denv);
+t_proc_info	*init_proc_info(t_list **denv, t_list *node_lst);
 
 // open_fd.c
 int	find_in_fd(t_list *lst, char *h_filename);
@@ -172,6 +175,8 @@ t_list	*tokenize(char *s);
 
 // util.c
 int		is_same(char *a, char *b);
-void	free_double_str(char **envp);
+void	pipe_open(int fd[2]);
+pid_t	make_fork(void);
+int		line_check(char *line, t_list **token_lst);
 
 #endif
