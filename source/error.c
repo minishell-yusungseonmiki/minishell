@@ -6,7 +6,7 @@
 /*   By: seonmiki <seonmiki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 16:54:38 by seonmiki          #+#    #+#             */
-/*   Updated: 2023/12/03 16:54:40 by seonmiki         ###   ########.fr       */
+/*   Updated: 2023/12/03 17:42:58 by seonmiki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,11 @@ int	error(e_error err)
 	{
 		write(2, "export: not a valid identifier\n", 31);
         g_exit_status = 1;
+	}
+	else if (err == OPEN_FAILED)
+	{
+		perror(NULL);
+		exit(1);
 	}
 	return (1);
 }

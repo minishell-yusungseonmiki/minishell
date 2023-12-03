@@ -60,7 +60,8 @@ typedef struct s_proc_info {
 typedef enum {
 	SYNTAX,
 	MAX_HEREDOC,
-	INVALID_EXPORT
+	INVALID_EXPORT,
+	OPEN_FAILED
 }	e_error;
 
 int	g_exit_status;
