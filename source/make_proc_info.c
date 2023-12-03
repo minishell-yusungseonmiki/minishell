@@ -38,35 +38,40 @@ void	check_redirection(t_list *lst)
 	}
 }
 
+static int	count_arg(t_list *lst)
+{
+	int	cnt;
+
+	cnt = 0;
+	while (lst)
+	{
+		if (((t_node *)(lst->content))->visited == 0)
+			cnt++;
+		lst = lst->next;
+	}
+	return (cnt);
+}
+
 // 명령어 인자 리스트 2차원 배열로 할당하여 반환하기
 char	**find_cmd_argv(t_list *lst)
 {
 	char	**find_arg;
 	int		arg_cnt;
-	t_list	*iter;
 	int		i;
 
-	arg_cnt = 0;
-	iter = lst;
-	while (iter)
-	{
-		if (((t_node *)(iter->content))->visited == 0)
-			arg_cnt++;
-		iter = iter->next;
-	}
+	arg_cnt = count_arg(lst);
 	if (arg_cnt == 0) // 실행할 명령어가 없는 경우
 		return (NULL);
 	find_arg = (char **)malloc(sizeof(char *) * (arg_cnt + 1));
 	i = 0;
-	iter = lst;
-	while (iter)
+	while (lst)
 	{
-		if (((t_node *)(iter->content))->visited == 0)
+		if (((t_node *)(lst->content))->visited == 0)
 		{
-			find_arg[i] = ft_strdup(((t_node *)(iter->content))->elem);
+			find_arg[i] = ft_strdup(((t_node *)(lst->content))->elem);
 			i++;
 		}
-		iter = iter->next;
+		lst = lst->next;
 	}
 	find_arg[i] = NULL;
 	return (find_arg);
