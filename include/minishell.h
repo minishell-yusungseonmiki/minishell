@@ -118,7 +118,7 @@ char	*not_quote(char *elem, int *i, t_list *env);
 void	erase_quotes(t_list *lst, t_list *env);
 
 // error.c
-int		error(e_error err);
+int		error(e_error err, char *str);
 
 // execute.c
 void	execute(t_list *proc_lst);
@@ -169,6 +169,7 @@ char	**parse_envp(t_list *denv);
 void	sigint_handler(int signum);
 void	sigint_heredoc(int signum);
 void	sigint_child(int signum);
+void	sigquit_child(int signum);
 void	print_off_signal(void);
 void	print_on_signal(void);
 

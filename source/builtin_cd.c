@@ -12,6 +12,15 @@
 
 #include "../include/minishell.h"
 
+static void	builtin_cd_error(char *str)
+{
+	write(2, "cd: ", 5);
+	write(2, str, ft_strlen(str));
+	write(2, ": ", 3);
+	perror(NULL);
+	g_exit_status = 1;
+}
+
 char	*find_value(t_list *denv, char *find)
 {
 	while (denv)
@@ -50,11 +59,7 @@ void	execute_cd(t_proc_info *proc)
 	if (proc->cmd_argv[1])
 	{
 		if (chdir(proc->cmd_argv[1]) < 0)
-		{
-			perror(NULL);
-			g_exit_status = 1;
-			return ;
-		}
+			builtin_cd_error(proc->cmd_argv[1]);
 	}
 	set_value(&proc->denv, "OLDPWD", old_pwd);
 	now_pwd = getcwd(NULL, 0);

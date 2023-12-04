@@ -34,7 +34,9 @@ void	check_numeric_first_arg(char *first_arg)
 			i++;
 		if (!ft_isdigit(first_arg[i])) //숫자가 아니면
 		{
-			printf("exit: numeric argument required\n");
+			write(2, "exit: ", 7);
+			write(2, first_arg, ft_strlen(first_arg));
+			write(2, ": numeric argument required\n", 29);
 			g_exit_status = 255;
 			exit(g_exit_status);
 		}
@@ -47,7 +49,7 @@ void	execute_exit(t_proc_info *proc, int only_builtin)
 	char	*first_arg;
 
 	if (only_builtin) //builtin 하나인 경우만 exit 출력
-		printf("exit\n");
+		write(2, "exit\n", 6);
 	first_arg = proc->cmd_argv[1];
 	if (first_arg == NULL)
 	{
@@ -57,6 +59,6 @@ void	execute_exit(t_proc_info *proc, int only_builtin)
 	check_numeric_first_arg(first_arg);
 	cal_exit_status(first_arg);
 	if (proc->cmd_argv[2]) // 인자가 두개 이상이면
-		printf("exit: too many arguments\n");
+		write(2, "exit: too many arguments\n", 26);
 	exit(g_exit_status);
 }
