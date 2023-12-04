@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yusung <yusung@student.42.fr>              +#+  +:+       +#+        */
+/*   By: seonmiki <seonmiki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 15:05:41 by yusung            #+#    #+#             */
-/*   Updated: 2023/11/29 22:03:08 by yusung           ###   ########.fr       */
+/*   Updated: 2023/12/04 15:43:42 by seonmiki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,20 +23,6 @@ t_token	*make_token(const char *elem, e_type type)
 	return (token);
 }
 
-int	meet_special(char c)
-{
-	if (c == '|')
-		return (1);
-	if (c == '<')
-		return (1);
-	if (c == '>')
-		return (1);
-	if (ft_isspace(c))
-		return (1);
-	return (0);
-}
-
-// 반환값 : arg 0, special(리다이렉션이나 파이프) 1 또는 2, blank(공백) 3
 int	make_special_token(t_list **lst, char *s)
 {
 	const char	special[5][3] = {"|", "<<", ">>", "<", ">"};
@@ -64,37 +50,6 @@ void	make_arg_token(t_list **lst, char *s, int i, int start)
 	elem = ft_substr(s, start, i - start);
 	ft_lstadd_back(lst, ft_lstnew(make_token(elem, ARG)));
 	free(elem);
-}
-
-int	in_quote(char c, char *q, int *i)
-{
-	if (c == '\'' || c == '\"')
-	{
-		if (*q == 0)
-			(*q) = c;
-		else if (c == *q)
-			(*q) = 0;
-		(*i) += 1;
-	}
-	else if (*q != 0) // 따옴표 내부에 있는 경우 인덱스 증가
-		(*i) += 1;
-	return (*q);
-}
-
-void	set_index(int type, int *i, int *start)
-{
-	if (type == 0) //arg
-		(*i) += 1;
-	else if (type == 1 || type == 2) //파이프, 리다이렉션
-	{	
-		(*i) += type;
-		(*start) = (*i);
-	}
-	else if (type == 3) //공백
-	{
-		(*i) += 1;
-		(*start) = (*i);
-	}
 }
 
 void	set_before_blank(t_list *lst, char *s)
@@ -138,9 +93,9 @@ t_list	*tokenize(char *s)
 	{
 		if (in_quote(s[i], &q, &i))
 			continue ;
-		if (meet_special(s[i])) //명령어 이전까지(start~i-1)의 arg 저장
+		if (meet_special(s[i]))
 		{
-			if (i != start) // 공백인 경우에 들어오면 i==start인 노드가 생겨버리는 것을 방지
+			if (i != start)
 				make_arg_token(&lst, s, i, start);
 			start = i;
 		}
@@ -149,6 +104,5 @@ t_list	*tokenize(char *s)
 	if (i != start)
 		make_arg_token(&lst, s, i, start);
 	set_before_blank(lst, s);
-	// ft_lstiter(lst, print_token);
 	return (lst);
 }

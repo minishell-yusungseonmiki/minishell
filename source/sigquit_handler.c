@@ -1,34 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   print.c                                            :+:      :+:    :+:   */
+/*   sigquit_handler.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: seonmiki <seonmiki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/03 17:33:41 by seonmiki          #+#    #+#             */
-/*   Updated: 2023/12/04 15:14:33 by seonmiki         ###   ########.fr       */
+/*   Created: 2023/12/04 15:37:19 by seonmiki          #+#    #+#             */
+/*   Updated: 2023/12/04 15:41:17 by seonmiki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-void	print_envp(char **envp, int out_fd)
+void	sigquit_child(int signum)
 {
-	int	i;
-
-	i = 0;
-	while (envp && envp[i])
-	{
-		ft_putstr_fd("declare -x ", out_fd);
-		ft_putstr_fd(envp[i], out_fd);
-		ft_putstr_fd("\n", out_fd);
-		i++;
-	}
+	(void) signum;
+	SIG_DFL ;
 }
 
-void	print_env(void *token)
+void	sigquit_last_child(int signum)
 {
-	if (((t_env *)token)->value[0] == '\0')
-		return ;
-	printf("%s=%s\n", ((t_env *)token)->key, ((t_env *)token)->value);
+	(void) signum;
+	g_exit_status = -131;
+	SIG_DFL ;
 }

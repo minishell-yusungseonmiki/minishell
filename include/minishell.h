@@ -14,8 +14,6 @@
 # include <stdlib.h>
 # include <fcntl.h>
 #include <termios.h>
-#include <sys/stat.h>
-#include <dirent.h>
 
 # define READ 0
 # define WRITE 1
@@ -64,7 +62,7 @@ typedef enum {
 	SYNTAX,
 	MAX_HEREDOC,
 	INVALID_EXPORT,
-	OPEN_FAILED,
+	FILE_ERROR,
 	NOT_CMD,
 	NOT_FILE
 }	e_error;

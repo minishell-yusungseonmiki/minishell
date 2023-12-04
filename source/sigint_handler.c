@@ -1,34 +1,44 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   print.c                                            :+:      :+:    :+:   */
+/*   sigint_handler.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: seonmiki <seonmiki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/03 17:33:41 by seonmiki          #+#    #+#             */
-/*   Updated: 2023/12/04 15:14:33 by seonmiki         ###   ########.fr       */
+/*   Created: 2023/12/03 17:33:50 by seonmiki          #+#    #+#             */
+/*   Updated: 2023/12/04 15:39:56 by seonmiki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-void	print_envp(char **envp, int out_fd)
+void	sigint_handler(int signum)
 {
-	int	i;
-
-	i = 0;
-	while (envp && envp[i])
-	{
-		ft_putstr_fd("declare -x ", out_fd);
-		ft_putstr_fd(envp[i], out_fd);
-		ft_putstr_fd("\n", out_fd);
-		i++;
-	}
+	(void) signum;
+	g_exit_status = 1;
+	printf("\n");
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
 }
 
-void	print_env(void *token)
+void	sigint_heredoc(int signum)
 {
-	if (((t_env *)token)->value[0] == '\0')
-		return ;
-	printf("%s=%s\n", ((t_env *)token)->key, ((t_env *)token)->value);
+	(void) signum;
+	g_exit_status = -1;
+	printf("\n");
+	close(0);
+}
+
+void	sigint_child(int signum)
+{
+	(void) signum;
+	printf("\n");
+}
+
+void	sigint_last_child(int signum)
+{
+	(void) signum;
+	g_exit_status = -130;
+	printf("\n");
 }

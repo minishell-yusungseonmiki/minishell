@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   erase_quotes.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: seonmiki <seonmiki@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: seonmiki <seonmiki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 16:54:26 by seonmiki          #+#    #+#             */
-/*   Updated: 2023/12/03 16:54:27 by seonmiki         ###   ########.fr       */
+/*   Updated: 2023/12/04 15:15:13 by seonmiki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ static void	erase_quotes_arg(t_list *lst, t_list *env)
 		else if (elem[i] == '\"')
 			str = double_quote(elem, &i, env);
 		else
-			str= not_quote(elem, &i, env);
+			str = not_quote(elem, &i, env);
 		tmp = new_elem;
 		new_elem = ft_strjoin(tmp, str);
 		free(str);

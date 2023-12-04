@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   make_proc_info.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: seonmiki <seonmiki@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: seonmiki <seonmiki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 17:33:09 by seonmiki          #+#    #+#             */
-/*   Updated: 2023/12/03 19:31:41 by seonmiki         ###   ########.fr       */
+/*   Updated: 2023/12/04 15:31:53 by seonmiki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,13 @@ t_list	*make_node_list(t_list *start, t_list *end)
 {
 	t_list	*sub_lst;
 	t_list	*iter;
-	
+	t_node	*node;
+
 	sub_lst = NULL;
 	iter = start;
 	while (iter != end)
 	{
-		t_node	*node = (t_node *)malloc(sizeof(t_node));
+		node = (t_node *)malloc(sizeof(t_node));
 		node->elem = ft_strdup(((t_token *)(iter->content))->elem);
 		node->type = ((t_token *)(iter->content))->type;
 		node->visited = 0;
@@ -32,41 +33,6 @@ t_list	*make_node_list(t_list *start, t_list *end)
 	return (sub_lst);
 }
 
-// cmd_argv 담기 전에 리다이렉션은 visited 1로 설정해두기
-void	check_redirection(t_list *lst)
-{
-	while (lst)
-	{
-		if (((t_node *)(lst->content))->type == IN
-			|| ((t_node *)(lst->content))->type == OUT
-			|| ((t_node *)(lst->content))->type == HEREDOC
-			|| ((t_node *)(lst->content))->type == APPEND
-		)
-		{
-			((t_node *)(lst->content))->visited = 1; // 방문 여부 확인(리다이렉션)
-			((t_node *)(lst->next->content))->visited = 1; // 방문 여부 확인(파일이름/리미터)
-		}
-		lst = lst->next;
-	}
-}
-
-static int	get_arg_cnt(t_list *lst)
-{
-	t_list	*iter;
-	int		arg_cnt;
-
-	arg_cnt = 0;
-	iter = lst;
-	while (iter)
-	{
-		if (((t_node *)(iter->content))->visited == 0)
-			arg_cnt++;
-		iter = iter->next;
-	}
-	return (arg_cnt);
-}
-
-// 명령어 인자 리스트 2차원 배열로 할당하여 반환하기
 char	**find_cmd_argv(t_list *lst)
 {
 	char	**find_arg;
@@ -74,7 +40,7 @@ char	**find_cmd_argv(t_list *lst)
 	int		i;
 
 	arg_cnt = get_arg_cnt(lst);
-	if (arg_cnt == 0) // 실행할 명령어가 없는 경우
+	if (arg_cnt == 0)
 		return (NULL);
 	find_arg = (char **)malloc(sizeof(char *) * (arg_cnt + 1));
 	i = 0;
@@ -91,13 +57,6 @@ char	**find_cmd_argv(t_list *lst)
 	return (find_arg);
 }
 
-static char	*free_and_return(char **pathlist, char *result)
-{
-	free_double_str(pathlist);
-	return (result);
-}
-
-// 명령어 경로 찾기
 char	*find_cmd_path(char **cmd_argv, char **path_list)
 {
 	int		i;
@@ -122,7 +81,6 @@ char	*find_cmd_path(char **cmd_argv, char **path_list)
 	return (free_and_return(path_list, ft_strdup(cmd)));
 }
 
-// 환경변수 path parsing하기
 char	**parse_envp(t_list *denv)
 {
 	char	**path_list;

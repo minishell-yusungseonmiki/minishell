@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: seonmiki <seonmiki@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: seonmiki <seonmiki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 16:56:00 by seonmiki          #+#    #+#             */
-/*   Updated: 2023/12/03 17:32:23 by seonmiki         ###   ########.fr       */
+/*   Updated: 2023/12/04 15:26:09 by seonmiki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,14 @@ static void	run_heredoc(t_list *cur, char *h_filename)
 	close(fd);
 }
 
-static char	*check_node_lst(t_list *proc_lst, int *cnt, int *flag, char *filename)
+static char	*check_node_lst(t_list *proc, int *cnt, int *flag, char *filename)
 {
 	t_list	*iter;
 	char	*tmp;
 	char	*h_filename;
 
 	h_filename = NULL;
-	iter = ((t_proc_info *)(proc_lst->content))->node_lst;
+	iter = ((t_proc_info *)(proc->content))->node_lst;
 	while (iter)
 	{
 		if (((t_token *)(iter->content))->type == HEREDOC)
@@ -79,7 +79,7 @@ static void	make_heredoc(t_list *proc_lst)
 		if (flag)
 			((t_proc_info *)(proc_lst->content))->h_filename = h_filename;
 		else
-			((t_proc_info *)(proc_lst->content))->h_filename = NULL; 
+			((t_proc_info *)(proc_lst->content))->h_filename = NULL;
 		proc_lst = proc_lst->next;
 	}
 }

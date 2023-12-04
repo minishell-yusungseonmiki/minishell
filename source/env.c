@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: seonmiki <seonmiki@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: seonmiki <seonmiki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 16:51:47 by seonmiki          #+#    #+#             */
-/*   Updated: 2023/12/03 19:44:13 by seonmiki         ###   ########.fr       */
+/*   Updated: 2023/12/04 15:14:24 by seonmiki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ char	*keyvalue_to_str(t_env *node, int export)
 		free(tmp);
 		tmp = ft_strjoin(str, "\"");
 		free(str);
-			return (tmp);
+		return (tmp);
 	}
 	tmp = ft_strjoin(str, "=");
 	free(str);
@@ -84,7 +84,7 @@ char	**lst_to_envp(t_list *env_lst, int export)
 	}
 	if (cnt == 0)
 		return (NULL);
-	envp = (char **)malloc(sizeof(char*) * (cnt + 1));
+	envp = (char **)malloc(sizeof(char *) * (cnt + 1));
 	i = 0;
 	while (env_lst)
 	{
@@ -93,25 +93,4 @@ char	**lst_to_envp(t_list *env_lst, int export)
 	}
 	envp[i] = NULL;
 	return (envp);
-}
-
-void	print_envp(char **envp, int out_fd)
-{
-	int	i;
-	
-	i = 0;
-	while (envp && envp[i])
-	{
-		ft_putstr_fd("declare -x ", out_fd);
-		ft_putstr_fd(envp[i], out_fd);
-		ft_putstr_fd("\n", out_fd);
-		i++;
-	}
-}
-
-void	print_env(void *token)
-{
-	if (((t_env *)token)->value[0] == '\0')
-		return ;
-	printf("%s=%s\n", ((t_env *)token)->key, ((t_env *)token)->value);
 }

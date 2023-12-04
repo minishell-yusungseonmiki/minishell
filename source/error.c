@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: seonmiki <seonmiki@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: seonmiki <seonmiki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 16:54:38 by seonmiki          #+#    #+#             */
-/*   Updated: 2023/12/03 19:21:44 by seonmiki         ###   ########.fr       */
+/*   Updated: 2023/12/04 15:53:14 by seonmiki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,22 +24,17 @@ static void	exit_error(e_error err, char *str)
 		write(2, "maximum here-document count exceeded\n", 37);
 		exit(1);
 	}
-	else if (err == OPEN_FAILED)
+	else if (err == FILE_ERROR)
 	{
 		write(2, str, ft_strlen(str));
-		write(2, ": No such file or directory\n", 28); //permision deny 인 경우..?
+		write(2, ": ", 2);
+		perror(NULL);
 		exit(1);
 	}
 	else if (err == NOT_CMD)
 	{
 		write(2, str, ft_strlen(str));
 		write(2, ": No such file or directory\n", 29);
-		exit(127);
-	}
-	else if (err == NOT_FILE)
-	{
-		write(2, str, ft_strlen(str));
-		write(2, ": command not found\n", 21);
 		exit(127);
 	}
 }
@@ -57,7 +52,13 @@ int	error(e_error err, char *str)
 		write(2, "export: '", 9);
 		write(2, str, ft_strlen(str));
 		write(2, "': not a valid identifier\n", 26);
-        g_exit_status = 1;
+		g_exit_status = 1;
+	}
+	else if (err == NOT_FILE)
+	{
+		write(2, str, ft_strlen(str));
+		write(2, ": command not found\n", 21);
+		exit(127);
 	}
 	return (1);
 }
