@@ -40,16 +40,12 @@ void	execute_child(t_proc_info *proc_info)
 	}
 	else //execve 활용한 나머지 명령어
 	{
-		if (access(proc_info->cmd_path, X_OK) != 0)
-		{
-			write(2, proc_info->cmd_argv[0], ft_strlen(proc_info->cmd_argv[0]));
-			write(2, " : command not found\n", 22);
-			exit(127);
-		}
 		if (execve(proc_info->cmd_path, proc_info->cmd_argv, lst_to_envp(proc_info->denv, 0)) < 0)
 		{
-			perror(NULL);
-			exit(1);
+			if (proc_info->cmd_argv[0] == ft_strchr(proc_info->cmd_argv[0], '/'))
+				error(NOT_CMD, proc_info->cmd_argv[0]);
+			else
+				error(NOT_FILE, proc_info->cmd_argv[0]);
 		}
 	}
 }
@@ -93,12 +89,12 @@ void	execute(t_list *proc_lst)
 	int		prev_fd;
 
 	print_on_signal();
-	signal(SIGINT, sigint_child);
-	signal(SIGQUIT, sigquit_child);
 	if (execute_only_builtin(proc_lst))
 		return ;
 	prev_fd = -1;
 	iter = proc_lst;
+	signal(SIGINT, sigint_last_child);
+	signal(SIGQUIT, sigquit_last_child);
 	while (iter)
 	{
 		proc_info = iter->content;
@@ -122,6 +118,8 @@ void	wait_process(t_list *proc_lst)
 	last_proc = ft_lstlast(proc_lst)->content;
 	waitpid(last_proc->child_pid, &tmp, 0);
 		tmp = tmp >> 8;
+	signal(SIGINT, sigint_child);
+	signal(SIGQUIT, sigquit_child);
 	while (waitpid(0, NULL, 0) > 0)
 		;
 	if (g_exit_status == -1) // heredoc sigint

@@ -30,6 +30,18 @@ static void	exit_error(e_error err, char *str)
 		write(2, ": No such file or directory\n", 28); //permision deny 인 경우..?
 		exit(1);
 	}
+	else if (err == NOT_CMD)
+	{
+		write(2, str, ft_strlen(str));
+		write(2, ": No such file or directory\n", 29);
+		exit(127);
+	}
+	else if (err == NOT_FILE)
+	{
+		write(2, str, ft_strlen(str));
+		write(2, ": command not found\n", 21);
+		exit(127);
+	}
 }
 
 int	error(e_error err, char *str)

@@ -33,11 +33,23 @@ void	sigint_heredoc(int signum)
 void	sigint_child(int signum)
 {
 	(void)signum;
-	g_exit_status = -130;
 	printf("\n");
 }
 
 void	sigquit_child(int signum)
+{
+	(void)signum;
+	SIG_DFL;
+}
+
+void	sigint_last_child(int signum)
+{
+	(void)signum;
+	g_exit_status = -130;
+	printf("\n");
+}
+
+void	sigquit_last_child(int signum)
 {
 	(void)signum;
 	g_exit_status = -131;

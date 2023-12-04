@@ -64,7 +64,9 @@ typedef enum {
 	SYNTAX,
 	MAX_HEREDOC,
 	INVALID_EXPORT,
-	OPEN_FAILED
+	OPEN_FAILED,
+	NOT_CMD,
+	NOT_FILE
 }	e_error;
 
 int	g_exit_status;
@@ -170,6 +172,8 @@ void	sigint_handler(int signum);
 void	sigint_heredoc(int signum);
 void	sigint_child(int signum);
 void	sigquit_child(int signum);
+void	sigint_last_child(int signum);
+void	sigquit_last_child(int signum);
 void	print_off_signal(void);
 void	print_on_signal(void);
 
