@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   change_value.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yusung <yusung@student.42.fr>              +#+  +:+       +#+        */
+/*   By: seonmiki <seonmiki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 16:51:39 by seonmiki          #+#    #+#             */
-/*   Updated: 2023/12/04 16:49:56 by yusung           ###   ########.fr       */
+/*   Updated: 2023/12/04 19:02:44 by seonmiki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,19 +38,16 @@ static char	*find_env(char *str, t_list *env, int *i)
 	int		start;
 	int		end;
 
-	start = *i + 1;
+	*i += 1;
+	start = *i;
 	if (str[start] == '\0')
-	{
-		*i += 1;
 		return (ft_strdup("$"));
-	}
 	if (str[start] == '?')
 	{
-		*i += 2;
+		*i += 1;
 		return (ft_itoa(g_exit_status));
 	}
-	while (str[*i] && str[*i] != ' ' && str[*i] != '\''
-		&& str[*i] != '=' && str[*i] != ':')
+	while (str[*i] && ft_isalnum(str[*i]))
 		*i += 1;
 	end = *i;
 	return (switch_value(env, ft_substr(str, start, end - start)));
