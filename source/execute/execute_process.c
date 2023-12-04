@@ -6,7 +6,7 @@
 /*   By: yusung <yusung@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/04 15:44:30 by seonmiki          #+#    #+#             */
-/*   Updated: 2023/12/04 16:38:03 by yusung           ###   ########.fr       */
+/*   Updated: 2023/12/04 19:08:29 by yusung           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	wait_process(t_list *proc_lst)
 
 	last_proc = ft_lstlast(proc_lst)->content;
 	waitpid(last_proc->child_pid, &tmp, 0);
-		tmp = tmp >> 8;
+	tmp = tmp >> 8;
 	signal(SIGINT, sigint_child);
 	signal(SIGQUIT, sigquit_child);
 	while (waitpid(0, NULL, 0) > 0)
@@ -60,6 +60,6 @@ void	wait_process(t_list *proc_lst)
 		g_exit_status = 130;
 	else if (g_exit_status == -131)
 		g_exit_status = 131;
-	else
+	else if (!(proc_lst->next == NULL && is_builtin(last_proc->cmd_argv)))
 		g_exit_status = tmp;
 }
