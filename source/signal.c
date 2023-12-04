@@ -15,6 +15,7 @@
 void	sigint_handler(int signum)
 {
 	(void)signum;
+	g_exit_status = 1;
     printf("\n");
     rl_on_new_line();
     // rl_replace_line("", 0);
@@ -24,6 +25,7 @@ void	sigint_handler(int signum)
 void	sigint_heredoc(int signum)
 {
 	(void)signum;
+	g_exit_status = -1;
 	printf("\n");
 	close(0);
 }
@@ -31,7 +33,15 @@ void	sigint_heredoc(int signum)
 void	sigint_child(int signum)
 {
 	(void)signum;
+	g_exit_status = -130;
 	printf("\n");
+}
+
+void	sigquit_child(int signum)
+{
+	(void)signum;
+	g_exit_status = -131;
+	SIG_DFL;
 }
 
 void	print_off_signal(void)

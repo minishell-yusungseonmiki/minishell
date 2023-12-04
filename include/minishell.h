@@ -169,6 +169,7 @@ char	**parse_envp(t_list *denv);
 void	sigint_handler(int signum);
 void	sigint_heredoc(int signum);
 void	sigint_child(int signum);
+void	sigquit_child(int signum);
 void	print_off_signal(void);
 void	print_on_signal(void);
 
